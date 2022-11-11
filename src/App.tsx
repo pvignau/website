@@ -1,14 +1,11 @@
-import './App.css';
-
-const title: string = "My super website";
+import './App.scss';
+import Hero from './components/Hero'
 
 function App() {
   return (
-    <div className="App">
-      <h1>{ title }</h1>
-      <div className="map">
-        <div className="hero"></div>
-      </div>
+    <div className='game-container'>
+      <div className="map"></div>
+      <Hero></Hero>
     </div>
   );
 }
