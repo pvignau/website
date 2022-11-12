@@ -1,0 +1,52 @@
+.hero {
+    width: 32px;
+    height: 32px;
+    margin-top: -8px;
+    margin-left: -6px;
+    background: url('/src/img/hero.png') no-repeat 0 0%;
+    animation: idle-down 2s steps(13) infinite;
+    transform: scale(0.8);
+}
+
+.hero.idle-down {
+    animation: idle-down 2s steps(7) infinite;
+}
+.hero.walk-left {
+    animation: walk-right 0.5s steps(7) infinite;
+}
+.hero.walk-left {
+    animation: walk-right 0.5s steps(7) infinite;
+}
+.hero.walk-left {
+    animation: walk-right 0.5s steps(7) infinite;
+}
+
+@keyframes idle-down {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: -416px 0;
+    }
+}
+
+@keyframes walk-right {
+    from {
+        background-position: 0 -32px;
+    }
+
+    to {
+        background-position: -224px -32px;
+    }
+}
+
+@keyframes walk-left {
+    from {
+        background-position: 0 -288px;
+    }
+
+    to {
+        background-position: -224px -288px;
+    }
+}
