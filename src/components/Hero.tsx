@@ -9,7 +9,7 @@ function Hero(props: {x?: Number, y?: Number}): ReactElement {
   }
 
   return (
-    <div className="hero"></div>
+    <div className="hero walk-down"></div>
   );
 }
 
