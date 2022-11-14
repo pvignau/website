@@ -5,7 +5,6 @@
     margin-left: -6px;
     background: url('/src/img/hero.png') no-repeat 0 0%;
     animation: idle-down 2s steps(13) infinite;
-    transform: scale(0.8);
 }
 
 .hero.idle-down {

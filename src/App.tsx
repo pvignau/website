@@ -5,7 +5,9 @@ import WorldMap from './img/world.png'
 function App() {
   return (
     <div className='game-container'>
-      <div className="map"></div>
+      <div className="map">
+        <img src={ WorldMap } />
+      </div>
       <Hero></Hero>
     </div>
   );

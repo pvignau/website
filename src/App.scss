@@ -1,20 +1,27 @@
 .game-container {
-  transform: scale(3);
+  position: absolute;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
 }
+
+$posX: 286px; // 286px
+$posY: 525px; // 525px
+$topView: calc( 50% - $posY);
+$leftView: calc( 50% - $posX);
 
 .map {
   position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 357px;
-  left: 367px;
-  background: url('img/world-large.png') no-repeat center center fixed;
+  width: 1441px;
+  height: 1448px;
+  top: $topView;
+  left: $leftView;
+  transform: scale(3);
 }
 
 .hero {
+  transform: scale(3);
   position: absolute;
-  top: calc(100vh / 2);
-  left: calc(100vw / 2);
+  top: calc(100% / 2);
+  left: calc(100% / 2);
 }
