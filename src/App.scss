@@ -5,20 +5,6 @@
   overflow: hidden;
 }
 
-$posX: 286px; // 286px
-$posY: 525px; // 525px
-$topView: calc( 50% - $posY);
-$leftView: calc( 50% - $posX);
-
-.map {
-  position: absolute;
-  width: 1441px;
-  height: 1448px;
-  top: $topView;
-  left: $leftView;
-  transform: scale(3);
-}
-
 .hero {
   transform: scale(3);
   position: absolute;
