@@ -1,15 +1,15 @@
 import { ReactElement } from 'react';
+
+import type { RootState } from '../store'
+import { useSelector, useDispatch } from 'react-redux'
 import './Hero.css';
 
-function Hero(props: {x?: Number, y?: Number}): ReactElement {
+function Hero(): ReactElement {
 
-  let position: Object = {
-    x: props.x,
-    y: props.y
-  }
+  const { hero }  = useSelector((state: RootState) => state.hero)
 
   return (
-    <div className="hero walk-down"></div>
+    <div className={`hero walk-${hero.direction.toLowerCase()}`}></div>
   );
 }
 
