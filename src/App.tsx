@@ -1,7 +1,6 @@
 import './App.scss';
 import React from 'react';
-import Hero from './components/Hero'
-import Map from './components/Map'
+import MapEngine from './components/MapEngine'
 
 import type { RootState } from './store'
 import { useSelector, useDispatch } from 'react-redux'
@@ -11,9 +10,10 @@ function App() {
   const { hero }  = useSelector((state: RootState) => state.hero)
   const dispatch = useDispatch();
 
-  const handleKeyDown = (e: any) => {
-    console.log(e.key);
-    switch (e.key || e.keyCode) {
+  const keysPressed: string[] = [];
+  let interval: NodeJS.Timeout | string | number | undefined;
+  const move = () => {
+    switch (keysPressed[keysPressed.length - 1]) {
       case 'ArrowDown': 
         dispatch(goDown())
         break;
@@ -29,21 +29,33 @@ function App() {
     }
   }
 
+  const handleKeyDown = (e: any) => {
+    if(keysPressed.indexOf(e.key) === -1) {
+      keysPressed.push(e.key);
+    }
+  }
+
+  const handleKeyUp = (e: any) => {
+    for(let i = 0; i < keysPressed.length; i++){
+      if(keysPressed[i] == e.key) {
+        keysPressed.splice(i, 1);
+      }
+    }
+  }
+
   React.useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
-    // cleanup this component
+    window.addEventListener('keyup', handleKeyUp);
+    interval = setInterval(move, 100);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+      clearInterval(interval);
     };
   }, []);
-  
-  console.log(hero.position);
 
   return (
-    <div className='game-container'>
-      <Map y={hero.position.x + 'px'} x={hero.position.y + 'px'}></Map>
-      <Hero ></Hero>
-    </div>
+    <MapEngine></MapEngine>
   );
 }
 
