@@ -4,7 +4,7 @@ import type { RootState } from '../store'
 import { useSelector, useDispatch } from 'react-redux'
 import './Hero.css';
 
-function Hero(): ReactElement {
+function HeroDisplay(): ReactElement {
 
   const { hero }  = useSelector((state: RootState) => state.hero)
 
@@ -13,4 +13,4 @@ function Hero(): ReactElement {
   );
 }
 
-export default Hero;
+export default HeroDisplay;
