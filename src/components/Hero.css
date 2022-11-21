@@ -6,6 +6,7 @@
     background: url('/src/img/heroDown.png') no-repeat 0;
     animation: none;
     transform: scale(0.8);
+    border: 1px solid red;
 }
 .hero.walk-left {
     background: url('/src/img/heroLeft.png') no-repeat 0 0%;
