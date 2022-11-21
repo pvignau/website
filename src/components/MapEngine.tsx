@@ -12,7 +12,7 @@ function MapEngine(): ReactElement {
 
   return (
     <div className='game-container'>
-      <Map style={{top: `calc( 50% - ${hero.position.y}px)`, left: `calc( 50% - ${hero.position.x}px)`}}></Map>
+      <Map style={{top: `calc( 50% - ${hero.position.y}px)`, left: `calc( 50% - ${hero.position.x}px)`}} debug></Map>
       <HeroDisplay></HeroDisplay>
     </div>
   );
