@@ -7,37 +7,38 @@ import { useSelector, useDispatch } from 'react-redux'
 import { goUp, goDown, goLeft, goRight } from './feature/hero/heroSlice'
 
 function App() {
-  const { hero }  = useSelector((state: RootState) => state.hero)
+  const { hero } = useSelector((state: RootState) => state.hero)
   const dispatch = useDispatch();
 
   const keysPressed: string[] = [];
   let interval: NodeJS.Timeout | string | number | undefined;
+  
   const move = () => {
     switch (keysPressed[keysPressed.length - 1]) {
-      case 'ArrowDown': 
+      case 'ArrowDown':
         dispatch(goDown())
         break;
-      case 'ArrowLeft': 
+      case 'ArrowLeft':
         dispatch(goLeft())
         break;
-      case 'ArrowUp': 
+      case 'ArrowUp':
         dispatch(goUp())
         break;
-      case 'ArrowRight': 
+      case 'ArrowRight':
         dispatch(goRight())
         break;
     }
   }
 
   const handleKeyDown = (e: any) => {
-    if(keysPressed.indexOf(e.key) === -1) {
+    if (keysPressed.indexOf(e.key) === -1) {
       keysPressed.push(e.key);
     }
   }
 
   const handleKeyUp = (e: any) => {
-    for(let i = 0; i < keysPressed.length; i++){
-      if(keysPressed[i] == e.key) {
+    for (let i = 0; i < keysPressed.length; i++) {
+      if (keysPressed[i] === e.key) {
         keysPressed.splice(i, 1);
       }
     }
