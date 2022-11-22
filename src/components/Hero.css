@@ -1,8 +1,7 @@
 .hero {
     width: 48px;
     height: 68px;
-    margin-top: -16px;
-    margin-left: -20px;
+    padding-top: 20px;
     background: url('/src/img/heroDown.png') no-repeat 0;
     animation: none;
     transform: scale(0.8);
@@ -29,3 +28,39 @@
     from { background-position: 0; }
     to { background-position: -192px; }
 }
+
+/**
+.hero {
+    width: 12px;
+    height: 17px; 
+    background: url('/src/img/heroDown.png') no-repeat 0;
+    background-size: auto 17px;
+    animation: none;
+    overflow: visible;
+}
+.hero.walk-left {
+    background: url('/src/img/heroLeft.png') no-repeat 0;
+    animation: flat-sprite 0.7s steps(4) infinite;
+    background-size: auto 17px;
+}
+.hero.walk-right {
+    background: url('/src/img/heroRight.png') no-repeat 0;
+    animation: flat-sprite 0.7s steps(4) infinite;
+    background-size: auto 17px;
+}
+.hero.walk-up {
+    background: url('/src/img/heroUp.png') no-repeat 0;
+    animation: flat-sprite 0.7s steps(4) infinite;
+    background-size: auto 17px;
+}
+.hero.walk-down {
+    background: url('/src/img/heroDown.png') no-repeat 0;
+    animation: flat-sprite 0.7s steps(4) infinite;
+    background-size: auto 17px;
+}
+
+@keyframes flat-sprite {
+    from { background-position: 0; }
+    to { background-position: -192px; }
+}
+*/

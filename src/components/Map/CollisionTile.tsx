@@ -3,7 +3,7 @@ import './CollisionTile.scss'
 
 function CollistionTile(props: any): ReactElement {
   return (
-    <div className="collision-tile" style={{top: props.x, left: props.y}}></div>
+    <div className="collision-tile" style={{top: props.y + 'px', left: props.x + 'px'}}></div>
   );
 }
 

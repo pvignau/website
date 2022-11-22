@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialState: {collisionTiles: {x: Number, y: Number}[]} = {
+const initialState: {collisionTiles: {x: number, y: number}[]} = {
     collisionTiles: []
 }
 

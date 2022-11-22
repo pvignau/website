@@ -5,26 +5,41 @@ import MapEngine from './components/MapEngine'
 import type { RootState } from './store'
 import { useSelector, useDispatch } from 'react-redux'
 import { goUp, goDown, goLeft, goRight } from './feature/hero/heroSlice'
+import { ObjectMoveHelper } from './feature/objects/helper';
 
 function App() {
   const { hero } = useSelector((state: RootState) => state.hero)
+  const { collisionTiles } = useSelector((state: RootState) => state.map)
   const dispatch = useDispatch();
 
   const keysPressed: string[] = [];
   let interval: NodeJS.Timeout | string | number | undefined;
   
   const move = () => {
+    let canMove = true
     switch (keysPressed[keysPressed.length - 1]) {
       case 'ArrowDown':
-        dispatch(goDown())
+        if (!ObjectMoveHelper.canMoveDown(hero, 10)) {
+          console.log('collide');
+        }
+        dispatch(goDown());
         break;
       case 'ArrowLeft':
+        if (!ObjectMoveHelper.canMoveLeft(hero, 10)) {
+          console.log('collide');
+        }
         dispatch(goLeft())
         break;
       case 'ArrowUp':
+        if (!ObjectMoveHelper.canMoveUp(hero, 10)) {
+          console.log('collide');
+        }
         dispatch(goUp())
         break;
       case 'ArrowRight':
+        if (!ObjectMoveHelper.canMoveRight(hero, 10)) {
+          console.log('collide');
+        }
         dispatch(goRight())
         break;
     }
@@ -47,7 +62,7 @@ function App() {
   React.useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
-    interval = setInterval(move, 100);
+    interval = setInterval(move, 50);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);

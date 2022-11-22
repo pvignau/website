@@ -15,11 +15,11 @@ export default function Map(props: any): ReactElement {
 
   const tiles:{x: Number, y: Number }[] = [];
   if (map.collisionTiles.length === 0) {
-    let height = 0, width = 0;
+    let height = 6, width = 0;
     WorldMapCollisions.forEach((line: number[]) => {
       line.forEach(column => {
         if (column > 0) {
-          tiles.push({x: height, y: width})
+          tiles.push({x: width, y: height})
         }
         width += 12;
       });
@@ -27,7 +27,7 @@ export default function Map(props: any): ReactElement {
       height += 12;
     });
 
-    tiles.push({x: 683, y: 588})
+    tiles.push({x: 600, y: 610})
     dispatch(setCollisionTiles(tiles));
   }
 
