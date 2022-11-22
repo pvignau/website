@@ -8,7 +8,7 @@ const ObjectMoveHelper = {
     canMoveUp (object: IHero, speed: number) {
         let canMove = true;
         store.getState().map.collisionTiles.forEach((tile: {x: number, y: number }) => {
-            if (doObjectsCollide({...store.getState().hero.hero.position, y: object.position.y - 3}, tile)) {
+            if (doObjectsCollide({...store.getState().hero.hero.position, y: store.getState().hero.hero.position.y - 3}, tile)) {
               canMove = false;
             }
           })
@@ -17,7 +17,7 @@ const ObjectMoveHelper = {
     canMoveDown (object: IHero, speed: number) {
         let canMove = true;
         store.getState().map.collisionTiles.forEach((tile: {x: number, y: number }) => {
-            if (doObjectsCollide({...store.getState().hero.hero.position, y: object.position.y + 3}, tile)) {
+            if (doObjectsCollide({...store.getState().hero.hero.position, y: store.getState().hero.hero.position.y + 3}, tile)) {
               canMove = false;
             }
           })
@@ -25,7 +25,8 @@ const ObjectMoveHelper = {
     },
     canMoveLeft (object: IHero, speed: number) {
         let canMove = true;
-        const newHero = {...store.getState().hero.hero.position, y: object.position.y - 3};
+        console.log(store.getState().map.collisionTiles);
+        const newHero = {...store.getState().hero.hero.position, y: store.getState().hero.hero.position.y - 3};
         console.log(newHero, store.getState().hero.hero.position);
         store.getState().map.collisionTiles.forEach((tile: {x: number, y: number }) => {
             if (doObjectsCollide(newHero, tile)) {
@@ -37,7 +38,7 @@ const ObjectMoveHelper = {
     canMoveRight (object: IHero, speed: number) {
         let canMove = true;
         store.getState().map.collisionTiles.forEach((tile: {x: number, y: number }) => {
-            if (doObjectsCollide({...store.getState().hero.hero.position, y: object.position.y + 3}, tile)) {
+            if (doObjectsCollide({...store.getState().hero.hero.position, y: store.getState().hero.hero.position.y + 3}, tile)) {
               canMove = false;
             }
           })

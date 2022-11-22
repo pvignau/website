@@ -1,27 +1,35 @@
 .hero {
-    width: 48px;
-    height: 68px;
-    padding-top: 20px;
-    background: url('/src/img/heroDown.png') no-repeat 0;
+    position: absolute;
+    top: 610px;
+    left: 600px;
+    width: 9px;
+    height: 12px;
+    background: url('/src/img/heroDown.png') no-repeat;
+    background-size: auto 12px;
+    background-position: 0;
     animation: none;
-    transform: scale(0.8);
+    transform: scale(1);
     border: 1px solid red;
 }
 .hero.walk-left {
-    background: url('/src/img/heroLeft.png') no-repeat 0 0%;
+    background: url('/src/img/heroLeft.png') no-repeat 0;
     animation: flat-sprite 0.7s steps(4) infinite;
+    background-size: auto 12px;
 }
 .hero.walk-right {
-    background: url('/src/img/heroRight.png') no-repeat 0 0%;
+    background: url('/src/img/heroRight.png') no-repeat 0;
     animation: flat-sprite 0.7s steps(4) infinite;
+    background-size: auto 12px;
 }
 .hero.walk-up {
-    background: url('/src/img/heroUp.png') no-repeat 0 0%;
+    background: url('/src/img/heroUp.png') no-repeat 0;
     animation: flat-sprite 0.7s steps(4) infinite;
+    background-size: auto 12px;
 }
 .hero.walk-down {
-    background: url('/src/img/heroDown.png') no-repeat 0 0%;
+    background: url('/src/img/heroDown.png') no-repeat 0;
     animation: flat-sprite 0.7s steps(4) infinite;
+    background-size: auto 12px;
 }
 
 @keyframes flat-sprite {

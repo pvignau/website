@@ -15,10 +15,10 @@ function MapEngine(): ReactElement {
     y: 234
   }
 
+//   <Map style={{top: `calc( 50% - ${hero.position.y - 234}px)`, left: `calc( 50% - ${hero.position.x - 245}px)`}} debug></Map>
   return (
     <div className='game-container'>
-      <Map style={{top: `calc( 50% - ${hero.position.y - 234}px)`, left: `calc( 50% - ${hero.position.x - 245}px)`}} debug></Map>
-      <HeroDisplay></HeroDisplay>
+      <Map debug></Map>
     </div>
   );
 }

@@ -6,10 +6,12 @@ import CollistionTile from './Map/CollisionTile';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import { setCollisionTiles } from '../feature/maps/mapSlice';
+import Hero from './Hero'
 
 export default function Map(props: any): ReactElement {
   
   const map = useSelector((state: RootState) => state.map)
+  const {hero} = useSelector((state: RootState) => state.hero)
   const dispatch = useDispatch();
   let collisionTilesComponents: JSX.Element[] = [];
 
@@ -38,6 +40,7 @@ export default function Map(props: any): ReactElement {
   return (
     <div className="map" style={props.style}>
         <img src={ WorldMap } alt="map"/>
+        <Hero></Hero>
         {props.debug && 
           <div className='collisions-tiles'>
             {collisionTilesComponents}
