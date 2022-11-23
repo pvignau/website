@@ -35,7 +35,6 @@ export default function Map(props: any): ReactElement {
   if (props.debug) {
     collisionTilesComponents = map.collisionTiles.map((tile: {x: Number, y: Number }) => { return (<CollistionTile key={tile.x + '-' + tile.y} x={tile.x} y={tile.y}></CollistionTile>) } )
   }
-  console.log(props.style);
 
   return (
     <div className="map" style={props.style}>
