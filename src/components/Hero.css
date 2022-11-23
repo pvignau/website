@@ -1,74 +1,33 @@
 .hero {
     position: absolute;
-    top: 610px;
-    left: 600px;
-    width: 9px;
-    height: 12px;
+    width: 24px;
+    height: 36px;
     background: url('/src/img/heroDown.png') no-repeat;
-    background-size: auto 12px;
+    background-size: auto 36px;
+    background-repeat: no-repeat;
     background-position: 0;
     animation: none;
-    transform: scale(1);
-    border: 1px solid red;
+    transition: top 0.2s ease, left 0.2s ease;
 }
+/* FIXME : clean this */
 .hero.walk-left {
-    background: url('/src/img/heroLeft.png') no-repeat 0;
+    background-image: url('/src/img/heroLeft.png');
     animation: flat-sprite 0.7s steps(4) infinite;
-    background-size: auto 12px;
 }
 .hero.walk-right {
-    background: url('/src/img/heroRight.png') no-repeat 0;
+    background-image: url('/src/img/heroRight.png');
     animation: flat-sprite 0.7s steps(4) infinite;
-    background-size: auto 12px;
 }
 .hero.walk-up {
-    background: url('/src/img/heroUp.png') no-repeat 0;
+    background-image: url('/src/img/heroUp.png');
     animation: flat-sprite 0.7s steps(4) infinite;
-    background-size: auto 12px;
 }
 .hero.walk-down {
-    background: url('/src/img/heroDown.png') no-repeat 0;
+    background-image: url('/src/img/heroDown.png');
     animation: flat-sprite 0.7s steps(4) infinite;
-    background-size: auto 12px;
 }
 
 @keyframes flat-sprite {
     from { background-position: 0; }
-    to { background-position: -192px; }
+    to { background-position: -96px; }
 }
-
-/**
-.hero {
-    width: 12px;
-    height: 17px; 
-    background: url('/src/img/heroDown.png') no-repeat 0;
-    background-size: auto 17px;
-    animation: none;
-    overflow: visible;
-}
-.hero.walk-left {
-    background: url('/src/img/heroLeft.png') no-repeat 0;
-    animation: flat-sprite 0.7s steps(4) infinite;
-    background-size: auto 17px;
-}
-.hero.walk-right {
-    background: url('/src/img/heroRight.png') no-repeat 0;
-    animation: flat-sprite 0.7s steps(4) infinite;
-    background-size: auto 17px;
-}
-.hero.walk-up {
-    background: url('/src/img/heroUp.png') no-repeat 0;
-    animation: flat-sprite 0.7s steps(4) infinite;
-    background-size: auto 17px;
-}
-.hero.walk-down {
-    background: url('/src/img/heroDown.png') no-repeat 0;
-    animation: flat-sprite 0.7s steps(4) infinite;
-    background-size: auto 17px;
-}
-
-@keyframes flat-sprite {
-    from { background-position: 0; }
-    to { background-position: -192px; }
-}
-*/

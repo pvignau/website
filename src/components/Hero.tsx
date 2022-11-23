@@ -9,7 +9,7 @@ function HeroDisplay(props: any): ReactElement {
   const { hero }  = useSelector((state: RootState) => state.hero)
 
   return (
-    <div className={`hero walk-${hero.direction.toLowerCase()}`} style={{top: `${hero.position.y}px`, left: `${hero.position.x}px`}}></div>
+    <div id="hero" className={`hero walk-${hero.direction.toLowerCase()}`} style={{top: `${hero.position.y}px`, left: `${hero.position.x}px`}}></div>
   );
 }
 
