@@ -40,12 +40,12 @@ export default function Map(props: any): ReactElement {
   return (
     <div className="map" style={props.style}>
         <img src={ WorldMap } alt="map"/>
-        <Hero></Hero>
         {props.debug && 
           <div className='collisions-tiles'>
             {collisionTilesComponents}
           </div>
         }
+        {props.children}
     </div>
   );
 }

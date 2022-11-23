@@ -10,15 +10,11 @@ function MapEngine(): ReactElement {
 
   const { hero }  = useSelector((state: RootState) => state.hero);
 
-  const heroOffset = {
-    x: 245,
-    y: 234
-  }
-
-//   <Map style={{top: `calc( 50% - ${hero.position.y - 234}px)`, left: `calc( 50% - ${hero.position.x - 245}px)`}} debug></Map>
   return (
     <div className='game-container'>
-      <Map debug></Map>
+      <Map debug>
+        <HeroDisplay></HeroDisplay>
+      </Map>
     </div>
   );
 }
