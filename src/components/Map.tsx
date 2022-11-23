@@ -27,8 +27,6 @@ export default function Map(props: any): ReactElement {
       width = 0;
       height += 36;
     });
-
-    tiles.push({x: 600, y: 610})
     dispatch(setCollisionTiles(tiles));
   }
 
