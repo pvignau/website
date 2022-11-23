@@ -1,30 +1,33 @@
 .hero {
-    width: 48px;
-    height: 68px;
-    margin-top: -16px;
-    margin-left: -20px;
-    background: url('/src/img/heroDown.png') no-repeat 0;
+    position: absolute;
+    width: 24px;
+    height: 36px;
+    background: url('/src/img/heroDown.png') no-repeat;
+    background-size: auto 36px;
+    background-repeat: no-repeat;
+    background-position: 0;
     animation: none;
-    transform: scale(0.8);
+    transition: top 0.2s ease, left 0.2s ease;
 }
+/* FIXME : clean this */
 .hero.walk-left {
-    background: url('/src/img/heroLeft.png') no-repeat 0 0%;
+    background-image: url('/src/img/heroLeft.png');
     animation: flat-sprite 0.7s steps(4) infinite;
 }
 .hero.walk-right {
-    background: url('/src/img/heroRight.png') no-repeat 0 0%;
+    background-image: url('/src/img/heroRight.png');
     animation: flat-sprite 0.7s steps(4) infinite;
 }
 .hero.walk-up {
-    background: url('/src/img/heroUp.png') no-repeat 0 0%;
+    background-image: url('/src/img/heroUp.png');
     animation: flat-sprite 0.7s steps(4) infinite;
 }
 .hero.walk-down {
-    background: url('/src/img/heroDown.png') no-repeat 0 0%;
+    background-image: url('/src/img/heroDown.png');
     animation: flat-sprite 0.7s steps(4) infinite;
 }
 
 @keyframes flat-sprite {
     from { background-position: 0; }
-    to { background-position: -192px; }
+    to { background-position: -96px; }
 }
