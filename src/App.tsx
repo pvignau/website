@@ -10,7 +10,6 @@ import { ObjectMoveHelper } from './feature/objects/helper';
 
 function App() {
   const { hero } = useSelector((state: RootState) => state.hero)
-  const { collisionTiles } = useSelector((state: RootState) => state.map)
   const dispatch = useDispatch();
 
   const keysPressed: string[] = [];
