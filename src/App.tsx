@@ -1,5 +1,5 @@
 import './App.scss';
-import React from 'react';
+import React, { useState } from 'react';
 import MapEngine from './components/MapEngine'
 
 import type { RootState } from './store'
@@ -9,11 +9,12 @@ import { store } from './store';
 import { ObjectMoveHelper } from './feature/objects/helper';
 
 function App() {
-  const { hero } = useSelector((state: RootState) => state.hero)
+  // eslint-disable-next-line
+  const { hero } = useSelector((state: RootState) => state.hero); // This makes a ref event if we do not use it ? Black magic ... 
   const dispatch = useDispatch();
 
   const keysPressed: string[] = [];
-  let interval: NodeJS.Timeout | string | number | undefined;
+  const [interval, setIntervalId] = useState<NodeJS.Timeout | string | number | undefined>(undefined);
 
   const mapOffset = {
     x: (Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) / 2) - (store.getState().hero.hero.position.x + (28 / 2)), 
@@ -21,25 +22,24 @@ function App() {
   };
 
   const move = () => {
-    let canMove = true
     switch (keysPressed[keysPressed.length - 1]) {
       case 'ArrowDown':
-        if (ObjectMoveHelper.canMoveDown(hero, 12)) {
+        if (ObjectMoveHelper.canMoveDown(12) === true) {
           dispatch(goDown());
         }
         break;
       case 'ArrowLeft':
-        if (ObjectMoveHelper.canMoveLeft(hero, 12)) {
+        if (ObjectMoveHelper.canMoveLeft(12) === true) {
           dispatch(goLeft())
         }
         break;
       case 'ArrowUp':
-        if (ObjectMoveHelper.canMoveUp(hero, 12)) {
+        if (ObjectMoveHelper.canMoveUp(12) === true) {
           dispatch(goUp())
         }
         break;
       case 'ArrowRight':
-        if (ObjectMoveHelper.canMoveRight(hero, 12)) {
+        if (ObjectMoveHelper.canMoveRight(12) === true) {
           dispatch(goRight())
         }
         break;
@@ -67,7 +67,7 @@ function App() {
   React.useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
-    interval = setInterval(move, 100);
+    setIntervalId(setInterval(move, 100));
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
