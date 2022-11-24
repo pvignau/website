@@ -2117,6 +2117,12 @@
                  "id":22,
                  "name":"path-work",
                  "opacity":1,
+                 "properties":[
+                        {
+                         "name":"address",
+                         "type":"string",
+                         "value":"\/work"
+                        }],
                  "type":"tilelayer",
                  "visible":true,
                  "width":120,
@@ -2248,6 +2254,12 @@
                  "id":21,
                  "name":"path-home",
                  "opacity":1,
+                 "properties":[
+                        {
+                         "name":"address",
+                         "type":"string",
+                         "value":"\/home"
+                        }],
                  "type":"tilelayer",
                  "visible":true,
                  "width":120,
