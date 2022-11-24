@@ -13,7 +13,7 @@ declare global { // FIXME : move this
     debug: boolean; 
   }
 }
-window.debug = false;
+window.debug = (window.location.hostname === 'localhost');
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
