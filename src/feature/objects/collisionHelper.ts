@@ -5,8 +5,8 @@ const doObjectsCollide = function (
     ): Boolean {
     return (
         hero.x <= collisionTile.x + 36 &&
-        hero.x + 36 >= collisionTile.x &&
-        hero.y <= collisionTile.y + 36 &&
+        hero.x + 24 >= collisionTile.x &&
+        hero.y <= collisionTile.y + 12 &&
         hero.y + 36 >= collisionTile.y
     )
 }
