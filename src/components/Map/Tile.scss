@@ -1,0 +1,12 @@
+.tile {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    opacity: 0.3;
+    &.collision {
+        background-color: red;
+    }
+    &.door {
+        background-color: blue;
+    }
+}
