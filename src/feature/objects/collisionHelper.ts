@@ -1,13 +1,13 @@
 
 const doObjectsCollide = function (
     hero: { x: number, y: number }, 
-    collisionTile: { x: number, y: number }
+    tile: { x: number, y: number }
     ): Boolean {
     return (
-        hero.x <= collisionTile.x + 36 &&
-        hero.x + 24 >= collisionTile.x &&
-        hero.y <= collisionTile.y + 12 &&
-        hero.y + 36 >= collisionTile.y
+        hero.x <= tile.x + 36 &&
+        hero.x + 24 >= tile.x &&
+        hero.y <= tile.y + 12 &&
+        hero.y + 36 >= tile.y
     )
 }
 
