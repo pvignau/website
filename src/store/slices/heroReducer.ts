@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { IHeroState } from '../../types'
-import hero from './Hero';
+import hero from '../../feature/hero/Hero';
 hero.position = {x: 1716, y: 1944};
 const initialState: IHeroState = {
     hero

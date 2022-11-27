@@ -1,16 +1,17 @@
 import './App.scss';
 import React, { useState } from 'react';
 import MapEngine from './components/MapEngine'
-
+import Loader from './components/Loader'
 import type { RootState } from './store'
 import { useSelector, useDispatch } from 'react-redux'
-import { goUp, goDown, goLeft, goRight, stopHero } from './feature/hero/heroSlice'
+import { goUp, goDown, goLeft, goRight, stopHero } from './store/slices/heroReducer'
 import { store } from './store';
 import { ObjectMoveHelper } from './feature/objects/helper';
 
 function App() {
   // eslint-disable-next-line
   const { hero } = useSelector((state: RootState) => state.hero); // This makes a ref event if we do not use it ? Black magic ... 
+  const isLoading = useSelector((state: RootState) => state.root.isLoading); // This makes a ref event if we do not use it ? Black magic ... 
   const dispatch = useDispatch();
 
   const keysPressed: string[] = [];
@@ -75,9 +76,20 @@ function App() {
     };
   }, []);
 
-  return (
-    <MapEngine style={{top: `${mapOffset.y}px`, left: `${mapOffset.x}px`}} ></MapEngine>
-  );
+  if (isLoading) {
+    return <div>
+      <Loader assetsToLoad={[
+        import('./img/hero/spriteDown.png'),
+        import('./img/hero/spriteUp.png'),
+        import('./img/hero/spriteLeft.png'),
+        import('./img/hero/spriteRight.png'),
+        import('./maps/world.png')
+      ]}></Loader>
+      <MapEngine style={{display: 'none', top: `${mapOffset.y}px`, left: `${mapOffset.x}px`}} ></MapEngine>
+    </div>
+  } else {
+    return <MapEngine style={{top: `${mapOffset.y}px`, left: `${mapOffset.x}px`}} ></MapEngine>
+  }
 }
 
 export default App;

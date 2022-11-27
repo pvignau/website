@@ -1,0 +1,22 @@
+#loader {
+    position: absolute;
+    right: 5%;
+    top: 80%;
+
+    img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .hint {
+        position: absolute;
+        top: -100px;
+        left: -200px;
+        max-width: 100px;
+        text-align: center;
+
+        &.hidden {
+            display: none;
+        }
+    }
+}
