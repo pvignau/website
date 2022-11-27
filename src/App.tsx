@@ -8,13 +8,12 @@ import { goUp, goDown, goLeft, goRight, stopHero } from './store/slices/heroRedu
 import { ObjectMoveHelper } from './feature/objects/helper';
 
 function App() {
-  // eslint-disable-next-line
-//   const { hero } = useSelector((state: RootState) => state.hero); // This makes a ref event if we do not use it ? Black magic ... 
-  const isLoading = useSelector((state: RootState) => state.root.isLoading); // This makes a ref event if we do not use it ? Black magic ... 
+
   const dispatch = useDispatch();
+  const isLoading = useSelector((state: RootState) => state.root.isLoading); // This makes a ref event if we do not use it ? Black magic ... 
+  const [interval, setIntervalId] = useState<NodeJS.Timeout | string | number | undefined>(undefined);
 
   const keysPressed: string[] = useMemo(() => [], []);
-  const [interval, setIntervalId] = useState<NodeJS.Timeout | string | number | undefined>(undefined);
 
   React.useEffect(() => {
     const move = () => {
