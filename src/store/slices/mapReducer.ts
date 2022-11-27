@@ -7,7 +7,7 @@ const initialState: {collisionTiles: {x: number, y: number}[], metaTiles: {x: nu
 }
 
 export const mapSlice = createSlice({
-  name: 'hero',
+  name: 'map',
   initialState,
   reducers: {
     setCollisionTiles: (state, action) => {

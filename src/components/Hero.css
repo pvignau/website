@@ -2,7 +2,7 @@
     position: absolute;
     width: 24px;
     height: 36px;
-    background: url('/src/img/heroDown.png') no-repeat;
+    background: url('/src/img/hero/spriteDown.png') no-repeat;
     background-size: auto 36px;
     background-repeat: no-repeat;
     background-position: 0;
@@ -12,19 +12,19 @@
 }
 /* FIXME : clean this */
 .hero.walk-left {
-    background-image: url('/src/img/heroLeft.png');
+    background-image: url('/src/img/hero/spriteLeft.png');
     animation: flat-sprite 0.7s steps(4) infinite;
 }
 .hero.walk-right {
-    background-image: url('/src/img/heroRight.png');
+    background-image: url('/src/img/hero/spriteRight.png');
     animation: flat-sprite 0.7s steps(4) infinite;
 }
 .hero.walk-up {
-    background-image: url('/src/img/heroUp.png');
+    background-image: url('/src/img/hero/spriteUp.png');
     animation: flat-sprite 0.7s steps(4) infinite;
 }
 .hero.walk-down {
-    background-image: url('/src/img/heroDown.png');
+    background-image: url('/src/img/hero/spriteDown.png');
     animation: flat-sprite 0.7s steps(4) infinite;
 }
 

@@ -1,11 +1,11 @@
 import { ReactElement } from 'react';
-import './Map.scss'
+import './Map.css'
 import WorldMap from '../maps/world.png'
 import WorldJson from '../maps/world.json'
 import Tile from './Map/Tile';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
-import { setCollisionTiles, setMetaTiles } from '../feature/maps/mapSlice';
+import { setCollisionTiles, setMetaTiles } from '../store/slices/mapReducer';
 
 export default function Map(props: any): ReactElement {
   
