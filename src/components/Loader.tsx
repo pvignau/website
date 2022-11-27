@@ -9,7 +9,7 @@ export default class Loader extends Component<{assetsToLoad?: Promise<typeof imp
     hint: string;
     dispatch: any;
 
-    constructor (props: any) { // FIXME : see typing 
+    constructor (props: {assetsToLoad?: Promise<typeof import("*.png")>[]}) { // FIXME : see typing 
         super(props);
         this.hint = "This will show up when page is loading."
     }

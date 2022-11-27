@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 import './Map.css'
 import WorldMap from '../maps/world.png'
 import WorldJson from '../maps/world.json'
@@ -6,10 +6,12 @@ import Tile from './Map/Tile';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import { setCollisionTiles, setMetaTiles } from '../store/slices/mapReducer';
+import { getHeroCenteredMapOffset } from '../feature/map/helper';
 
 export default function Map(props: any): ReactElement {
   
   const map = useSelector((state: RootState) => state.map)
+  const { hero }  = useSelector((state: RootState) => state.hero)
   const dispatch = useDispatch();
   let tilesComponents: JSX.Element[] = [];
 
@@ -100,8 +102,11 @@ export default function Map(props: any): ReactElement {
     tilesComponents = [...tilesComponents, ...map.metaTiles.map((tile: {x: Number, y: Number }) => { return (<Tile type="door" key={tile.x + '-' + tile.y} x={tile.x} y={tile.y}></Tile>) } )]
   }
 
+  // get map offset
+  const mapOffset = getHeroCenteredMapOffset(hero);
+
   return (
-    <div className="map" style={props.style}>
+    <div className="map" style={{top: `${mapOffset.y}px`, left: `${mapOffset.x}px`}}>
         <img src={ WorldMap } alt="map"/>
         {props.debug && 
           <div className='collisions-tiles'>
