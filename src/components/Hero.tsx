@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 
 import type { RootState } from '../store'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import './Hero.css';
 
 function HeroDisplay(props: any): ReactElement {
