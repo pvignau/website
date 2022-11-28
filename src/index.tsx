@@ -3,7 +3,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import Home from './Home';
 import reportWebVitals from './reportWebVitals';
+
+import {
+  createBrowserRouter,
+  RouterProvider
+} from "react-router-dom";
 
 import { store } from './store'
 import { Provider } from 'react-redux'
@@ -15,13 +21,24 @@ declare global { // FIXME : move this
 }
 window.debug = (window.location.hostname === 'localhost');
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />
+  },
+  {
+    path: "/home",
+    element: <Home />
+  },
+]);
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <Provider store={store}>
     <React.StrictMode>
-      <App />
+      <RouterProvider router={router} />
     </React.StrictMode>
   </Provider>
 );
