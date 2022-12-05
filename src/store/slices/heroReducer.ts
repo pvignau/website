@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { IHeroState } from '../../types'
 import hero from '../../feature/hero/Hero';
-hero.position = {x: 1716, y: 1944};
+hero.position = {x: 1525, y: 1750};
 const initialState: IHeroState = {
     hero
 }
@@ -11,23 +11,27 @@ export const heroSlice = createSlice({
   initialState,
   reducers: {
     stopHero: (state) => {
-        state.hero.direction = 'none';
+        state.hero.isMoving = false;
     },
     goLeft: (state) => {
         state.hero.direction = 'left';
         state.hero.position.x -= 12;
+        state.hero.isMoving = true;
     },
     goRight: (state) => {
         state.hero.direction = 'right';
         state.hero.position.x += 12;
+        state.hero.isMoving = true;
     },
     goUp: (state) => {
         state.hero.direction = 'up';
         state.hero.position.y -= 12;
+        state.hero.isMoving = true;
     },
     goDown: (state) => {
         state.hero.direction = 'down';
         state.hero.position.y += 12;
+        state.hero.isMoving = true;
 
     },
     setHeroPosition: (state, { payload }: PayloadAction<{ x: number, y: number }>) => {
