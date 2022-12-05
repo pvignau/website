@@ -12,3 +12,13 @@ export interface IHero {
 export interface IHeroState {
     hero: IHero
 }
+
+export interface ITileMeta {
+    action: string,
+    value: string
+}
+export interface ITile {
+    x: number,
+    y: number,
+    meta?: ITileMeta | null
+}
