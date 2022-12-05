@@ -1,4 +1,5 @@
 import { store } from "../../store"
+import type { ITile } from '../../types';
 import { doObjectsCollide } from "./collisionHelper";
 
 const ObjectMoveHelper = {
@@ -18,7 +19,7 @@ const ObjectMoveHelper = {
       }
       return store.getState().hero.hero.position
     },
-    canMoveUp (speed: number) {
+    getUpBlockingTile (speed: number): null | ITile {
         const tiles = this.getTiles();
         for(let i = 0; i <tiles.length; i++) {
           if (doObjectsCollide(this.getHeroFuturePosition('up', speed), tiles[i])) {
@@ -26,9 +27,9 @@ const ObjectMoveHelper = {
             return tiles[i];
           }
         }
-        return true;
+        return null;
     },
-    canMoveDown (speed: number) {
+    getDownBlockingTile (speed: number): null | ITile {
       const tiles = this.getTiles();
         for(let i = 0; i <tiles.length; i++) {
           if (doObjectsCollide(this.getHeroFuturePosition('down', speed), tiles[i])) {
@@ -36,9 +37,9 @@ const ObjectMoveHelper = {
             return tiles[i];
           }
         }
-        return true;
+        return null;
     },
-    canMoveLeft (speed: number) {
+    getLeftBlockingTile (speed: number): null | ITile {
       const tiles = this.getTiles();
         for(let i = 0; i <tiles.length; i++) {
           if (doObjectsCollide(this.getHeroFuturePosition('left', speed), tiles[i])) {
@@ -46,9 +47,9 @@ const ObjectMoveHelper = {
             return tiles[i];
           }
         }
-        return true;
+        return null;
     },
-    canMoveRight (speed: number) {
+    getRightBlockingTile (speed: number): null | ITile {
       const tiles = this.getTiles();
         for(let i = 0; i <tiles.length; i++) {
           if (doObjectsCollide(this.getHeroFuturePosition('right', speed), tiles[i])) {
@@ -56,7 +57,7 @@ const ObjectMoveHelper = {
             return tiles[i];
           }
         }
-        return true;
+        return null;
     },
 }
 
