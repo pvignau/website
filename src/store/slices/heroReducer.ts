@@ -39,11 +39,19 @@ export const heroSlice = createSlice({
     },
     setHeroDirection: (state, { payload }: PayloadAction<string>) => {
         state.hero.direction = payload
-    }
+    },
+    makeTalk: (state, { payload }: PayloadAction<string[]>) => {
+        state.hero.isTalking = true
+        state.hero.speech = payload
+    },
+    stopTalking: (state) => {
+        state.hero.isTalking = false
+        state.hero.speech = []
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { goLeft, goRight, goUp, goDown, stopHero } = heroSlice.actions
+export const { goLeft, goRight, goUp, goDown, stopHero, makeTalk, stopTalking } = heroSlice.actions
 
 export default heroSlice.reducer
