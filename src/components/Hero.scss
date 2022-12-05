@@ -1,0 +1,32 @@
+.hero {
+    position: absolute;
+    width: 24px;
+    height: 36px;
+    background: url('../img/hero/spriteDown.png') no-repeat; /* default down, look the user */
+    background-size: auto 36px;
+    background-repeat: no-repeat;
+    background-position: 0;
+    animation: none;
+    transform: scale(1.5);
+    transition: top 0.2s ease, left 0.2s ease;
+    &.walk {
+        animation: flat-sprite 0.7s steps(4) infinite;
+    }
+    &.left {
+        background-image: url('../img/hero/spriteLeft.png');
+    }
+    &.right {
+        background-image: url('../img/hero/spriteRight.png');
+    }
+    &.up {
+        background-image: url('../img/hero/spriteUp.png');
+    }
+    &.down {
+        background-image: url('../img/hero/spriteDown.png');
+    }
+}
+
+@keyframes flat-sprite {
+    from { background-position: 0; }
+    to { background-position: -96px; }
+}
