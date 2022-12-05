@@ -6,7 +6,9 @@ export interface IHeroPosition {
 export interface IHero {
     position: IHeroPosition,
     direction: string,
-    isMoving: boolean
+    isMoving: boolean,
+    isTalking: boolean,
+    speech: string[]
 }
 
 export interface IHeroState {
