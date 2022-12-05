@@ -3,7 +3,10 @@ import React, { useState, ReactElement } from 'react';
 import type { RootState } from '../store'
 import { makeTalk, stopTalking } from '../store/slices/heroReducer'
 import { useSelector, useDispatch } from 'react-redux'
+import mobile from 'is-mobile';
 import './Hero.scss';
+
+const isMobile = mobile();
 
 function HeroTalk(props: any): ReactElement {
   const { hero } = useSelector((state: RootState) => state.hero)
@@ -19,23 +22,28 @@ function HeroTalk(props: any): ReactElement {
         dispatch(stopTalking());
       }
       window.removeEventListener('keydown', nextLineOrClose);
+      window.removeEventListener('touchstart', nextLineOrClose);
     }
 
     setTimeout(() => {
       setDismiss(true);
       window.addEventListener('keydown', nextLineOrClose)
+      window.addEventListener('touchstart', nextLineOrClose)
     },1000);
 
     return () => {
       window.removeEventListener('keydown', nextLineOrClose);
+      window.removeEventListener('touchstart', nextLineOrClose);
     }
   });
+
+  const hintText = isMobile ? 'Touch screen' : 'Press any key'
 
   return (
     <dialog className='bubble' open>
       <p>{hero.speech[line]}</p>
       {dismiss &&
-        <div className='hint'>Press key ...</div>
+        <div className='hint'>{hintText}</div>
       }
     </dialog>
   )
@@ -47,7 +55,7 @@ function HeroDisplay(props: any): ReactElement {
   const dispatch = useDispatch();
 
   const talk = () => {
-    dispatch(makeTalk(['Outch ! It hurts !', 'Don\'t do that !']));
+    dispatch(makeTalk([isMobile ? 'Gross... do not touch me !' : 'Outch ! It hurts !', 'Don\'t do that !']));
   }
 
   return (
