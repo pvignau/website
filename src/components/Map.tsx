@@ -25,16 +25,16 @@ export default function Map(props: any): ReactElement {
     while(collisionsLayer.data.length > 0) {
       collisions.push(collisionsLayer.data.splice(0, collisionsLayer.width));
     }
-    let height = 0, width = 0;
+    let height = 12, width = 0;
     collisions.forEach((line: number[]) => {
       line.forEach(column => {
         if (column > 0) {
           tiles.push({x: width, y: height})
         }
-        width += 36;
+        width += 32;
       });
       width = 0;
-      height += 36;
+      height += 32;
     });
     dispatch(setCollisionTiles(tiles));
 
@@ -63,10 +63,10 @@ export default function Map(props: any): ReactElement {
           if (tileMeta) tile.meta = tileMeta
           tiles.push(tile)
         }
-        width += 36;
+        width += 32;
       });
       width = 0;
-      height += 36;
+      height += 32;
     });
 
     meta = [];
@@ -89,10 +89,10 @@ export default function Map(props: any): ReactElement {
           if (tileMeta) tile.meta = tileMeta
           tiles.push(tile)
         }
-        width += 36;
+        width += 32;
       });
       width = 0;
-      height += 36;
+      height += 32;
     });
     dispatch(setMetaTiles(tiles));
   }
