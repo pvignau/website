@@ -22,5 +22,5 @@ export interface ITileMeta {
 export interface ITile {
     x: number,
     y: number,
-    meta?: ITileMeta | null
+    meta: ITileMeta
 }
