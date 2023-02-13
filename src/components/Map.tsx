@@ -1,20 +1,18 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import './Map.css'
 import WorldMap from '../maps/world.png'
-import WorldJson from '../maps/world.json'
 import Tile from './Map/Tile';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { setCollisionTiles, setMetaTiles } from '../store/slices/mapReducer';
 import { getHeroCenteredMapOffset } from '../feature/map/helper';
 
 export default function Map(props: any): ReactElement {
   
   const map = useSelector((state: RootState) => state.map)
   const { hero }  = useSelector((state: RootState) => state.hero)
-  const dispatch = useDispatch();
   let tilesComponents: JSX.Element[] = [];
 
+  /*
   // FIXME : Type this
   // FIXME : WOW CLEAN THIS !!!!
   let tiles:{x: Number | null, y: Number | null, meta?: any}[] = [];
@@ -95,11 +93,10 @@ export default function Map(props: any): ReactElement {
       height += 32;
     });
     dispatch(setMetaTiles(tiles));
-  }
+  }*/
 
   if (props.debug) {
-    tilesComponents = map.collisionTiles.map((tile: {x: Number, y: Number }) => { return (<Tile type="collision" key={tile.x + '-' + tile.y} x={tile.x} y={tile.y}></Tile>) } )
-    tilesComponents = [...tilesComponents, ...map.metaTiles.map((tile: {x: Number, y: Number }) => { return (<Tile type="door" key={tile.x + '-' + tile.y} x={tile.x} y={tile.y}></Tile>) } )]
+    tilesComponents = [...map.tiles.map((tile: {x: Number, y: Number, meta?: any }) => { return (<Tile type={tile?.meta.action === 'redirect' ? 'door' : 'collision'} key={tile.x + '-' + tile.y} x={tile.x} y={tile.y}></Tile>) } )]
   }
 
   // get map offset
