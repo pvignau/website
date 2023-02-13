@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useDispatch } from 'react-redux'
 import { goUp, goDown, goLeft, goRight, stopHero } from '../store/slices/heroReducer'
 import { ObjectMoveHelper } from '../feature/objects/helper';
+import { store } from "../store"
 import type { ITile } from '../types';
 
 // TODO : Rework this, needs to return state and function
@@ -79,11 +80,14 @@ const useMove = () => {
       setIntervalId(setInterval(move, 100));
     }
     return () => {
+      keysPressed.length = 0; // Needed on room change
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
       clearInterval(interval);
     };
   }, [dispatch, interval, keysPressed]);
+
+  return [store.getState().hero.hero.position]
 };
 
 export default useMove;
