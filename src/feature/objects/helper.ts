@@ -3,8 +3,8 @@ import type { ITile } from '../../types';
 import { doObjectsCollide } from "./collisionHelper";
 
 const ObjectMoveHelper = {
-    getTiles () {
-      return [...store.getState().map.collisionTiles, ...store.getState().map.metaTiles]
+    getTiles (): ITile[] {
+      return store.getState().map.tiles
     },
     getHeroFuturePosition (direction: string,speed: number) {
       switch (direction) {
