@@ -22,7 +22,7 @@ const useMove = () => {
           if (blockingTile === null) {
             dispatch(goDown());
           }
-          if (blockingTile?.meta) {
+          if (blockingTile && blockingTile.meta.action === 'redirect') {
             // redirect to page
             window.location.href = blockingTile.meta.value;
           }
@@ -32,7 +32,7 @@ const useMove = () => {
           if (blockingTile === null) {
             dispatch(goLeft())
           }
-          if (blockingTile?.meta) {
+          if (blockingTile && blockingTile.meta.action === 'redirect') {
             // redirect to page
             window.location.href = blockingTile.meta.value;
           }
@@ -42,7 +42,7 @@ const useMove = () => {
           if (blockingTile === null) {
             dispatch(goUp())
           }
-          if (blockingTile?.meta) {
+          if (blockingTile && blockingTile.meta.action === 'redirect') {
             // redirect to page
             window.location.href = blockingTile.meta.value;
           }
@@ -52,7 +52,7 @@ const useMove = () => {
           if (blockingTile === null) {
             dispatch(goRight())
           }
-          if (blockingTile?.meta) {
+          if (blockingTile && blockingTile.meta.action === 'redirect') {
             // redirect to page
             window.location.href = blockingTile.meta.value;
           }
