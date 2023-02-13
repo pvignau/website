@@ -2123,7 +2123,7 @@
                         {
                          "name":"address",
                          "type":"string",
-                         "value":"\/home"
+                         "value":"\/#\/home"
                         }],
                  "type":"tilelayer",
                  "visible":true,
@@ -2260,7 +2260,7 @@
                         {
                          "name":"address",
                          "type":"string",
-                         "value":"\/work"
+                         "value":"\/#\/work"
                         }],
                  "type":"tilelayer",
                  "visible":true,
