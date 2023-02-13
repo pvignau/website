@@ -1,9 +1,19 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import './index.scss';
 import App from './App';
+import Home from './Home';
 import reportWebVitals from './reportWebVitals';
+
+import {
+<<<<<<< Updated upstream
+  createBrowserRouter,
+=======
+  createHashRouter,
+>>>>>>> Stashed changes
+  RouterProvider
+} from "react-router-dom";
 
 import { store } from './store'
 import { Provider } from 'react-redux'
@@ -15,13 +25,28 @@ declare global { // FIXME : move this
 }
 window.debug = (window.location.hostname === 'localhost');
 
+<<<<<<< Updated upstream
+const router = createBrowserRouter([
+=======
+const router = createHashRouter([
+>>>>>>> Stashed changes
+  {
+    path: "/",
+    element: <App />
+  },
+  {
+    path: "/home",
+    element: <Home />
+  },
+]);
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <Provider store={store}>
     <React.StrictMode>
-      <App />
+      <RouterProvider router={router} />
     </React.StrictMode>
   </Provider>
 );

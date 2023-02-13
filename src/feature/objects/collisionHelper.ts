@@ -1,4 +1,3 @@
-
 const doObjectsCollide = function (
     hero: { x: number, y: number }, 
     tile: { x: number, y: number }

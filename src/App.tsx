@@ -6,6 +6,7 @@ import type { RootState } from './store'
 import { useSelector, useDispatch } from 'react-redux'
 import { goUp, goDown, goLeft, goRight, stopHero } from './store/slices/heroReducer'
 import { ObjectMoveHelper } from './feature/objects/helper';
+import type { ITile } from './types'
 
 function App() {
 
@@ -17,25 +18,54 @@ function App() {
 
   React.useEffect(() => {
     const move = () => {
+      let blockingTile: ITile | null = null;
       switch (keysPressed[keysPressed.length - 1]) {
         case 'ArrowDown':
-          if (ObjectMoveHelper.canMoveDown(12) === true) {
+          blockingTile = ObjectMoveHelper.getDownBlockingTile(12);
+          if (blockingTile === null) {
             dispatch(goDown());
+          }
+          if (blockingTile?.meta) {
+            // redirect to page
+            console.log(blockingTile.meta.action);
+            console.log(blockingTile.meta.value);
+            window.location.href = blockingTile.meta.value;
           }
           break;
         case 'ArrowLeft':
-          if (ObjectMoveHelper.canMoveLeft(12) === true) {
+          blockingTile = ObjectMoveHelper.getLeftBlockingTile(12);
+          if (blockingTile === null) {
             dispatch(goLeft())
+          }
+          if (blockingTile?.meta) {
+            // redirect to page
+            console.log(blockingTile.meta.action);
+            console.log(blockingTile.meta.value);
+            window.location.href = blockingTile.meta.value;
           }
           break;
         case 'ArrowUp':
-          if (ObjectMoveHelper.canMoveUp(12) === true) {
+          blockingTile = ObjectMoveHelper.getUpBlockingTile(12);
+          if (blockingTile === null) {
             dispatch(goUp())
+          }
+          if (blockingTile?.meta) {
+            // redirect to page
+            console.log(blockingTile.meta.action);
+            console.log(blockingTile.meta.value);
+            window.location.href = blockingTile.meta.value;
           }
           break;
         case 'ArrowRight':
-          if (ObjectMoveHelper.canMoveRight(12) === true) {
+          blockingTile = ObjectMoveHelper.getRightBlockingTile(12);
+          if (blockingTile === null) {
             dispatch(goRight())
+          }
+          if (blockingTile?.meta) {
+            // redirect to page
+            console.log(blockingTile.meta.action);
+            console.log(blockingTile.meta.value);
+            window.location.href = blockingTile.meta.value;
           }
           break;
       }

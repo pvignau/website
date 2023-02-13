@@ -1,3 +1,12 @@
+@font-face {
+  font-family: 'minecraftmedium';
+  src: url('./fonts/minecraft-webfont.woff2') format('woff2'),
+       url('./fonts/minecraft-webfont.woff') format('woff'),
+       url('./fonts/minecraft-webfont.ttf') format('ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
 html,
 body {
   margin: 0;
@@ -10,7 +19,7 @@ body {
   height: 100vh;
   width: 100vw;
 
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'minecraftmedium', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
