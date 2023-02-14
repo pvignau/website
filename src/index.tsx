@@ -7,11 +7,7 @@ import Home from './Home';
 import reportWebVitals from './reportWebVitals';
 
 import {
-<<<<<<< Updated upstream
-  createBrowserRouter,
-=======
   createHashRouter,
->>>>>>> Stashed changes
   RouterProvider
 } from "react-router-dom";
 
@@ -25,11 +21,7 @@ declare global { // FIXME : move this
 }
 window.debug = (window.location.hostname === 'localhost');
 
-<<<<<<< Updated upstream
-const router = createBrowserRouter([
-=======
 const router = createHashRouter([
->>>>>>> Stashed changes
   {
     path: "/",
     element: <App />
