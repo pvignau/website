@@ -2,9 +2,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.scss';
-import App from './App';
-import Home from './Home';
 import reportWebVitals from './reportWebVitals';
+
+const App = React.lazy(() => import('./App'));
+const Home = React.lazy(() => import('./Home'));
 
 import {
   createHashRouter,
@@ -24,11 +25,15 @@ window.debug = (window.location.hostname === 'localhost');
 const router = createHashRouter([
   {
     path: "/",
-    element: <App />
+    element: <React.Suspense fallback={<>...</>}>
+      <App />
+    </React.Suspense>
   },
   {
     path: "/home",
-    element: <Home />
+    element: <React.Suspense fallback={<>...</>}>
+      <Home />
+    </React.Suspense>
   },
 ]);
 
