@@ -2120,11 +2120,17 @@
                  "name":"path-home",
                  "opacity":1,
                  "properties":[
-                        {
-                         "name":"address",
-                         "type":"string",
-                         "value":"\/#\/home"
-                        }],
+                  {
+                     "name":"action",
+                     "type":"string",
+                     "value":"redirect"
+                  }, 
+                  {
+                     "name":"value",
+                     "type":"string",
+                     "value":"\/#\/home"
+                  }
+                 ],
                  "type":"tilelayer",
                  "visible":true,
                  "width":120,
@@ -2257,11 +2263,17 @@
                  "name":"path-work",
                  "opacity":1,
                  "properties":[
-                        {
-                         "name":"address",
-                         "type":"string",
-                         "value":"\/#\/work"
-                        }],
+                  {
+                     "name":"action",
+                     "type":"string",
+                     "value":"redirect"
+                  }, 
+                  {
+                     "name":"value",
+                     "type":"string",
+                     "value":"\/#\/work"
+                  }
+                 ],
                  "type":"tilelayer",
                  "visible":true,
                  "width":120,
@@ -2394,11 +2406,11 @@
                  "name":"collisions",
                  "opacity":1,
                  "properties":[
-                        {
-                         "name":"collidable",
-                         "type":"bool",
-                         "value":true
-                        }],
+                     {
+                     "name":"action",
+                     "type":"string",
+                     "value":"collision"
+                     }],
                  "type":"tilelayer",
                  "visible":true,
                  "width":120,
