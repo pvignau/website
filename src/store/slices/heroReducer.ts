@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { IHeroState } from '../../types'
 import hero from '../../feature/hero/Hero';
-hero.position = {x: 1525, y: 1750};
 const initialState: IHeroState = {
     hero
 }
@@ -52,6 +51,6 @@ export const heroSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { goLeft, goRight, goUp, goDown, stopHero, makeTalk, stopTalking } = heroSlice.actions
+export const { setHeroPosition, setHeroDirection, goLeft, goRight, goUp, goDown, stopHero, makeTalk, stopTalking } = heroSlice.actions
 
 export default heroSlice.reducer
