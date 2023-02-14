@@ -16,7 +16,7 @@ const layerToTiles = function (layer: any): ITile[] {
   while(layer.data.length > 0) {
     rawTiles.push(layer.data.splice(0, layer.width));
   }
-  let height = (layer.name === 'collisions') ? 12 : 0, // Specific to fix collisions case
+  let height = (layer.name === 'collisions') ? 12 : 0, // FIXME: Specific to fix collisions case
     width = 0;
     const tileMeta = {
       action: layer.properties?.find((property: any) => property.name === 'action')?.value,
