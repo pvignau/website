@@ -23,7 +23,6 @@ const ObjectMoveHelper = {
         const tiles = this.getTiles();
         for(let i = 0; i <tiles.length; i++) {
           if (doObjectsCollide(this.getHeroFuturePosition('up', speed), tiles[i])) {
-            console.log(tiles[i]);
             return tiles[i];
           }
         }
@@ -33,7 +32,6 @@ const ObjectMoveHelper = {
       const tiles = this.getTiles();
         for(let i = 0; i <tiles.length; i++) {
           if (doObjectsCollide(this.getHeroFuturePosition('down', speed), tiles[i])) {
-            console.log(tiles[i]);
             return tiles[i];
           }
         }
@@ -43,7 +41,6 @@ const ObjectMoveHelper = {
       const tiles = this.getTiles();
         for(let i = 0; i <tiles.length; i++) {
           if (doObjectsCollide(this.getHeroFuturePosition('left', speed), tiles[i])) {
-            console.log(tiles[i]);
             return tiles[i];
           }
         }
@@ -53,7 +50,6 @@ const ObjectMoveHelper = {
       const tiles = this.getTiles();
         for(let i = 0; i <tiles.length; i++) {
           if (doObjectsCollide(this.getHeroFuturePosition('right', speed), tiles[i])) {
-            console.log(tiles[i]);
             return tiles[i];
           }
         }
