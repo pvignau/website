@@ -19,7 +19,7 @@ function App() {
   useEffect(() => {
     dispatch(setHeroPosition({x: 1525, y: 1750}))
     dispatch(initMap({name: 'world', background: WorldMapBackground, json: WorldJson }));
-  })
+  }, [])
 
   useMove();
 

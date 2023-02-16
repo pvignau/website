@@ -20,7 +20,7 @@ function Home() {
     dispatch(setHeroPosition({x: 115, y: 180}))
     dispatch(setHeroDirection('up'))
     dispatch(initMap({name: 'home', background: HomeMapBackground, json: HomeJson }));
-  })
+  }, [])
 
   useMove();
 
