@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { StrictMode, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.scss';
 import reportWebVitals from './reportWebVitals';
@@ -25,15 +25,15 @@ window.debug = (window.location.hostname === 'localhost');
 const router = createHashRouter([
   {
     path: "/",
-    element: <React.Suspense fallback={<>...</>}>
+    element: <Suspense fallback={<>...</>}>
       <App />
-    </React.Suspense>
+    </Suspense>
   },
   {
     path: "/home",
-    element: <React.Suspense fallback={<>...</>}>
+    element: <Suspense fallback={<>...</>}>
       <Home />
-    </React.Suspense>
+    </Suspense>
   },
 ]);
 
@@ -42,9 +42,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <Provider store={store}>
-    <React.StrictMode>
+    <StrictMode>
       <RouterProvider router={router} />
-    </React.StrictMode>
+    </StrictMode>
   </Provider>
 );
 
