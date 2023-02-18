@@ -11,7 +11,7 @@ const useMove = () => {
   const dispatch = useDispatch();
   const [interval, setIntervalId] = useState<NodeJS.Timeout | string | number | undefined>(undefined);
 
-  const keysPressed: string[] = useMemo(() => [], []);
+  const [keysPressed, setKeysPressed] = useState<string[]>([]);
 
   useEffect(() => {
     const move = () => {
@@ -61,18 +61,22 @@ const useMove = () => {
     }
 
     const handleKeyDown = (e: any) => {
-      if (keysPressed.indexOf(e.key) === -1) {
-        keysPressed.push(e.key);
+      const keys = keysPressed;
+      if (keys.indexOf(e.key) === -1) {
+        keys.push(e.key);
+        setKeysPressed(keys);
       }
     }
 
     const handleKeyUp = (e: any) => {
+      const keys = keysPressed;
       for (let i = 0; i < keysPressed.length; i++) {
-        if (keysPressed[i] === e.key) {
-          keysPressed.splice(i, 1);
+        if (keys[i] === e.key) {
+          keys.splice(i, 1);
         }
       }
-      if (keysPressed.length === 0) dispatch(stopHero());
+      setKeysPressed(keys);
+      if (keys.length === 0) dispatch(stopHero());
     }
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
@@ -85,7 +89,7 @@ const useMove = () => {
       window.removeEventListener('keyup', handleKeyUp);
       clearInterval(interval);
     };
-  }, [dispatch, interval, keysPressed]);
+  }, [interval, keysPressed]);
 
   return [store.getState().hero.hero.position]
 };
