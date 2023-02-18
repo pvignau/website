@@ -4,12 +4,12 @@ import LoaderSVG from '../img/common/loader.svg';
 import { store}  from '../store'
 import { setIsLoading } from '../store/slices/rootReducer';
 
-export default class Loader extends Component<{assetsToLoad?: Promise<typeof import("*.png")>[]}> {
+export default class Loader extends Component<{assetsToLoad?: Promise<typeof import("*.webp")>[]}> {
 
     hint: string;
     dispatch: any;
 
-    constructor (props: {assetsToLoad?: Promise<typeof import("*.png")>[]}) { // FIXME : see typing 
+    constructor (props: {assetsToLoad?: Promise<typeof import("*.webp")>[]}) { 
         super(props);
         this.hint = "This will show up when page is loading."
     }

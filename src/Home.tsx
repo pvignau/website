@@ -2,7 +2,7 @@ import './Home.scss';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import HomeMapBackground from './maps/home.png';
+import HomeMapBackground from './maps/home.webp';
 import HomeJson from './maps/home.json';
 
 import MapEngine from './components/MapEngine';
@@ -27,11 +27,11 @@ function Home() {
   if (isLoading) {
     return <div>
       <Loader assetsToLoad={[
-        import('./img/hero/spriteDown.png'),
-        import('./img/hero/spriteUp.png'),
-        import('./img/hero/spriteLeft.png'),
-        import('./img/hero/spriteRight.png'),
-        import('./maps/home.png')
+        import('./img/hero/spriteDown.webp'),
+        import('./img/hero/spriteUp.webp'),
+        import('./img/hero/spriteLeft.webp'),
+        import('./img/hero/spriteRight.webp'),
+        import('./maps/home.webp')
       ]}></Loader>
       <MapEngine></MapEngine>
     </div>

@@ -2,7 +2,7 @@ import './App.scss';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import WorldMapBackground from './maps/world.png';
+import WorldMapBackground from './maps/world.webp';
 import WorldJson from './maps/world.json';
 
 import MapEngine from './components/MapEngine';
@@ -26,11 +26,11 @@ function App() {
   if (isLoading) {
     return <div>
       <Loader assetsToLoad={[
-        import('./img/hero/spriteDown.png'),
-        import('./img/hero/spriteUp.png'),
-        import('./img/hero/spriteLeft.png'),
-        import('./img/hero/spriteRight.png'),
-        import('./maps/world.png')
+        import('./img/hero/spriteDown.webp'),
+        import('./img/hero/spriteUp.webp'),
+        import('./img/hero/spriteLeft.webp'),
+        import('./img/hero/spriteRight.webp'),
+        import('./maps/world.webp')
       ]}></Loader>
       <MapEngine></MapEngine>
     </div>
