@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createBrowserHistory } from '../app/history';
@@ -7,11 +7,12 @@ import { App } from '../app/router';
 import { ui } from '../content';
 import { computeCamera } from '../engine/camera';
 import { HERO } from '../engine/hero';
+import { projectToMinimap } from '../engine/minimap';
 import { findSpawn } from '../engine/tiled';
 import { questStore } from '../quest/useQuest';
 import { helpSeen } from './helpSeen';
 import { MAPS } from './maps';
-import { ZOOM_KEY } from './preferences';
+import { MINIMAP_KEY, ZOOM_KEY } from './preferences';
 
 /** jsdom has no layout: every box measures as a 1280 × 720 screen, two CSS pixels per map pixel. */
 const VIEWPORT = { width: 1280, height: 720 };
@@ -133,5 +134,59 @@ describe('zoom', () => {
     window.localStorage.setItem(ZOOM_KEY, '9');
     await openWorld();
     expect(scale()).toBe(2);
+  });
+});
+
+describe('minimap', () => {
+  const minimap = () => document.querySelector<HTMLElement>('.minimap');
+  const toggle = () => screen.getByRole('button', { name: ui.mapControls.minimap });
+
+  it('folds and unfolds with its button, and is remembered', async () => {
+    // jsdom matches no media query: the screen counts as too short, the minimap starts folded.
+    await openWorld();
+    expect(toggle()).toHaveAttribute('aria-pressed', 'false');
+    expect(minimap()).not.toBeVisible();
+
+    await userEvent.click(toggle());
+    expect(toggle()).toHaveAttribute('aria-pressed', 'true');
+    expect(minimap()).toBeVisible();
+    expect(window.localStorage.getItem(MINIMAP_KEY)).toBe('shown');
+    cleanup();
+
+    await openWorld();
+    expect(minimap()).toBeVisible();
+  });
+
+  it('sits with the zoom buttons, out of the reach of screen readers', async () => {
+    window.localStorage.setItem(MINIMAP_KEY, 'shown');
+    await openWorld();
+    const group = screen.getByRole('group', { name: ui.mapControls.label });
+    expect(within(group).getAllByRole('button')).toHaveLength(3);
+    expect(minimap()).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  it('puts the hero where he stands, and ticks off the place he visits', async () => {
+    window.localStorage.setItem(MINIMAP_KEY, 'shown');
+    renderAt('/work');
+    await screen.findByRole('dialog');
+    const layout = MAPS.world.minimap;
+    if (!layout) throw new Error('The world has a minimap.');
+    const { x, y } = projectToMinimap(findSpawn(MAPS.world.data, '/work').position, layout);
+    const marker = document.querySelector<HTMLElement>('.minimap__hero-layer');
+    expect(marker?.style.transform).toBe(
+      `translate(${((x + 0.5) / layout.width) * 100}%, ${((y + 0.5) / layout.height) * 100}%)`,
+    );
+    const work = document.querySelector('.minimap__place[data-place="work"]');
+    expect(work).toHaveAttribute('data-visited');
+    expect(document.querySelectorAll('.minimap__place[data-visited]')).toHaveLength(1);
+  });
+
+  it('is left out of the house, where the zoom buttons stay', async () => {
+    window.localStorage.setItem(MINIMAP_KEY, 'shown');
+    renderAt('/home');
+    await screen.findByRole('img', { name: ui.game.mapAlt.home });
+    expect(minimap()).toBeNull();
+    expect(screen.queryByRole('button', { name: ui.mapControls.minimap })).toBeNull();
+    expect(zoomIn()).toBeInTheDocument();
   });
 });

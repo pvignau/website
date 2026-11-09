@@ -45,3 +45,26 @@ describe('MapControls', () => {
     expect(zoomIn).toHaveFocus();
   });
 });
+
+describe('MapControls with a minimap', () => {
+  it('folds it with a toggle button, the minimap above the buttons', async () => {
+    const onToggle = vi.fn();
+    render(
+      <MapControls canZoomIn canZoomOut onZoom={vi.fn()} minimap={{ shown: true, onToggle }}>
+        <div data-testid="minimap" />
+      </MapControls>,
+    );
+    const button = screen.getByRole('button', { name: ui.mapControls.minimap });
+    expect(button).toHaveAttribute('aria-pressed', 'true');
+    await userEvent.click(button);
+    expect(onToggle).toHaveBeenCalledOnce();
+    // The minimap comes first, then the strip of buttons.
+    const group = screen.getByRole('group', { name: ui.mapControls.label });
+    expect(group.firstElementChild).toBe(screen.getByTestId('minimap'));
+  });
+
+  it('has no such button on a map without one', () => {
+    setup();
+    expect(screen.queryByRole('button', { name: ui.mapControls.minimap })).toBeNull();
+  });
+});

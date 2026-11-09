@@ -76,3 +76,8 @@
 .map-controls__buttons .map-controls__button[aria-disabled='true'] > svg {
   opacity: 0.4;
 }
+
+/* The minimap button lights up while the minimap shows. */
+.map-controls__buttons .map-controls__button[aria-pressed='true'] {
+  color: var(--accent);
+}

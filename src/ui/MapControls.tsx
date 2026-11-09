@@ -1,6 +1,7 @@
+import type { ReactNode } from 'react';
 import { ui } from '../content';
 import type { ZoomDirection } from '../engine/zoom';
-import { ZoomIcon } from './icons';
+import { MinimapIcon, ZoomIcon } from './icons';
 import './MapControls.css';
 
 interface ZoomButtonProps {
@@ -31,21 +32,42 @@ function ZoomButton({ direction, enabled, onZoom }: ZoomButtonProps) {
   );
 }
 
-/** Buttons in the bottom corner of the screen, over the map: zoom out and in. */
+/**
+ * The bottom corner of the screen, over the map: zoom out and in and, on a
+ * map that has one, the minimap (`children`) with the button that folds it.
+ */
 export function MapControls({
   canZoomIn,
   canZoomOut,
   onZoom,
+  minimap,
+  children,
 }: {
   canZoomIn: boolean;
   canZoomOut: boolean;
   onZoom: (direction: ZoomDirection) => void;
+  /** Whether the minimap shows, and how to fold or unfold it; none on a map without one. */
+  minimap?: { shown: boolean; onToggle: () => void };
+  children?: ReactNode;
 }) {
   return (
     <div className="map-controls" role="group" aria-label={ui.mapControls.label}>
+      {children}
       <div className="map-controls__buttons">
         <ZoomButton direction={-1} enabled={canZoomOut} onZoom={onZoom} />
         <ZoomButton direction={1} enabled={canZoomIn} onZoom={onZoom} />
+        {minimap && (
+          <button
+            type="button"
+            className="pixel-button pixel-button--quiet map-controls__button"
+            title={ui.mapControls.minimap}
+            aria-pressed={minimap.shown}
+            onClick={minimap.onToggle}
+          >
+            <MinimapIcon />
+            <span className="visually-hidden">{ui.mapControls.minimap}</span>
+          </button>
+        )}
       </div>
     </div>
   );
