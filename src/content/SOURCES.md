@@ -17,7 +17,8 @@ Ces formulations n'ont pas de source publique. Je les ai tranchées à partir de
 ## Vérifié
 
 - **Poste et parcours** (`role`, `places.home`) : profil LinkedIn, lu le 7 novembre 2026.
-  - Tech Lead Design System, France Télévisions, freelance, depuis mars 2023.
+  - Software Architect, France Télévisions, en CDI depuis avril 2026 : donné par Pierre-Yves le 9 novembre 2026, pas encore sur LinkedIn.
+  - Tech Lead Design System, France Télévisions, freelance, de mars 2023 à avril 2026.
   - Infopro Digital, juillet 2014 à mai 2023 : Web Developer, Lead Web Developer (2016), Architecte front-end (2019), Head of Frontend (2021). Avant cela, une mission Clevermind pour Infopro Digital (2014).
   - 2012 à 2014 : John Paul, puis megalo & company (Zend et Magento).
 - **Vie perso** (`places.home`) : « papa de deux enfants, amateur de jeux vidéo et de deux-roues ». Source : README de profil (« dad of 2, biker, gamer »). À toi de voir si tu veux que ça apparaisse sur le site.

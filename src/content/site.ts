@@ -16,11 +16,11 @@ const LINKEDIN = 'https://www.linkedin.com/in/pierre-yves-vignau-a99a9424/';
 
 export const content: SiteContent = {
   name: 'Pyve',
-  role: 'Tech lead design system',
+  role: 'Software architect',
   description:
-    'Le portfolio de Pierre-Yves Vignau, alias Pyve, tech lead design system : un archipel en pixel art à explorer comme un mini-RPG, ou à lire en version texte.',
+    'Le portfolio de Pierre-Yves Vignau, alias Pyve, software architect : un archipel en pixel art à explorer comme un mini-RPG, ou à lire en version texte.',
   pitch:
-    'Pierre-Yves Vignau, alias Pyve, est tech lead design system : son portfolio est un petit archipel en pixel art, à explorer comme un mini-RPG. Chaque lieu raconte une partie de son travail, de la maison au ponton. Une version texte reprend tout, pour qui préfère lire.',
+    'Pierre-Yves Vignau, alias Pyve, est software architect : son portfolio est un petit archipel en pixel art, à explorer comme un mini-RPG. Chaque lieu raconte une partie de son travail, de la maison au ponton. Une version texte reprend tout, pour qui préfère lire.',
 
   places: {
     home: {
@@ -30,7 +30,7 @@ export const content: SiteContent = {
       title: 'Chez Pyve',
       quest: 'Entrer dans la maison',
       description:
-        'Chez Pyve : développeur web devenu tech lead du design system de France Télévisions, son parcours, ses outils et sa façon de travailler.',
+        'Chez Pyve : développeur web devenu software architect à France Télévisions, son parcours, ses outils et sa façon de travailler.',
       body: [
         {
           kind: 'paragraph',
@@ -38,11 +38,11 @@ export const content: SiteContent = {
         },
         {
           kind: 'paragraph',
-          text: 'Je suis développeur web, basé au sud de Paris. Mon terrain de jeu : les design systems et les design tokens.',
+          text: "Développeur web de formation, basé au sud de Paris. Mon terrain de jeu : l'architecture front-end, les design systems et les design tokens.",
         },
         {
           kind: 'paragraph',
-          text: 'Depuis 2023, je suis tech lead du design system de France Télévisions, en freelance.',
+          text: "Depuis avril 2026, je suis software architect à France Télévisions, en CDI. J'y étais auparavant tech lead du design system, en freelance.",
         },
         { kind: 'paragraph', text: 'Mon inventaire :' },
         {
@@ -63,7 +63,8 @@ export const content: SiteContent = {
         {
           kind: 'list',
           items: [
-            'Depuis 2023 : tech lead design system, France Télévisions (freelance).',
+            'Depuis 2026 : software architect, France Télévisions (CDI).',
+            '2023-2026 : tech lead design system, France Télévisions (freelance).',
             '2014-2023 : Infopro Digital, de développeur web à head of frontend, en passant par lead dev et architecte front-end.',
             '2012-2014 : développeur web en agence, PHP, Zend et Magento.',
           ],
