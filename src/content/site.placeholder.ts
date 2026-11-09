@@ -84,6 +84,7 @@ export const content: SiteContent = {
     steps: [
       'Flèches ou ZQSD : marcher.',
       'Espace ou Entrée : interagir.',
+      'Touches + et - : zoomer et dézoomer.',
       'Touche ? : revoir cette aide.',
     ],
     textVersionLabel: 'Version texte',

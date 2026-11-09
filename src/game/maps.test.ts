@@ -1,11 +1,14 @@
 import { describe, expect, it } from 'vitest';
+import { PLACE_IDS } from '../content';
 import { computeCamera, computeScale } from '../engine/camera';
 import { isSolidTile, rectHitsSolid } from '../engine/collision';
 import type { Rect } from '../engine/geometry';
 import { HERO, heroHitbox } from '../engine/hero';
+import { MINIMAP_MARGIN_TILES, MINIMAP_MAX_PIXELS } from '../engine/minimap';
 import type { GameMap } from '../engine/tiled';
 import { findSpawn } from '../engine/tiled';
 import homeTiled from '../maps/home.json';
+import { ZOOM_LEVELS, zoomedScale } from '../engine/zoom';
 import homeImage from '../maps/home.webp?inline';
 import worldTiled from '../maps/world.json';
 import worldImage from '../maps/world.webp?inline';
@@ -202,15 +205,18 @@ describe('the cropped world image', () => {
     ).toBe(true);
   });
 
-  it('covers all the camera shows on common screens, wherever the hero walks', () => {
+  /**
+   * What the camera shows of the world (in map pixels) on each screen at a zoom
+   * level, wherever the hero walks: the feet at the four corners of each tile
+   * the hero can reach, the hitbox inside it.
+   */
+  function* views(zoom: number) {
     const tiles = reachableTiles(world);
     const { width: feetWidth } = heroHitbox({ x: 0, y: 0 });
-    const misses = new Set<string>();
     for (const [width, height, dpr] of SCREENS) {
       const viewport = { width, height };
-      const scale = computeScale(viewport, world.tileSize, dpr);
+      const scale = zoomedScale(computeScale(viewport, world.tileSize, dpr), zoom, dpr);
       for (const tile of tiles) {
-        // Where the feet can be on this tile (hitbox inside it), at its four corners.
         for (const x of [tile.x + feetWidth / 2, tile.x + tile.width - feetWidth / 2]) {
           for (const y of [tile.y + HERO.hitbox.height, tile.y + tile.height]) {
             // Same focus as useHeroController: the middle of the sprite.
@@ -222,13 +228,36 @@ describe('the cropped world image', () => {
               width: width / scale,
               height: height / scale,
             };
-            if (!contains(world.background, shown)) misses.add(`${width}x${height}@${dpr}`);
+            yield { screen: `${width}x${height}@${dpr}`, shown };
           }
         }
       }
     }
-    expect([...misses]).toEqual([]);
-  });
+  }
+
+  it.each(ZOOM_LEVELS.filter((zoom) => zoom >= 1))(
+    'covers all the camera shows on common screens at zoom %s, wherever the hero walks',
+    (zoom) => {
+      const misses = new Set<string>();
+      for (const { screen, shown } of views(zoom)) {
+        if (!contains(world.background, shown)) misses.add(screen);
+      }
+      expect([...misses]).toEqual([]);
+    },
+  );
+
+  // Past the image, the sea pattern of the world view (GameScreen.css) takes over.
+  it.each(ZOOM_LEVELS.filter((zoom) => zoom < 1))(
+    'zoomed out to %s, never shows past the edges of the map',
+    (zoom) => {
+      const map = { x: 0, y: 0, width: world.width, height: world.height };
+      const misses = new Set<string>();
+      for (const { screen, shown } of views(zoom)) {
+        if (!contains(map, shown)) misses.add(screen);
+      }
+      expect([...misses]).toEqual([]);
+    },
+  );
 
   it('lets the sea pattern draw the rest, on the tile grid', () => {
     expect(MAPS.world.sea).toBe(true);
@@ -281,6 +310,52 @@ describe.each([
         }
       }
     }
+  });
+});
+
+describe('the minimap', () => {
+  const world = MAPS.world.data;
+  const layout = MAPS.world.minimap;
+  const within = (outer: Rect, inner: Rect) =>
+    inner.x >= outer.x &&
+    inner.y >= outer.y &&
+    inner.x + inner.width <= outer.x + outer.width &&
+    inner.y + inner.height <= outer.y + outer.height;
+
+  it('lies within the cropped image, in whole blocks, small enough', () => {
+    expect(layout).not.toBeNull();
+    if (!layout) return;
+    expect(within(world.background, layout.frame)).toBe(true);
+    expect(layout.width * layout.blockSize).toBe(layout.frame.width);
+    expect(layout.height * layout.blockSize).toBe(layout.frame.height);
+    expect(Math.max(layout.width, layout.height)).toBeLessThanOrEqual(MINIMAP_MAX_PIXELS);
+  });
+
+  it('shows every tile the hero can reach, with sea around', () => {
+    if (!layout) throw new Error('No minimap.');
+    const margin = MINIMAP_MARGIN_TILES * world.tileSize;
+    const misses = reachableTiles(world).filter(
+      (tile) =>
+        !within(layout.frame, {
+          x: tile.x - margin,
+          y: tile.y - margin,
+          width: tile.width + 2 * margin,
+          height: tile.height + 2 * margin,
+        }),
+    );
+    expect(misses).toEqual([]);
+  });
+
+  it('marks the house, the projects, the lab and the boat, each on the minimap', () => {
+    if (!layout) throw new Error('No minimap.');
+    expect(layout.places.map(({ placeId }) => placeId).sort()).toEqual([...PLACE_IDS].sort());
+    for (const { placeId, x, y } of layout.places) {
+      expect(x > 0 && x < layout.width && y > 0 && y < layout.height, placeId).toBe(true);
+    }
+  });
+
+  it('leaves the house out: one room, shown whole on most screens', () => {
+    expect(MAPS.home.minimap).toBeNull();
   });
 });
 

@@ -207,11 +207,13 @@
   pointer-events: none;
 }
 
+/* Bottom left: the map controls take the right corner. */
 .debug-coordinates {
   position: fixed;
-  right: calc(0.5rem + var(--safe-right));
+  left: calc(0.5rem + var(--safe-left));
   bottom: calc(0.5rem + var(--safe-bottom));
   z-index: 30;
+  pointer-events: none;
   padding: 0.25rem 0.5rem;
   background: rgb(0 0 0 / 75%);
   color: #fff;

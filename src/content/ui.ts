@@ -43,6 +43,18 @@ export interface UiCopy {
     complete: string;
   };
   toolbar: { label: string; help: string; helpShortcut: string };
+  /** Buttons in the bottom corner, over the map. */
+  mapControls: {
+    /** Accessible name of their group. */
+    label: string;
+    zoomIn: string;
+    zoomOut: string;
+    /** `aria-keyshortcuts` of the zoom buttons: ARIA calls the + key "Plus". */
+    zoomInShortcut: string;
+    zoomOutShortcut: string;
+    /** The button that shows or hides the minimap (a toggle: aria-pressed). */
+    minimap: string;
+  };
   dialog: { close: string; newTab: string };
   help: { start: string };
   textVersion: { close: string };
@@ -95,6 +107,14 @@ export const ui: UiCopy = {
     complete: 'Quête terminée : merci de ta visite !',
   },
   toolbar: { label: 'Menu du jeu', help: 'Aide', helpShortcut: '?' },
+  mapControls: {
+    label: 'Carte',
+    zoomIn: 'Zoom avant',
+    zoomOut: 'Zoom arrière',
+    zoomInShortcut: 'Plus',
+    zoomOutShortcut: '-',
+    minimap: 'Minicarte',
+  },
   dialog: { close: 'Fermer', newTab: '(nouvel onglet)' },
   help: { start: 'Jouer' },
   textVersion: { close: 'Retour au jeu' },

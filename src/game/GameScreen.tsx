@@ -10,6 +10,8 @@ import { computeScale } from '../engine/camera';
 import type { Direction } from '../engine/input';
 import type { Interactable } from '../engine/tiled';
 import { findSpawn } from '../engine/tiled';
+import type { ZoomDirection, ZoomLevel } from '../engine/zoom';
+import { createWheelZoom, DEFAULT_ZOOM, stepZoom, zoomedScale } from '../engine/zoom';
 import { useDocumentTitle } from '../lib/useDocumentTitle';
 import { useElementSize } from '../lib/useElementSize';
 import { useImagesReady } from '../lib/useImagesReady';
@@ -19,6 +21,8 @@ import { HelpDialog } from '../ui/HelpDialog';
 import { TextVersionIcon } from '../ui/icons';
 import { Hud } from '../ui/Hud';
 import { Loader } from '../ui/Loader';
+import { MapControls } from '../ui/MapControls';
+import { Minimap } from '../ui/Minimap';
 import { PlaceDialog } from '../ui/PlaceDialog';
 import { QuestLog } from '../ui/QuestLog';
 import { TEXT_VERSION_ID, TextVersion } from '../ui/TextVersion';
@@ -31,6 +35,7 @@ import type { MapDefinition, MapId } from './maps';
 import { MAPS } from './maps';
 import type { Overlay, OverlayState } from './overlay';
 import { overlayOf, overlayPlace } from './overlay';
+import { minimapPreference, zoomPreference } from './preferences';
 import { useHeroController } from './useHeroController';
 import { useKeyboardControls } from './useKeyboardControls';
 import { WorldView } from './WorldView';
@@ -41,6 +46,8 @@ const MESSAGE_MS = 2500;
 const MESSAGE_MS_PER_CHAR = 50;
 /** Room enough to keep the quest log open next to the HUD (not a phone in landscape). */
 const WIDE_SCREEN = '(min-width: 48rem) and (min-height: 36rem)';
+/** Room enough for the minimap above the zoom buttons: not a phone in landscape. */
+const TALL_SCREEN = '(min-height: 30rem)';
 
 /** Navigation state set by doors, so the next map spawns the hero in front of the right one. */
 interface ArrivalState {
@@ -78,6 +85,7 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
   const debug = new URLSearchParams(location.search).has('debug');
   const touch = useMediaQuery(COARSE_POINTER);
   const wide = useMediaQuery(WIDE_SCREEN);
+  const tall = useMediaQuery(TALL_SCREEN);
   const visited = useVisitedPlaces();
 
   const [spawn] = useState(() => findSpawn(map.data, arrivalRoute(location)));
@@ -107,12 +115,35 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const worldRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
+  const minimapHeroRef = useRef<HTMLSpanElement>(null);
   const hitboxRef = useRef<SVGRectElement>(null);
   const coordinatesRef = useRef<HTMLOutputElement>(null);
   const textButtonRef = useRef<HTMLButtonElement>(null);
   const touchDirections = useRef<ReadonlySet<Direction>>(new Set());
   const viewport = useElementSize(viewportRef);
-  const scale = computeScale(viewport, map.data.tileSize, window.devicePixelRatio);
+
+  // The zoom multiplies the default framing; levels that round to the same scale count once.
+  const [zoom, setZoom] = useState<ZoomLevel>(() => zoomPreference.get() ?? DEFAULT_ZOOM);
+  const dpr = window.devicePixelRatio;
+  const baseScale = computeScale(viewport, map.data.tileSize, dpr);
+  const scaleAt = (level: ZoomLevel) => zoomedScale(baseScale, level, dpr);
+  const scale = scaleAt(zoom);
+  const zoomSteps = { in: stepZoom(zoom, 1, scaleAt), out: stepZoom(zoom, -1, scaleAt) };
+  const zoomBy = (direction: ZoomDirection) => {
+    const level = direction === 1 ? zoomSteps.in : zoomSteps.out;
+    if (level === null) return;
+    setZoom(level);
+    zoomPreference.set(level);
+  };
+  const [wheelZoom] = useState(createWheelZoom);
+
+  // The minimap shows where the screen has room for it, until the visitor folds or unfolds it.
+  const [minimapChoice, setMinimapChoice] = useState(minimapPreference.get);
+  const minimapShown = minimapChoice ?? tall;
+  const toggleMinimap = () => {
+    setMinimapChoice(!minimapShown);
+    minimapPreference.set(!minimapShown);
+  };
 
   const playing = ready && openPlace === null && !helpOpen && !textOpen;
   useDocumentTitle(pageTitle(map, openPlace));
@@ -235,6 +266,7 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
     onHelp: () => {
       openOverlay('help');
     },
+    onZoom: zoomBy,
   });
   const readDirections = useCallback(
     () => new Set<Direction>([...keys.current.values(), ...touchDirections.current]),
@@ -247,7 +279,14 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
     active: playing,
     viewport,
     scale,
-    elements: { world: worldRef, hero: heroRef, hitbox: hitboxRef, coordinates: coordinatesRef },
+    minimap: map.minimap,
+    elements: {
+      world: worldRef,
+      hero: heroRef,
+      minimapHero: minimapHeroRef,
+      hitbox: hitboxRef,
+      coordinates: coordinatesRef,
+    },
     readDirections,
     onNearestChange,
   });
@@ -279,6 +318,11 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
             className="game__viewport"
             ref={viewportRef}
             aria-label={ui.game.label}
+            onWheel={(event) => {
+              if (!ready) return;
+              const direction = wheelZoom(event);
+              if (direction !== null) zoomBy(direction);
+            }}
             onPointerDown={
               debug
                 ? (event) => {
@@ -341,6 +385,25 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
             </div>
           </div>
 
+          <MapControls
+            canZoomIn={zoomSteps.in !== null}
+            canZoomOut={zoomSteps.out !== null}
+            onZoom={zoomBy}
+            minimap={map.minimap ? { shown: minimapShown, onToggle: toggleMinimap } : undefined}
+          >
+            {map.minimap && (
+              <Minimap
+                layout={map.minimap}
+                image={map.image}
+                background={map.data.background}
+                ready={ready}
+                visited={visited}
+                viewport={viewport}
+                shown={minimapShown}
+                heroRef={minimapHeroRef}
+              />
+            )}
+          </MapControls>
           <TouchPad directionsRef={touchDirections} onAction={interact} enabled={playing} />
           {debug && (
             <output ref={coordinatesRef} className="debug-coordinates" aria-hidden="true" />

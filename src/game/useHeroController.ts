@@ -7,6 +7,8 @@ import type { Size, Vec2 } from '../engine/geometry';
 import { HERO, heroHitbox, interactionPoint } from '../engine/hero';
 import type { Direction } from '../engine/input';
 import { directionVector, resolveFacing } from '../engine/input';
+import type { MinimapLayout } from '../engine/minimap';
+import { projectToMinimap } from '../engine/minimap';
 import { findNearest } from '../engine/proximity';
 import type { GameMap, Interactable, SpawnPoint } from '../engine/tiled';
 import { useAnimationFrame } from './useAnimationFrame';
@@ -14,6 +16,8 @@ import { useAnimationFrame } from './useAnimationFrame';
 export interface HeroElements {
   world: RefObject<HTMLDivElement | null>;
   hero: RefObject<HTMLDivElement | null>;
+  /** The hero on the minimap, if the map has one. */
+  minimapHero: RefObject<HTMLElement | null>;
   /** Debug overlay only. */
   hitbox: RefObject<SVGRectElement | null>;
   coordinates: RefObject<HTMLOutputElement | null>;
@@ -26,6 +30,8 @@ interface HeroControllerOptions {
   active: boolean;
   viewport: Size;
   scale: number;
+  /** Where the hero shows on the minimap; null on a map without one. */
+  minimap: MinimapLayout<PlaceId> | null;
   elements: HeroElements;
   /** Directions currently held (keyboard and touch pad). */
   readDirections: () => ReadonlySet<Direction>;
@@ -40,12 +46,12 @@ interface HeroState {
   frame: number;
   nearest: Interactable<PlaceId> | null;
   /** Last values written to the DOM, to skip identical writes. */
-  written: { hero: string; world: string; facing: string; frame: string };
+  written: { hero: string; world: string; facing: string; frame: string; minimap: string };
 }
 
-/** Writes the hero, camera and debug overlay to the DOM, and reports the nearby object. */
+/** Writes the hero, the camera, the hero on the minimap and the debug overlay to the DOM, and reports the nearby object. */
 function renderFrame(hero: HeroState, options: HeroControllerOptions): void {
-  const { map, viewport, scale, elements, onNearestChange } = options;
+  const { map, viewport, scale, minimap, elements, onNearestChange } = options;
   const dpr = window.devicePixelRatio || 1;
   const { written } = hero;
 
@@ -66,6 +72,14 @@ function renderFrame(hero: HeroState, options: HeroControllerOptions): void {
     const camera = computeCamera(focus, viewport, map, scale, dpr);
     const transform = `translate3d(${camera.x}px, ${camera.y}px, 0)`;
     if (transform !== written.world) worldElement.style.transform = written.world = transform;
+  }
+
+  // The minimap moves pixel by pixel of its own: a write every 16 map pixels or so, not every frame.
+  const marker = elements.minimapHero.current;
+  if (marker && minimap) {
+    const { x, y } = projectToMinimap(hero.position, minimap);
+    const transform = `translate(${((x + 0.5) / minimap.width) * 100}%, ${((y + 0.5) / minimap.height) * 100}%)`;
+    if (transform !== written.minimap) marker.style.transform = written.minimap = transform;
   }
 
   const hitbox = elements.hitbox.current;
@@ -107,7 +121,7 @@ export function useHeroController(options: HeroControllerOptions): HeroControlle
     walkTime: 0,
     frame: 0,
     nearest: null,
-    written: { hero: '', world: '', facing: '', frame: '' },
+    written: { hero: '', world: '', facing: '', frame: '', minimap: '' },
   });
   const latest = useRef(options);
   useLayoutEffect(() => {
