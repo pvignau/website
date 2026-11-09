@@ -7,6 +7,7 @@ import {
   isInteractKey,
   padDirections,
   resolveFacing,
+  zoomFromKey,
 } from './input';
 
 const key = (code: string, value: string) => ({ code, key: value });
@@ -50,6 +51,18 @@ describe('action keys', () => {
   it('opens the help with "?" whatever the layout', () => {
     expect(isHelpKey({ key: '?' })).toBe(true);
     expect(isHelpKey({ key: ',' })).toBe(false);
+  });
+
+  it('zooms in with + (or =, its key without Shift) and out with -, keypad included', () => {
+    expect(zoomFromKey(key('Equal', '+'))).toBe(1);
+    expect(zoomFromKey(key('Equal', '='))).toBe(1);
+    expect(zoomFromKey(key('NumpadAdd', '+'))).toBe(1);
+    expect(zoomFromKey(key('Minus', '-'))).toBe(-1);
+    // AZERTY: "-" is on the 6 key.
+    expect(zoomFromKey(key('Digit6', '-'))).toBe(-1);
+    expect(zoomFromKey(key('NumpadSubtract', '-'))).toBe(-1);
+    expect(zoomFromKey(key('Digit6', '6'))).toBeNull();
+    expect(zoomFromKey(key('Slash', '_'))).toBeNull();
   });
 });
 

@@ -10,6 +10,8 @@ import { computeScale } from '../engine/camera';
 import type { Direction } from '../engine/input';
 import type { Interactable } from '../engine/tiled';
 import { findSpawn } from '../engine/tiled';
+import type { ZoomDirection, ZoomLevel } from '../engine/zoom';
+import { createWheelZoom, DEFAULT_ZOOM, stepZoom, zoomedScale } from '../engine/zoom';
 import { useDocumentTitle } from '../lib/useDocumentTitle';
 import { useElementSize } from '../lib/useElementSize';
 import { useImagesReady } from '../lib/useImagesReady';
@@ -19,6 +21,7 @@ import { HelpDialog } from '../ui/HelpDialog';
 import { TextVersionIcon } from '../ui/icons';
 import { Hud } from '../ui/Hud';
 import { Loader } from '../ui/Loader';
+import { MapControls } from '../ui/MapControls';
 import { PlaceDialog } from '../ui/PlaceDialog';
 import { QuestLog } from '../ui/QuestLog';
 import { TEXT_VERSION_ID, TextVersion } from '../ui/TextVersion';
@@ -31,6 +34,7 @@ import type { MapDefinition, MapId } from './maps';
 import { MAPS } from './maps';
 import type { Overlay, OverlayState } from './overlay';
 import { overlayOf, overlayPlace } from './overlay';
+import { zoomPreference } from './preferences';
 import { useHeroController } from './useHeroController';
 import { useKeyboardControls } from './useKeyboardControls';
 import { WorldView } from './WorldView';
@@ -110,7 +114,21 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
   const textButtonRef = useRef<HTMLButtonElement>(null);
   const touchDirections = useRef<ReadonlySet<Direction>>(new Set());
   const viewport = useElementSize(viewportRef);
-  const scale = computeScale(viewport, map.data.tileSize, window.devicePixelRatio);
+
+  // The zoom multiplies the default framing; levels that round to the same scale count once.
+  const [zoom, setZoom] = useState<ZoomLevel>(() => zoomPreference.get() ?? DEFAULT_ZOOM);
+  const dpr = window.devicePixelRatio;
+  const baseScale = computeScale(viewport, map.data.tileSize, dpr);
+  const scaleAt = (level: ZoomLevel) => zoomedScale(baseScale, level, dpr);
+  const scale = scaleAt(zoom);
+  const zoomSteps = { in: stepZoom(zoom, 1, scaleAt), out: stepZoom(zoom, -1, scaleAt) };
+  const zoomBy = (direction: ZoomDirection) => {
+    const level = direction === 1 ? zoomSteps.in : zoomSteps.out;
+    if (level === null) return;
+    setZoom(level);
+    zoomPreference.set(level);
+  };
+  const [wheelZoom] = useState(createWheelZoom);
 
   const playing = ready && openPlace === null && !helpOpen && !textOpen;
   useDocumentTitle(pageTitle(map, openPlace));
@@ -222,6 +240,7 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
     onHelp: () => {
       openOverlay('help');
     },
+    onZoom: zoomBy,
   });
   const readDirections = useCallback(
     () => new Set<Direction>([...keys.current.values(), ...touchDirections.current]),
@@ -266,6 +285,11 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
             className="game__viewport"
             ref={viewportRef}
             aria-label={ui.game.label}
+            onWheel={(event) => {
+              if (!ready) return;
+              const direction = wheelZoom(event);
+              if (direction !== null) zoomBy(direction);
+            }}
             onPointerDown={
               debug
                 ? (event) => {
@@ -328,6 +352,11 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
             </div>
           </div>
 
+          <MapControls
+            canZoomIn={zoomSteps.in !== null}
+            canZoomOut={zoomSteps.out !== null}
+            onZoom={zoomBy}
+          />
           <TouchPad directionsRef={touchDirections} onAction={interact} enabled={playing} />
           {debug && (
             <output ref={coordinatesRef} className="debug-coordinates" aria-hidden="true" />

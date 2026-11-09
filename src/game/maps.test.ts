@@ -5,6 +5,7 @@ import type { Rect } from '../engine/geometry';
 import { HERO, heroHitbox } from '../engine/hero';
 import type { GameMap } from '../engine/tiled';
 import { findSpawn } from '../engine/tiled';
+import { ZOOM_LEVELS, zoomedScale } from '../engine/zoom';
 import homeImage from '../maps/home.webp?inline';
 import worldTiled from '../maps/world.json';
 import worldImage from '../maps/world.webp?inline';
@@ -193,15 +194,18 @@ describe('the cropped world image', () => {
     ).toBe(true);
   });
 
-  it('covers all the camera shows on common screens, wherever the hero walks', () => {
+  /**
+   * What the camera shows of the world (in map pixels) on each screen at a zoom
+   * level, wherever the hero walks: the feet at the four corners of each tile
+   * the hero can reach, the hitbox inside it.
+   */
+  function* views(zoom: number) {
     const tiles = reachableTiles(world);
     const { width: feetWidth } = heroHitbox({ x: 0, y: 0 });
-    const misses = new Set<string>();
     for (const [width, height, dpr] of SCREENS) {
       const viewport = { width, height };
-      const scale = computeScale(viewport, world.tileSize, dpr);
+      const scale = zoomedScale(computeScale(viewport, world.tileSize, dpr), zoom, dpr);
       for (const tile of tiles) {
-        // Where the feet can be on this tile (hitbox inside it), at its four corners.
         for (const x of [tile.x + feetWidth / 2, tile.x + tile.width - feetWidth / 2]) {
           for (const y of [tile.y + HERO.hitbox.height, tile.y + tile.height]) {
             // Same focus as useHeroController: the middle of the sprite.
@@ -213,13 +217,36 @@ describe('the cropped world image', () => {
               width: width / scale,
               height: height / scale,
             };
-            if (!contains(world.background, shown)) misses.add(`${width}x${height}@${dpr}`);
+            yield { screen: `${width}x${height}@${dpr}`, shown };
           }
         }
       }
     }
-    expect([...misses]).toEqual([]);
-  });
+  }
+
+  it.each(ZOOM_LEVELS.filter((zoom) => zoom >= 1))(
+    'covers all the camera shows on common screens at zoom %s, wherever the hero walks',
+    (zoom) => {
+      const misses = new Set<string>();
+      for (const { screen, shown } of views(zoom)) {
+        if (!contains(world.background, shown)) misses.add(screen);
+      }
+      expect([...misses]).toEqual([]);
+    },
+  );
+
+  // Past the image, the sea pattern of the world view (GameScreen.css) takes over.
+  it.each(ZOOM_LEVELS.filter((zoom) => zoom < 1))(
+    'zoomed out to %s, never shows past the edges of the map',
+    (zoom) => {
+      const map = { x: 0, y: 0, width: world.width, height: world.height };
+      const misses = new Set<string>();
+      for (const { screen, shown } of views(zoom)) {
+        if (!contains(map, shown)) misses.add(screen);
+      }
+      expect([...misses]).toEqual([]);
+    },
+  );
 
   it('lets the sea pattern draw the rest, on the tile grid', () => {
     expect(MAPS.world.sea).toBe(true);

@@ -220,6 +220,7 @@ export const content: SiteContent = {
       'Flèches ou ZQSD : marcher.',
       'Espace ou Entrée : interagir avec un lieu.',
       'Sur écran tactile : la croix pour marcher, le bouton A pour interagir.',
+      'Touches + et - ou molette : zoomer et dézoomer.',
       'Touche ? : revoir cette aide.',
       'Visite les quatre lieux pour finir la quête.',
       'Pas le temps ? La version texte dit tout, sans jouer.',

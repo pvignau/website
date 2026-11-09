@@ -1,4 +1,5 @@
 import type { Vec2 } from './geometry';
+import type { ZoomDirection } from './zoom';
 
 export type Direction = 'up' | 'down' | 'left' | 'right';
 
@@ -47,6 +48,16 @@ export function isInteractKey(event: Pick<KeyboardEvent, 'code' | 'key'>): boole
 
 export function isHelpKey(event: Pick<KeyboardEvent, 'key'>): boolean {
   return event.key === '?';
+}
+
+/**
+ * + zooms in and - zooms out, from the main keyboard or the keypad. "=" counts
+ * as +: on many layouts (QWERTY, AZERTY) it is the same key, without Shift.
+ */
+export function zoomFromKey(event: Pick<KeyboardEvent, 'key'>): ZoomDirection | null {
+  if (event.key === '+' || event.key === '=') return 1;
+  if (event.key === '-') return -1;
+  return null;
 }
 
 /** Unit-less input vector; opposite directions cancel each other. */

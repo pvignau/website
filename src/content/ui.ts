@@ -43,6 +43,19 @@ export interface UiCopy {
     complete: string;
   };
   toolbar: { label: string; help: string; helpShortcut: string };
+  /** Buttons in the bottom corner, over the map. */
+  mapControls: {
+    /** Accessible name of their group. */
+    label: string;
+    zoomIn: string;
+    zoomOut: string;
+    /** Signs shown on the zoom buttons: the minus sign (U+2212) is as wide as +, a hyphen is not. */
+    zoomInSign: string;
+    zoomOutSign: string;
+    /** `aria-keyshortcuts` of the zoom buttons: ARIA calls the + key "Plus". */
+    zoomInShortcut: string;
+    zoomOutShortcut: string;
+  };
   dialog: { close: string; newTab: string };
   help: { start: string };
   textVersion: { close: string };
@@ -95,6 +108,15 @@ export const ui: UiCopy = {
     complete: 'Quête terminée : merci de ta visite !',
   },
   toolbar: { label: 'Menu du jeu', help: 'Aide', helpShortcut: '?' },
+  mapControls: {
+    label: 'Carte',
+    zoomIn: 'Zoom avant',
+    zoomOut: 'Zoom arrière',
+    zoomInSign: '+',
+    zoomOutSign: '−',
+    zoomInShortcut: 'Plus',
+    zoomOutShortcut: '-',
+  },
   dialog: { close: 'Fermer', newTab: '(nouvel onglet)' },
   help: { start: 'Jouer' },
   textVersion: { close: 'Retour au jeu' },
