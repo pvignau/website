@@ -20,8 +20,8 @@ describe('MapControls', () => {
     expect(screen.getByRole('group', { name: ui.mapControls.label })).toContainElement(zoomIn);
     expect(zoomIn).toHaveAttribute('aria-keyshortcuts', 'Plus');
     expect(zoomOut).toHaveAttribute('aria-keyshortcuts', '-');
-    // The sign shows; the name is what screen readers say.
-    expect(screen.getByText(ui.mapControls.zoomInSign)).toHaveAttribute('aria-hidden', 'true');
+    // An icon shows; the name is what screen readers say, and the tooltip.
+    expect(zoomIn.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
     expect(zoomIn).toHaveAttribute('title', ui.mapControls.zoomIn);
   });
 

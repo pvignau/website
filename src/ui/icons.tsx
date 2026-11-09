@@ -16,3 +16,22 @@ export function TextVersionIcon() {
     </svg>
   );
 }
+
+/** Plus and minus, 7 × 7 pixels drawn 2 × 2, with the stroke of the other icons. */
+export function ZoomIcon({ direction }: { direction: 1 | -1 }) {
+  return (
+    <svg
+      className="pixel-icon"
+      viewBox="0 0 7 7"
+      width="14"
+      height="14"
+      aria-hidden="true"
+      shapeRendering="crispEdges"
+    >
+      <path
+        fill="currentColor"
+        d={direction === 1 ? 'M0 3h7v1H0zM3 0h1v3H3zM3 4h1v3H3z' : 'M0 3h7v1H0z'}
+      />
+    </svg>
+  );
+}

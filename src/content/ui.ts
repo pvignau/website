@@ -49,9 +49,6 @@ export interface UiCopy {
     label: string;
     zoomIn: string;
     zoomOut: string;
-    /** Signs shown on the zoom buttons: the minus sign (U+2212) is as wide as +, a hyphen is not. */
-    zoomInSign: string;
-    zoomOutSign: string;
     /** `aria-keyshortcuts` of the zoom buttons: ARIA calls the + key "Plus". */
     zoomInShortcut: string;
     zoomOutShortcut: string;
@@ -112,8 +109,6 @@ export const ui: UiCopy = {
     label: 'Carte',
     zoomIn: 'Zoom avant',
     zoomOut: 'Zoom arrière',
-    zoomInSign: '+',
-    zoomOutSign: '−',
     zoomInShortcut: 'Plus',
     zoomOutShortcut: '-',
   },

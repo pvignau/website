@@ -1,5 +1,6 @@
 import { ui } from '../content';
 import type { ZoomDirection } from '../engine/zoom';
+import { ZoomIcon } from './icons';
 import './MapControls.css';
 
 interface ZoomButtonProps {
@@ -24,7 +25,7 @@ function ZoomButton({ direction, enabled, onZoom }: ZoomButtonProps) {
         if (enabled) onZoom(direction);
       }}
     >
-      <span aria-hidden="true">{direction === 1 ? copy.zoomInSign : copy.zoomOutSign}</span>
+      <ZoomIcon direction={direction} />
       <span className="visually-hidden">{name}</span>
     </button>
   );

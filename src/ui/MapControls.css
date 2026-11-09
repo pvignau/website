@@ -31,43 +31,48 @@
   }
 }
 
-/* One strip, the buttons sharing their borders: narrow enough to clear the cross on a 320 px phone. */
+/*
+ * One strip, the buttons sharing their borders: narrow enough to clear the
+ * cross on a 320 px phone. The rules go through the strip to outweigh
+ * .pixel-button, whose stylesheet comes later.
+ */
 .map-controls__buttons {
   display: flex;
   box-shadow: 3px 3px 0 var(--shadow);
   pointer-events: auto;
 }
 
-.map-controls__button {
+.map-controls__buttons .map-controls__button {
   padding-inline: 0;
-  box-shadow: none;
-  font-size: 1.4rem;
-  font-weight: 700;
 }
 
-.map-controls__button + .map-controls__button {
+/* The strip casts the shadow; the focus ring keeps its dark edge (global.css). */
+.map-controls__buttons .map-controls__button:not(:focus-visible) {
+  box-shadow: none;
+}
+
+.map-controls__buttons .map-controls__button + .map-controls__button {
   margin-left: -3px;
 }
 
 /* The focus ring of a button goes over its neighbours. */
-.map-controls__button:focus-visible {
+.map-controls__buttons .map-controls__button:focus-visible {
   position: relative;
   z-index: 1;
 }
 
 /* A strip does not sink one button: it darkens instead. */
-.map-controls__button:active {
+.map-controls__buttons .map-controls__button:active {
   translate: none;
-  box-shadow: none;
   background: var(--panel-solid);
 }
 
-.map-controls__button[aria-disabled='true'] {
+.map-controls__buttons .map-controls__button[aria-disabled='true'] {
   color: var(--ink-muted);
   background: var(--panel-raised);
   cursor: default;
 }
 
-.map-controls__button[aria-disabled='true'] > span {
+.map-controls__buttons .map-controls__button[aria-disabled='true'] > svg {
   opacity: 0.4;
 }
