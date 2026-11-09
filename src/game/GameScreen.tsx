@@ -26,7 +26,7 @@ import { TouchPad } from '../ui/TouchPad';
 import './GameScreen.css';
 import { helpSeen } from './helpSeen';
 import { HERO_SPRITE_URLS } from './heroSprites';
-import { objectLabel, zoneName } from './labels';
+import { noteOf, objectLabel, zoneName } from './labels';
 import type { MapDefinition, MapId } from './maps';
 import { MAPS } from './maps';
 import type { Overlay, OverlayState } from './overlay';
@@ -35,8 +35,10 @@ import { useHeroController } from './useHeroController';
 import { useKeyboardControls } from './useKeyboardControls';
 import { WorldView } from './WorldView';
 
-/** How long a one-off HUD message ("nothing here") stays. */
+/** How long a one-off HUD message stays: "nothing here", or what an object says. */
 const MESSAGE_MS = 2500;
+/** Reading time added by each character of a longer message. */
+const MESSAGE_MS_PER_CHAR = 50;
 /** Room enough to keep the quest log open next to the HUD (not a phone in landscape). */
 const WIDE_SCREEN = '(min-width: 48rem) and (min-height: 36rem)';
 
@@ -123,9 +125,12 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
 
   useEffect(() => {
     if (message === null) return;
-    const timer = window.setTimeout(() => {
-      setMessage(null);
-    }, MESSAGE_MS);
+    const timer = window.setTimeout(
+      () => {
+        setMessage(null);
+      },
+      Math.max(MESSAGE_MS, 1000 + message.length * MESSAGE_MS_PER_CHAR),
+    );
     return () => {
       window.clearTimeout(timer);
     };
@@ -191,6 +196,12 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
       announce(ui.hud.nothingHere);
       return;
     }
+    if (nearest.kind === 'note') {
+      const { text } = noteOf(nearest, content);
+      setMessage(text);
+      announce(text);
+      return;
+    }
     setMessage(null);
     if (nearest.kind === 'place') {
       showPlace(nearest.placeId);
@@ -205,6 +216,8 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
   const onNearestChange = useCallback(
     (item: Interactable<PlaceId> | null) => {
       setNearest(item);
+      // Something new nearby takes the HUD back from a message; walking away leaves it to read.
+      if (item !== null) setMessage(null);
       // Coming near something is worth saying; walking away is not.
       const text =
         item === null

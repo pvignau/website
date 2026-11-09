@@ -41,11 +41,21 @@ describe('site content', () => {
     expect(misfiled).toEqual([]);
   });
 
-  it('keeps every place label within 12 characters', () => {
-    const tooLong = places
-      .filter((place) => Array.from(place.label).length > 12)
-      .map((place) => place.label);
+  it('keeps every place and note label within 12 characters', () => {
+    const tooLong = [...places, ...Object.values(content.notes)]
+      .filter((item) => Array.from(item.label).length > 12)
+      .map((item) => item.label);
     expect(tooLong).toEqual([]);
+  });
+
+  it('gives every note a label and one sentence', () => {
+    const notes = Object.values(content.notes);
+    expect(notes.length).toBeGreaterThan(0);
+    expect(notes.filter((note) => !note.label || !note.text.endsWith('.'))).toEqual([]);
+  });
+
+  it('puts a no-break space, never a plain one, before ? ! : ;', () => {
+    expect(allStrings(content).filter((text) => / [?!:;]/.test(text))).toEqual([]);
   });
 
   it('gives every place a zone, a title, a quest and a body', () => {

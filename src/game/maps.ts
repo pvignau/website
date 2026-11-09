@@ -1,6 +1,6 @@
 import { PATHS } from '../app/pages';
 import type { PlaceId } from '../content';
-import { PLACE_IDS } from '../content';
+import { NOTE_IDS, PLACE_IDS } from '../content';
 import type { GameMap } from '../engine/tiled';
 import { parseTiledMap } from '../engine/tiled';
 import homeData from '../maps/home.json?tiled';
@@ -37,7 +37,7 @@ export interface MapDefinition {
   readonly introPlace: PlaceId | null;
 }
 
-const options = { placeIds: PLACE_IDS };
+const options = { placeIds: PLACE_IDS, noteIds: NOTE_IDS };
 
 /** Parsed once, when the module loads: a data error fails fast (and in the tests). */
 export const MAPS: Readonly<Record<MapId, MapDefinition>> = {

@@ -9,6 +9,9 @@
 /** Identifier of an interactive place on a map. */
 export type PlaceId = 'home' | 'work' | 'lab' | 'contact';
 
+/** Identifier of an object that says one sentence when inspected (a `note` object in Tiled). */
+export type NoteId = 'tv' | 'console' | 'helmet';
+
 export interface Link {
   label: string;
   href: string;
@@ -47,6 +50,16 @@ export interface Place {
   description?: string;
 }
 
+/**
+ * What an object of the map says when inspected: no dialog, no quest, one
+ * sentence in the HUD. Not in the text version: the places say it all.
+ */
+export interface Note {
+  /** Shown near the object (≤ 12 chars). */
+  label: string;
+  text: string;
+}
+
 export interface SiteContent {
   /** Display name, e.g. "Pyve". */
   name: string;
@@ -57,6 +70,8 @@ export interface SiteContent {
   /** Meta description of the home page (search results), 160 characters at most. */
   description: string;
   places: Record<PlaceId, Place>;
+  /** Objects of the house that say a word about Pyve. */
+  notes: Record<NoteId, Note>;
   /** Onboarding / "how to play" screen. */
   help: {
     title: string;

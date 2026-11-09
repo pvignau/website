@@ -214,6 +214,21 @@ export const content: SiteContent = {
     },
   },
 
+  notes: {
+    tv: {
+      label: 'Télé',
+      text: 'Une TV The Frame : éteinte, elle affiche un tableau, et Home Assistant en change tout seul.',
+    },
+    console: {
+      label: 'Console',
+      text: "La console du salon : amateur de jeux vidéo, je ne m'en cache pas.",
+    },
+    helmet: {
+      label: 'Casque',
+      text: "Un casque de moto, près de la porte : l'autre passion, ce sont les deux-roues.",
+    },
+  },
+
   help: {
     title: 'Comment jouer',
     steps: [

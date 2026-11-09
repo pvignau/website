@@ -288,9 +288,11 @@ describe('map content', () => {
   const world = MAPS.world.data;
   const home = MAPS.home.data;
   const summary = (map: GameMap) =>
-    map.interactables.map((item) =>
-      item.kind === 'place' ? `place:${item.placeId}` : `warp:${item.name}->${item.to}`,
-    );
+    map.interactables.map((item) => {
+      if (item.kind === 'place') return `place:${item.placeId}`;
+      if (item.kind === 'note') return `note:${item.noteId}`;
+      return `warp:${item.name}->${item.to}`;
+    });
 
   it('puts the house door, the projects, the lab and the boat on the world map', () => {
     expect(new Set(summary(world))).toEqual(
@@ -300,7 +302,13 @@ describe('map content', () => {
     expect(findSpawn(world, '/work').name).toBe('spawn-work');
   });
 
-  it('puts the bio and the way out in the house', () => {
-    expect(summary(home).sort()).toEqual(['place:home', 'warp:exit->/']);
+  it('puts the bio, the way out and three things to inspect in the house', () => {
+    expect(summary(home).sort()).toEqual([
+      'note:console',
+      'note:helmet',
+      'note:tv',
+      'place:home',
+      'warp:exit->/',
+    ]);
   });
 });

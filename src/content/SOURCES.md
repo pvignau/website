@@ -21,6 +21,7 @@ Ces formulations n'ont pas de source publique. Je les ai tranchées à partir de
   - Infopro Digital, juillet 2014 à mai 2023 : Web Developer, Lead Web Developer (2016), Architecte front-end (2019), Head of Frontend (2021). Avant cela, une mission Clevermind pour Infopro Digital (2014).
   - 2012 à 2014 : John Paul, puis megalo & company (Zend et Magento).
 - **Vie perso** (`places.home`) : « papa de deux enfants, amateur de jeux vidéo et de deux-roues ». Source : README de profil (« dad of 2, biker, gamer »). À toi de voir si tu veux que ça apparaisse sur le site.
+- **Objets de la maison** (`notes`) : la télé reprend `ha-samsung-frame-artwork` (une TV The Frame dont Home Assistant change le tableau), la console et le casque la vie perso ci-dessus. Rien d'autre : ni lieu, ni détail de l'installation.
 - **Localisation** : « basé au sud de Paris ». LinkedIn indique « Paris et périphérie ». Le texte reste vague exprès.
 - **Correctif Terrazzo** : ticket #531 ouvert par pvignau, corrigé par sa PR #533, fusionnée le 10 septembre 2025.
 - **PR Tokens Studio #3834** : ouverte le 7 avril 2026, en attente de relecture au 7 novembre 2026. Aucun commit de pvignau n'est fusionné dans `tokens-studio/figma-plugin`. Mets le résumé à jour si son statut change.

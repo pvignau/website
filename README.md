@@ -67,7 +67,7 @@ Les pages ont chacune leur titre, leur description, leur URL canonique (sans bar
 
 Tout texte visible passe par `src/content/index.ts`, l'unique point d'entrée. Les composants ne contiennent aucun texte en dur.
 
-- `types.ts` définit le contrat : `SiteContent`, `Place`, `ContentBlock`, etc.
+- `types.ts` définit le contrat : `SiteContent`, `Place`, `Note`, `ContentBlock`, etc. Une note est la phrase d'un objet de la carte (la télé, la console, le casque), avec son étiquette.
 - Le contenu du portfolio vit dans `site.ts`, que `index.ts` exporte. `site.placeholder.ts` en garde une version neutre de même forme, pratique pour travailler sur le moteur : une ligne d'`index.ts` suffit pour basculer.
 - `ui.ts` contient la microcopie du moteur : aides du HUD, boutons, noms accessibles, titres de page.
 - Typographie : apostrophe droite, et espace insécable (U+00A0) avant `? ! : ;`. ESLint accepte ces espaces dans les chaînes.
@@ -87,6 +87,7 @@ Le moteur lit seulement le groupe de calques `meta` :
 | ---------- | ---------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | `place`    | un `PlaceId`           | `radius` (facultatif, 24 px par défaut) | Ouvre le dialogue du lieu. Plusieurs objets peuvent ouvrir le même lieu.                                           |
 | `redirect` | libre, ou un `PlaceId` | `value` (route, ex. `/home`), `radius`  | Mène à une autre route. Nommé par un lieu, il en prend l'étiquette et la zone ; sinon « Sortir ».                  |
+| `note`     | un `NoteId`            | `radius`                                | Dit une phrase dans le HUD (les objets de la maison) : ni dialogue, ni quête, ni version texte.                    |
 | `spawn`    | libre                  | `value` (route d'arrivée), `direction`  | Point d'apparition : sans `value`, celui par défaut ; sinon pour une arrivée depuis cette route ou ce lien direct. |
 | `decor`    | libre                  | `value` (nom du décor, ex. `leds`)      | Petit décor animé dessiné par le moteur : diodes (`leds`), voyant de l'antenne (`beacon`) et néon (`neon`) du lab. |
 

@@ -22,9 +22,9 @@ import { META_GROUP } from './tiledMeta';
 export const DEFAULT_INTERACTION_RADIUS = 24;
 
 /** Value of an object's `action` property (or of its Tiled class). */
-export type MapObjectAction = 'place' | 'redirect' | 'spawn' | 'decor';
+export type MapObjectAction = 'place' | 'redirect' | 'note' | 'spawn' | 'decor';
 
-const ACTIONS: readonly MapObjectAction[] = ['place', 'redirect', 'spawn', 'decor'];
+const ACTIONS: readonly MapObjectAction[] = ['place', 'redirect', 'note', 'spawn', 'decor'];
 
 /** Opens the dialog of a place. The object is named after the place id. */
 export interface PlaceObject<P extends string> {
@@ -47,7 +47,20 @@ export interface WarpObject<P extends string> {
   readonly radius: number;
 }
 
-export type Interactable<P extends string> = PlaceObject<P> | WarpObject<P>;
+/**
+ * Says one sentence in the HUD when inspected: no dialog, no quest. The object
+ * is named after a note id of the content (checked when the map is parsed).
+ */
+export interface NoteObject {
+  readonly kind: 'note';
+  readonly id: string;
+  readonly name: string;
+  readonly noteId: string;
+  readonly rect: Rect;
+  readonly radius: number;
+}
+
+export type Interactable<P extends string> = PlaceObject<P> | WarpObject<P> | NoteObject;
 
 /** Purely visual overlay drawn by the engine (e.g. blinking LEDs), named by its `value`. */
 export interface Decoration {
@@ -92,6 +105,8 @@ export class TiledMapError extends Error {
 export interface ParseOptions<P extends string> {
   /** Valid place ids: a `place` object with another name is a data error. */
   readonly placeIds: readonly P[];
+  /** Valid note ids, likewise for `note` objects. */
+  readonly noteIds?: readonly string[];
 }
 
 type JsonObject = Readonly<Record<string, unknown>>;
@@ -352,6 +367,16 @@ export function parseTiledMap<P extends string>(
             throw new TiledMapError(objectPath, 'a redirect needs a rectangle, not a point');
           }
           interactables.push({ kind: 'warp', id, name, to, placeId, rect, radius });
+          break;
+        }
+        case 'note': {
+          if (!options.noteIds?.includes(name)) {
+            throw new TiledMapError(objectPath, `note object "${name}" is not a known note id`);
+          }
+          if (rect.width <= 0 || rect.height <= 0) {
+            throw new TiledMapError(objectPath, 'a note needs a rectangle, not a point');
+          }
+          interactables.push({ kind: 'note', id, name, noteId: name, rect, radius });
           break;
         }
         case 'decor': {

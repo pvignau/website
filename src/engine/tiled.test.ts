@@ -3,7 +3,7 @@ import { isSolidTile } from './collision';
 import { DEFAULT_INTERACTION_RADIUS, findSpawn, parseTiledMap } from './tiled';
 
 const PLACE_IDS = ['home', 'work', 'lab', 'contact'] as const;
-const options = { placeIds: PLACE_IDS };
+const options = { placeIds: PLACE_IDS, noteIds: ['tv'] };
 
 const property = (name: string, value: string | number) => ({
   name,
@@ -176,6 +176,21 @@ describe('parseTiledMap', () => {
     expect(findSpawn(map, null).name).toBe('spawn');
   });
 
+  it('reads notes, named after their note id', () => {
+    const tv = { name: 'tv', x: 0, y: 32, width: 32, height: 16, props: { action: 'note' } };
+    const map = parseTiledMap(tiledMap({ objects: [...DEFAULT_OBJECTS, tv] }), options);
+    expect(map.interactables.filter((item) => item.kind === 'note')).toEqual([
+      {
+        kind: 'note',
+        id: '3',
+        name: 'tv',
+        noteId: 'tv',
+        rect: { x: 0, y: 32, width: 32, height: 16 },
+        radius: DEFAULT_INTERACTION_RADIUS,
+      },
+    ]);
+  });
+
   it('reads decorations', () => {
     const map = parseTiledMap(
       tiledMap({
@@ -343,6 +358,23 @@ describe('parseTiledMap', () => {
           ],
         }),
         /expected up, down, left or right/,
+      ],
+      [
+        'a note with an unknown name',
+        tiledMap({
+          objects: [
+            ...DEFAULT_OBJECTS,
+            { name: 'radio', x: 0, y: 32, width: 8, height: 8, props: { action: 'note' } },
+          ],
+        }),
+        /note object "radio" is not a known note id/,
+      ],
+      [
+        'a note on a point',
+        tiledMap({
+          objects: [...DEFAULT_OBJECTS, { name: 'tv', x: 0, y: 32, props: { action: 'note' } }],
+        }),
+        /a note needs a rectangle, not a point/,
       ],
       [
         'a map without default spawn',

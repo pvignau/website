@@ -73,6 +73,12 @@ export const content: SiteContent = {
     },
   },
 
+  notes: {
+    tv: { label: 'Télé', text: 'Texte provisoire de la télé.' },
+    console: { label: 'Console', text: 'Texte provisoire de la console.' },
+    helmet: { label: 'Casque', text: 'Texte provisoire du casque.' },
+  },
+
   help: {
     title: 'Comment jouer',
     steps: [
