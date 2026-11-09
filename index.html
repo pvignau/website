@@ -1,27 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="fr">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <link rel="stylesheet" href="css/main.css">
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="/logo192.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <!--
+      Title, description, Open Graph tags and canonical URL come from src/content:
+      vite-plugins/site-pages.ts writes them in place of the next comment.
+    -->
+    <!-- site-meta -->
+    <meta name="theme-color" content="#101820" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.json" />
-    <title>pyve's world</title>
+    <link
+      rel="preload"
+      href="/src/fonts/pixelify-sans/pixelify-sans-latin-400-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/src/fonts/pixelify-sans/pixelify-sans-latin-700-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/src/styles/boot.css" />
+    <script>
+      // The game could not start (its script did not load, or failed before the app
+      // ran, see src/main.tsx): show the text version written in the page instead.
+      addEventListener(
+        'error',
+        function (event) {
+          var root = document.documentElement;
+          var fatal = event.target instanceof HTMLScriptElement || event instanceof ErrorEvent;
+          if (fatal && !root.hasAttribute('data-app')) root.classList.add('no-game');
+        },
+        true,
+      );
+    </script>
+    <script nomodule>
+      document.documentElement.classList.add('no-game');
+    </script>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
-      <div id="loader">
-          <img src=/img/common/loader.svg alt='loader display' />
-          <p className="hint hidden"></p>
+      <div id="loader" class="loader" role="status">
+        <span class="loader__squares" aria-hidden="true"
+          ><span></span><span></span><span></span
+        ></span>
+        <span class="loader__label"></span>
       </div>
+      <!-- The text version (vite-plugins/static-page.ts), replaced by the game as it starts. -->
+      <!-- site-static -->
     </div>
-    <script type="module" src="/src/index.tsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -1,0 +1,256 @@
+.game {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--backdrop);
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.game__viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Sizes and positions are map pixels × --s (set inline by WorldView). */
+.world {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+
+/* Around the cropped background image, the sea goes on, on the tile grid of the map. */
+.world--sea {
+  background: url('../img/sea.webp') 0 0 / calc(128px * var(--s)) calc(128px * var(--s)) repeat;
+  image-rendering: pixelated;
+}
+
+.world__background {
+  position: absolute;
+  max-width: none;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+/* The hero box holds a shadow (::before) and the sprite (::after). */
+.hero {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: calc(24px * var(--s));
+  height: calc(36px * var(--s));
+  will-change: transform;
+  pointer-events: none;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  left: calc(5px * var(--s));
+  top: calc(31px * var(--s));
+  width: calc(14px * var(--s));
+  height: calc(5px * var(--s));
+  border-radius: 50%;
+  background: rgb(0 0 0 / 22%);
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../img/hero/spriteDown.webp');
+  background-repeat: no-repeat;
+  background-size: calc(96px * var(--s)) calc(36px * var(--s));
+  background-position: calc(var(--frame, 0) * -24px * var(--s)) 0;
+  image-rendering: pixelated;
+}
+
+.hero[data-facing='up']::after {
+  background-image: url('../img/hero/spriteUp.webp');
+}
+
+.hero[data-facing='left']::after {
+  background-image: url('../img/hero/spriteLeft.webp');
+}
+
+.hero[data-facing='right']::after {
+  background-image: url('../img/hero/spriteRight.webp');
+}
+
+/* Shown only next to the object: the HUD says the same for screen readers. */
+.object-label {
+  position: absolute;
+  z-index: 3;
+  translate: -50% calc(-100% - 8px);
+  padding: 0.25rem 0.5rem;
+  border: 2px solid var(--wood-dark);
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 2px 2px 0 var(--shadow);
+  font-family: var(--font-pixel);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 120ms steps(3),
+    visibility 120ms;
+  pointer-events: none;
+}
+
+.object-label::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  translate: -50% 0;
+  border: 6px solid transparent;
+  border-top-color: var(--wood-dark);
+}
+
+.object-label[data-near] {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Decorations: small animated overlays placed by `decor` objects in Tiled. */
+.decor {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Lab window: blinking diodes. */
+.decor--leds::before,
+.decor--leds::after {
+  content: '';
+  position: absolute;
+  width: calc(2px * var(--s));
+  height: calc(2px * var(--s));
+  animation: leds-blink 1.1s steps(1) infinite;
+}
+
+.decor--leds::before {
+  left: calc(3px * var(--s));
+  top: calc(3px * var(--s));
+  background: #6ee7b7;
+  box-shadow: calc(5px * var(--s)) calc(2px * var(--s)) 0 #ef8354;
+}
+
+.decor--leds::after {
+  left: calc(5px * var(--s));
+  top: calc(8px * var(--s));
+  background: #ffd166;
+  box-shadow: calc(4px * var(--s)) calc(1px * var(--s)) 0 #6ee7b7;
+  animation-duration: 0.7s;
+  animation-direction: reverse;
+}
+
+@keyframes leds-blink {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+/* ?debug */
+.debug-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.debug-coordinates {
+  position: fixed;
+  right: calc(0.5rem + var(--safe-right));
+  bottom: calc(0.5rem + var(--safe-bottom));
+  z-index: 30;
+  padding: 0.25rem 0.5rem;
+  background: rgb(0 0 0 / 75%);
+  color: #fff;
+  font:
+    0.8rem/1.2 ui-monospace,
+    monospace;
+}
+
+.game__stage {
+  position: absolute;
+  inset: 0;
+}
+
+/*
+ * The HUD (left) and the toolbar (right) share one bar: the toolbar keeps its
+ * width and the HUD takes what is left, wrapping its text, so it never slides
+ * under the buttons, whatever the width of the screen.
+ */
+.game__top {
+  position: absolute;
+  top: calc(0.75rem + var(--safe-top));
+  right: calc(0.75rem + var(--safe-right));
+  left: calc(0.75rem + var(--safe-left));
+  z-index: 10;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.toolbar {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  pointer-events: auto;
+}
+
+.toolbar__buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.toolbar__text {
+  position: relative;
+}
+
+/* Phones in portrait: the text version button keeps its icon only (its name stays). */
+@media (max-width: 30rem) {
+  .toolbar__text {
+    padding-inline: 0;
+  }
+
+  .toolbar__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+.skip-link {
+  position: absolute;
+  top: calc(0.75rem + var(--safe-top));
+  left: 50%;
+  z-index: 50;
+  translate: -50% -200%;
+}
+
+.skip-link:focus-visible {
+  translate: -50% 0;
+}
+
+.game__main {
+  position: absolute;
+  inset: 0;
+}

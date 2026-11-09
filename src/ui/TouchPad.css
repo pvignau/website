@@ -1,0 +1,111 @@
+/* Only for touch screens; keyboards and mice never see it. */
+.touch-pad {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .touch-pad {
+    position: absolute;
+    right: calc(1rem + var(--safe-right));
+    bottom: calc(1rem + var(--safe-bottom));
+    left: calc(1rem + var(--safe-left));
+    z-index: 10;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+}
+
+.touch-pad__cross {
+  position: relative;
+  width: 9.5rem;
+  height: 9.5rem;
+  touch-action: none;
+  pointer-events: auto;
+}
+
+.touch-pad__arm {
+  position: absolute;
+  width: 33.4%;
+  height: 33.4%;
+  background: rgb(31 48 59 / 88%);
+  border: 3px solid var(--wood);
+  box-shadow: 3px 3px 0 var(--shadow);
+}
+
+.touch-pad__arm::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 0;
+  height: 0;
+  border: 0.55rem solid transparent;
+}
+
+.touch-pad__arm--up {
+  top: 0;
+  left: 33.3%;
+}
+
+.touch-pad__arm--up::after {
+  border-bottom-color: var(--ink);
+  translate: 0 -0.3rem;
+}
+
+.touch-pad__arm--down {
+  bottom: 0;
+  left: 33.3%;
+}
+
+.touch-pad__arm--down::after {
+  border-top-color: var(--ink);
+  translate: 0 0.3rem;
+}
+
+.touch-pad__arm--left {
+  top: 33.3%;
+  left: 0;
+}
+
+.touch-pad__arm--left::after {
+  border-right-color: var(--ink);
+  translate: -0.3rem 0;
+}
+
+.touch-pad__arm--right {
+  top: 33.3%;
+  right: 0;
+}
+
+.touch-pad__arm--right::after {
+  border-left-color: var(--ink);
+  translate: 0.3rem 0;
+}
+
+.touch-pad__arm[data-active] {
+  background: var(--wood);
+}
+
+.touch-pad__action {
+  width: 4.5rem;
+  height: 4.5rem;
+  border: 3px solid var(--wood-dark);
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 3px 3px 0 var(--shadow);
+  font-family: var(--font-pixel);
+  font-size: 1.75rem;
+  font-weight: 700;
+  touch-action: manipulation;
+  pointer-events: auto;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.touch-pad__action:active {
+  translate: 2px 2px;
+  box-shadow: 1px 1px 0 var(--shadow);
+}

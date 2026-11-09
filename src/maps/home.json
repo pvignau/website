@@ -154,43 +154,13 @@
          "id":6,
          "layers":[
                 {
-                 "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 642, 642, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 "height":8,
-                 "id":14,
-                 "name":"path-world",
-                 "opacity":1,
-                 "properties":[
-                        {
-                         "name":"action",
-                         "type":"string",
-                         "value":"redirect"
-                        }, 
-                        {
-                         "name":"value",
-                         "type":"string",
-                         "value":"\/"
-                        }],
-                 "type":"tilelayer",
-                 "visible":true,
-                 "width":15,
-                 "x":0,
-                 "y":0
-                }, 
-                {
                  "data":[641, 641, 641, 641, 641, 641, 641, 641, 641, 641, 641, 641, 641, 641, 641,
+                    641, 641, 641, 641, 0, 0, 0, 0, 0, 641, 0, 0, 0, 0, 641,
+                    641, 641, 0, 0, 641, 0, 0, 0, 0, 641, 0, 0, 0, 0, 641,
                     641, 0, 0, 0, 0, 0, 0, 0, 0, 641, 0, 0, 0, 0, 641,
                     641, 0, 0, 0, 0, 0, 0, 0, 0, 641, 0, 0, 0, 0, 641,
-                    641, 0, 0, 0, 0, 0, 0, 0, 0, 641, 0, 0, 0, 0, 641,
-                    641, 0, 0, 0, 0, 0, 0, 0, 0, 641, 0, 0, 0, 0, 641,
-                    641, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 641,
-                    641, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 641,
+                    641, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 641, 641, 641,
+                    641, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 641, 641, 641,
                     641, 641, 641, 0, 0, 641, 641, 641, 641, 641, 641, 641, 641, 641, 641],
                  "height":8,
                  "id":7,
@@ -207,6 +177,79 @@
                  "width":15,
                  "x":0,
                  "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "id":16,
+                 "name":"objects",
+                 "objects":[
+        {
+         "height":32,
+         "id":1,
+         "name":"exit",
+         "properties":[
+                {
+                 "name":"action",
+                 "type":"string",
+                 "value":"redirect"
+                }, 
+                {
+                 "name":"value",
+                 "type":"string",
+                 "value":"\/"
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":64,
+         "x":96,
+         "y":224
+        }, 
+        {
+         "height":52,
+         "id":2,
+         "name":"home",
+         "properties":[
+                {
+                 "name":"action",
+                 "type":"string",
+                 "value":"place"
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":48,
+         "x":376,
+         "y":160
+        }, 
+        {
+         "height":0,
+         "id":3,
+         "name":"spawn",
+         "point":true,
+         "properties":[
+                {
+                 "name":"action",
+                 "type":"string",
+                 "value":"spawn"
+                }, 
+                {
+                 "name":"direction",
+                 "type":"string",
+                 "value":"up"
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":0,
+         "x":128,
+         "y":200
+        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
                 }],
          "name":"meta",
          "opacity":1,
@@ -215,8 +258,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":16,
- "nextobjectid":1,
+ "nextlayerid":17,
+ "nextobjectid":4,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

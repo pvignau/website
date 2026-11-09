@@ -1,0 +1,24 @@
+/* Left part of the top bar (GameScreen.css): it shrinks, the toolbar does not. */
+.hud {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 24rem;
+  padding: 0.5rem 0.75rem;
+  font-family: var(--font-pixel);
+  line-height: 1.2;
+  overflow-wrap: break-word;
+  pointer-events: none;
+}
+
+.hud__zone {
+  margin: 0;
+  color: var(--accent);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.hud__hint {
+  margin: 0.2rem 0 0;
+  color: var(--ink);
+  font-size: 0.95rem;
+}

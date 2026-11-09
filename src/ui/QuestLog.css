@@ -1,0 +1,115 @@
+.quest {
+  font-family: var(--font-pixel);
+}
+
+.quest[open] {
+  width: min(17rem, calc(100vw - 1.5rem - var(--safe-left) - var(--safe-right)));
+}
+
+.quest__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 44px;
+  padding: 0.35rem 0.75rem;
+  color: var(--accent);
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.quest__summary::-webkit-details-marker {
+  display: none;
+}
+
+.quest__summary::after {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 3px solid currentColor;
+  border-bottom: 3px solid currentColor;
+  rotate: 45deg;
+  translate: 0 -2px;
+}
+
+.quest[open] .quest__summary::after {
+  rotate: 225deg;
+  translate: 0 2px;
+}
+
+.quest__title {
+  flex: 1;
+}
+
+.quest__progress {
+  color: var(--mint);
+}
+
+.quest__list {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0 0.75rem 0.75rem;
+  list-style: none;
+}
+
+.quest__item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--ink-muted);
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+.quest__item[data-done] {
+  color: var(--mint);
+}
+
+.quest__check {
+  flex: none;
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid currentColor;
+}
+
+.quest__item[data-done] .quest__check {
+  background: linear-gradient(currentColor, currentColor) 2px 2px / calc(100% - 4px)
+    calc(100% - 4px) no-repeat;
+}
+
+.quest__complete {
+  margin: 0;
+  padding: 0 0.75rem 0.75rem;
+  color: var(--accent);
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+/*
+ * Phones in portrait: the open list drops over the map, under its title, so the
+ * toolbar keeps the width of the closed quest and the HUD keeps its room.
+ */
+@media (max-width: 30rem) {
+  .quest {
+    position: relative;
+  }
+
+  .quest[open] {
+    width: auto;
+  }
+
+  .quest[open] .quest__body {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: -3px;
+    width: min(17rem, calc(100vw - 1.5rem - var(--safe-left) - var(--safe-right)));
+    padding-top: 0.75rem;
+    background: var(--panel);
+    border: 3px solid var(--wood);
+    box-shadow:
+      inset 0 0 0 2px var(--wood-dark),
+      4px 4px 0 var(--shadow);
+  }
+}
