@@ -97,7 +97,7 @@ Les tuiles font 32 px, mais le pixel art est dessiné à 16 px la tuile : un pix
 - `tools/map-art/world.png` et `home.png` : le fond de chaque carte, à un pixel par pixel du dessin, à retoucher dans un éditeur de pixel art ;
 - `tools/map-art/sea.png` : quatre tuiles sur quatre de mer, que le moteur répète autour de la grande carte ;
 - les sprites de `tools/map-art/sprites/`, écrits en texte : un caractère par pixel, une palette par sprite ;
-- le calque d'objets `art` de chaque carte, hors du groupe `meta` : chaque rectangle porte le nom d'un sprite et sa taille, en coordonnées paires (la grille du dessin), et ils sont dessinés dans l'ordre du calque. La propriété booléenne `solid` marque ce que le héros contourne, comme les panneaux : les tests vérifient que les tuiles dessous sont solides.
+- le calque d'objets `art` de chaque carte, hors du groupe `meta` : chaque rectangle porte le nom d'un sprite et sa taille, en coordonnées paires (la grille du dessin), et ils sont dessinés dans l'ordre du calque. La propriété booléenne `solid` marque ce que le héros contourne, panneaux et meubles : les tests vérifient que les tuiles dessous sont solides.
 
 Le script écrit `src/maps/world.webp`, `home.webp` et `src/img/sea.webp`, deux fois plus grands, en WebP sans perte (`cwebp -lossless -z 9 -exact`). `npm run map-art -- --check` vérifie qu'ils sont à jour (il faut aussi `dwebp`).
 
@@ -189,4 +189,4 @@ jobs:
 
 - Police [Pixelify Sans](https://github.com/eifetx/Pixelify-Sans), sous SIL Open Font License 1.1 (`src/fonts/pixelify-sans/OFL.txt`), auto-hébergée. Elle remplace la police Minecraft d'origine, qui ne contenait aucune lettre accentuée.
 - Les fonds des cartes et le héros viennent des packs cités dans les fichiers Tiled, qui gardent leurs licences d'origine. Les icônes et l'image `og-image.png` en sont dérivées.
-- Les sprites de `tools/map-art/sprites/` (panneaux, lab) sont dessinés pour ce site.
+- Les sprites de `tools/map-art/sprites/` (panneaux, lab, mobilier de la maison) sont dessinés pour ce site.

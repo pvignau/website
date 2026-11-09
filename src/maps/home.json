@@ -120,32 +120,215 @@
          "y":0
         }, 
         {
-         "id":8,
-         "layers":[
+         "draworder":"index",
+         "id":17,
+         "name":"art",
+         "objects":[
+        {
+         "height":48,
+         "id":4,
+         "name":"rug",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":112,
+         "x":90,
+         "y":74
+        }, 
+        {
+         "height":24,
+         "id":5,
+         "name":"poster-moto",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":36,
+         "x":64,
+         "y":14
+        }, 
+        {
+         "height":24,
+         "id":6,
+         "name":"tv-frame",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":52,
+         "x":134,
+         "y":12
+        }, 
+        {
+         "height":28,
+         "id":7,
+         "name":"tv-stand",
+         "properties":[
                 {
-                 "data":[0, 1796, 1797, 1798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 1828, 1813, 1814, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 1844, 0, 0, 1830, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1285, 1286, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1301, 1302, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 "height":8,
-                 "id":13,
-                 "name":"couch",
-                 "offsetx":13,
-                 "offsety":1,
-                 "opacity":1,
-                 "type":"tilelayer",
-                 "visible":true,
-                 "width":15,
-                 "x":0,
-                 "y":0
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
                 }],
-         "name":"objects",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":64,
+         "x":128,
+         "y":36
+        }, 
+        {
+         "height":52,
+         "id":8,
+         "name":"bookshelf",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":48,
+         "x":224,
+         "y":12
+        }, 
+        {
+         "height":36,
+         "id":9,
+         "name":"plant-big",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":28,
+         "x":46,
+         "y":28
+        }, 
+        {
+         "height":32,
+         "id":10,
+         "name":"sofa",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":92,
+         "x":98,
+         "y":128
+        }, 
+        {
+         "height":22,
+         "id":11,
+         "name":"plant-small",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":20,
+         "x":250,
+         "y":138
+        }, 
+        {
+         "height":42,
+         "id":12,
+         "name":"helmet-cabinet",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":28,
+         "x":46,
+         "y":162
+        }, 
+        {
+         "height":22,
+         "id":13,
+         "name":"plant-small",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":20,
+         "x":332,
+         "y":72
+        }, 
+        {
+         "height":44,
+         "id":14,
+         "name":"desk",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":72,
+         "x":356,
+         "y":52
+        }, 
+        {
+         "height":28,
+         "id":15,
+         "name":"chair",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":24,
+         "x":380,
+         "y":94
+        }, 
+        {
+         "height":78,
+         "id":16,
+         "name":"bed",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":48,
+         "x":384,
+         "y":132
+        }],
          "opacity":1,
-         "type":"group",
+         "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
@@ -155,12 +338,12 @@
          "layers":[
                 {
                  "data":[641, 641, 641, 641, 641, 641, 641, 641, 641, 641, 641, 641, 641, 641, 641,
-                    641, 641, 641, 641, 0, 0, 0, 0, 0, 641, 0, 0, 0, 0, 641,
-                    641, 641, 0, 0, 641, 0, 0, 0, 0, 641, 0, 0, 0, 0, 641,
-                    641, 0, 0, 0, 0, 0, 0, 0, 0, 641, 0, 0, 0, 0, 641,
-                    641, 0, 0, 0, 0, 0, 0, 0, 0, 641, 0, 0, 0, 0, 641,
-                    641, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 641, 641, 641,
-                    641, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 641, 641, 641,
+                    641, 641, 0, 0, 641, 641, 0, 641, 641, 641, 641, 641, 641, 641, 641,
+                    641, 0, 0, 0, 0, 0, 0, 0, 0, 641, 641, 641, 641, 641, 641,
+                    641, 0, 0, 0, 0, 0, 0, 0, 0, 641, 0, 0, 641, 0, 641,
+                    641, 0, 0, 641, 641, 641, 0, 0, 641, 641, 0, 0, 641, 641, 641,
+                    641, 641, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 641, 641, 641,
+                    641, 641, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 641, 641, 641,
                     641, 641, 641, 0, 0, 641, 641, 641, 641, 641, 641, 641, 641, 641, 641],
                  "height":8,
                  "id":7,
@@ -206,7 +389,7 @@
          "y":224
         }, 
         {
-         "height":52,
+         "height":44,
          "id":2,
          "name":"home",
          "properties":[
@@ -218,9 +401,9 @@
          "rotation":0,
          "type":"",
          "visible":true,
-         "width":48,
-         "x":376,
-         "y":160
+         "width":72,
+         "x":356,
+         "y":52
         }, 
         {
          "height":0,
@@ -258,9 +441,30 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":17,
- "nextobjectid":4,
+ "nextlayerid":18,
+ "nextobjectid":17,
  "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"crop-height",
+         "type":"int",
+         "value":256
+        }, 
+        {
+         "name":"crop-width",
+         "type":"int",
+         "value":480
+        }, 
+        {
+         "name":"crop-x",
+         "type":"int",
+         "value":0
+        }, 
+        {
+         "name":"crop-y",
+         "type":"int",
+         "value":0
+        }],
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
  "tileheight":32,

@@ -9,7 +9,10 @@ import { decodePng } from './png.ts';
 import { parseSprite } from './sprite.ts';
 
 const read = (path: string) => readFileSync(new URL(path, import.meta.url));
-const MAPS = [{ name: 'world', base: './world.png', image: '../../src/maps/world.webp' }];
+const MAPS = [
+  { name: 'world', base: './world.png', image: '../../src/maps/world.webp' },
+  { name: 'home', base: './home.png', image: '../../src/maps/home.webp' },
+];
 
 /** Canvas size from a WebP file header (VP8X or VP8L chunk). */
 function webpSize(file: Uint8Array) {

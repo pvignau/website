@@ -4,6 +4,7 @@
  * base image of the map (see the README).
  */
 import type { Image } from './image.ts';
+import { HOME_SPRITES } from './sprites/home.ts';
 import { WORLD_SPRITES } from './sprites/world.ts';
 
-export const SPRITES: Readonly<Record<string, Image>> = { ...WORLD_SPRITES };
+export const SPRITES: Readonly<Record<string, Image>> = { ...WORLD_SPRITES, ...HOME_SPRITES };

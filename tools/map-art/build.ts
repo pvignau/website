@@ -165,6 +165,7 @@ interface Output {
 
 const OUTPUTS: readonly Output[] = [
   { base: 'world.png', map: 'src/maps/world.json', out: 'src/maps/world.webp' },
+  { base: 'home.png', map: 'src/maps/home.json', out: 'src/maps/home.webp' },
   { base: 'sea.png', out: 'src/img/sea.webp' },
 ];
 
