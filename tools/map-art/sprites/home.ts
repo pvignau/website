@@ -1,4 +1,4 @@
-/** Sprites of the house: the furniture. */
+/** Sprites of the house: the furniture of its seven rooms. */
 import type { Image } from '../image.ts';
 import type { Palette } from '../sprite.ts';
 import { parseSprite } from '../sprite.ts';

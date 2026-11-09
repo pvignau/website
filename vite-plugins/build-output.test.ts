@@ -108,18 +108,24 @@ describe('image preloads', () => {
     [...file(page).matchAll(/<link rel="preload" href="([^"]+)" as="image" \/>/g)].map(
       ([, href]) => href,
     );
-  const worldMap = () => {
-    const name = [...files.keys()].find((key) => /^assets\/world-[\w-]+\.webp$/.test(key));
-    if (!name) throw new Error('The build has no world map.');
-    return `/${name}`;
+  const map = (name: string) => {
+    const asset = [...files.keys()].find((key) =>
+      new RegExp(`^assets/${name}-[\\w-]+\\.webp$`).test(key),
+    );
+    if (!asset) throw new Error(`The build has no ${name} map.`);
+    return `/${asset}`;
   };
 
   it.each(['index.html', 'work.html'])('fetches the world map early on %s', (page) => {
-    expect(preloads(page)).toEqual([worldMap()]);
+    expect(preloads(page)).toEqual([map('world')]);
   });
 
-  it.each(['home.html', '404.html'])('preloads no image on %s', (page) => {
-    expect(preloads(page)).toEqual([]);
+  it('fetches the house early on home.html', () => {
+    expect(preloads('home.html')).toEqual([map('home')]);
+  });
+
+  it('preloads no image on 404.html', () => {
+    expect(preloads('404.html')).toEqual([]);
   });
 });
 

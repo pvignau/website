@@ -21,6 +21,8 @@ export interface StaticPage {
 
 /** The world map: the first thing / and /work show, and by far their largest file. */
 const WORLD_MAP = 'src/maps/world.webp';
+/** The house: too large now to be inlined in the script, it is fetched alongside it. */
+const HOME_MAP = 'src/maps/home.webp';
 
 /** Pages generated at build time (see vite-plugins/site-pages.ts); 404.html covers the rest. */
 export const STATIC_PAGES: readonly StaticPage[] = [
@@ -36,6 +38,7 @@ export const STATIC_PAGES: readonly StaticPage[] = [
     path: PATHS.home,
     title: ui.pageTitle(content.places.home.zone),
     description: content.places.home.description ?? content.description,
+    preload: [HOME_MAP],
   },
   {
     file: 'work.html',

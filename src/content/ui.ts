@@ -87,7 +87,7 @@ export const ui: UiCopy = {
     mapAlt: {
       world:
         'Deux îles en pixel art reliées par un pont : une maison, un atelier, son annexe devenue le lab IA sous une enseigne au néon, et un ponton où attend un bateau.',
-      home: 'Intérieur de la maison : un salon avec un canapé face à la télé, une bibliothèque et des plantes, une chambre avec un lit et un bureau à deux écrans.',
+      home: 'Intérieur de la maison : une entrée, un salon avec un canapé face à la télé, un couloir, deux chambres colorées, une chambre avec un grand lit et un bureau pour coder et jouer.',
     },
   },
   hud: {

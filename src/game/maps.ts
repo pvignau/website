@@ -39,8 +39,9 @@ export interface MapDefinition {
   readonly introPlace: PlaceId | null;
   /**
    * Layout of the minimap, drawn from the background image; null for none. The
-   * house has none: one room of 15 by 8 tiles, which the camera shows nearly
-   * whole, with a single way out, the door the hero came in by.
+   * house has none: one corridor and its rooms, 21 by 14 tiles, which the camera
+   * shows nearly whole on a computer and whole zoomed out on any landscape
+   * screen, with a single way out, the door the hero came in by.
    */
   readonly minimap: MinimapLayout<PlaceId> | null;
 }

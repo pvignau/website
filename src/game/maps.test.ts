@@ -354,8 +354,38 @@ describe('the minimap', () => {
     }
   });
 
-  it('leaves the house out: one room, shown whole on most screens', () => {
+  it('leaves the house out: zoomed out, any landscape screen shows it whole', () => {
     expect(MAPS.home.minimap).toBeNull();
+    const home = MAPS.home.data;
+    const cut = SCREENS.filter(([width, height]) => width > height).filter(
+      ([width, height, dpr]) => {
+        const scale = zoomedScale(computeScale({ width, height }, home.tileSize, dpr), 0.5, dpr);
+        return width / scale < home.width || height / scale < home.height;
+      },
+    );
+    expect(cut).toEqual([]);
+  });
+});
+
+describe('the house', () => {
+  const home = MAPS.home.data;
+  /** A tile inside each room: entrance, living room, corridor, office and the three bedrooms. */
+  const ROOMS: [string, number, number][] = [
+    ['entrance', 18, 11],
+    ['living room', 11, 10],
+    ['corridor', 10, 7],
+    ['office', 3, 11],
+    ['first bedroom', 4, 3],
+    ['second bedroom', 8, 4],
+    ['third bedroom', 14, 4],
+  ];
+
+  it.each(ROOMS)('lets the hero walk into the %s', (_, column, row) => {
+    const { tileSize } = home;
+    const reached = reachableTiles(home).some(
+      (tile) => tile.x === column * tileSize && tile.y === row * tileSize,
+    );
+    expect(reached).toBe(true);
   });
 });
 
