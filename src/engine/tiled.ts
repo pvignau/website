@@ -1,15 +1,15 @@
 /**
  * Turns a Tiled JSON map into the engine's map model.
  *
- * The visual layers are pre-rendered in the map's background image (Tiled's
- * "Export As Image"); the engine only reads the `meta` group:
+ * The visual layers are pre-rendered in the map's background image
+ * (tools/map-art); the engine only reads the `meta` group:
  * - a tile layer whose `action` property is `collision`: solid tiles;
  * - object layers: interactive objects, decorations and spawn points, see
  *   `MapObjectAction`.
  *
- * The background may be a part of that export only: the map properties
- * `crop-x`, `crop-y`, `crop-width` and `crop-height` give it, in pixels of the
- * exported image (the arguments of `cwebp -crop`).
+ * The background may be a part only of the image Tiled would export: the map
+ * properties `crop-x`, `crop-y`, `crop-width` and `crop-height` give it, in
+ * pixels of that export (which grows to fit layer offsets).
  */
 import type { CollisionGrid } from './collision';
 import { createCollisionGrid } from './collision';

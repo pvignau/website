@@ -17,7 +17,7 @@ export interface MapDefinition {
   /** Places with their own URL (deep link): opening one shows its URL, the URL opens it. */
   readonly placeRoutes: Readonly<Partial<Record<PlaceId, string>>>;
   readonly data: GameMap<PlaceId>;
-  /** Background exported from Tiled (File > Export As Image). */
+  /** Background image, built by tools/map-art from its pixel art. */
   readonly image: string;
   /** Colour around the map, visible when it is smaller than the screen. */
   readonly backdrop: string;
