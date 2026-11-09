@@ -1992,6 +1992,68 @@
          "y":0
         }, 
         {
+         "draworder":"index",
+         "id":24,
+         "name":"art",
+         "objects":[
+        {
+         "height":32,
+         "id":10,
+         "name":"sign-pier",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":32,
+         "x":1824,
+         "y":1408
+        }, 
+        {
+         "height":32,
+         "id":11,
+         "name":"sign-home",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":32,
+         "x":1568,
+         "y":1760
+        }, 
+        {
+         "height":32,
+         "id":12,
+         "name":"sign-work",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":32,
+         "x":2496,
+         "y":2080
+        }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
          "id":20,
          "layers":[
                 {
@@ -2340,8 +2402,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":24,
- "nextobjectid":10,
+ "nextlayerid":25,
+ "nextobjectid":13,
  "orientation":"orthogonal",
  "properties":[
         {

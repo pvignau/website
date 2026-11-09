@@ -42,7 +42,7 @@ export default defineConfig([
     languageOptions: { globals: globals.browser },
   },
   {
-    files: ['*.config.{js,ts}', 'vite-plugins/**/*.ts'],
+    files: ['*.config.{js,ts}', 'vite-plugins/**/*.ts', 'tools/**/*.ts'],
     languageOptions: { globals: globals.node },
   },
   {

@@ -18,13 +18,18 @@ function stripLayer(layer: unknown, keepData: boolean): unknown {
     const { data: _data, ...metadata } = layer;
     return metadata;
   }
+  if (layer.type === 'objectgroup' && !keepData) {
+    const { objects: _objects, ...metadata } = layer;
+    return metadata;
+  }
   return layer;
 }
 
 /**
- * Drops what the runtime never reads from a Tiled map: tilesets and the tile
- * data of visual layers, which are pre-rendered in the background image.
- * Layer metadata (names, offsets) is kept: the background placement needs it.
+ * Drops what the runtime never reads from a Tiled map: tilesets, the tile
+ * data of visual layers and the objects of the `art` layer, all pre-rendered
+ * in the background image (tools/map-art). Layer metadata (names, offsets) is
+ * kept: the background placement needs it.
  */
 export function stripVisualData(map: unknown): unknown {
   if (!isRecord(map) || !Array.isArray(map.layers)) return map;

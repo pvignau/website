@@ -38,7 +38,8 @@ src/
   ui/         dialogue, HUD, journal de quête, aide, croix tactile, version texte
   quest/      progression de la quête (localStorage)
   lib/        petits hooks et accès au stockage
-  maps/       cartes Tiled (.json) et leurs fonds exportés (.webp)
+  maps/       cartes Tiled (.json) et leurs fonds (.webp)
+tools/map-art/ fabrique les fonds des cartes : dessin à 16 px, sprites, script
 vite-plugins/ tiled-map.ts (cartes allégées) et site-pages.ts (métadonnées, pages statiques)
 ```
 
@@ -75,7 +76,7 @@ Les textes sont des blocs (`paragraph`, `list`, `projects`) rendus en HTML séma
 
 ## Éditer une carte dans Tiled
 
-Les cartes `src/maps/world.json` et `home.json` sont des exports JSON de [Tiled](https://www.mapeditor.org/) (tuiles de 32 px). Les tilesets d'origine (`First Asset pack`, `Serene_Village`, `InteriorObjects`, `meta_tiles`…) ne sont pas dans ce dépôt : il faut les placer à côté des cartes pour retoucher les visuels ou peindre des collisions.
+Les cartes `src/maps/world.json` et `home.json` sont des exports JSON de [Tiled](https://www.mapeditor.org/) (tuiles de 32 px). Tiled sert à peindre les collisions et à placer les objets ; les images des cartes se fabriquent avec `tools/map-art` (voir plus bas). Les tilesets d'origine (`First Asset pack`, `Serene_Village`, `InteriorObjects`, `meta_tiles`…) ne sont pas dans ce dépôt : leurs calques restent dans les cartes, comme plan.
 
 Le moteur lit seulement le groupe de calques `meta` :
 
@@ -89,24 +90,30 @@ Le moteur lit seulement le groupe de calques `meta` :
 | `spawn`    | libre                  | `value` (route d'arrivée), `direction`  | Point d'apparition : sans `value`, celui par défaut ; sinon pour une arrivée depuis cette route ou ce lien direct. |
 | `decor`    | libre                  | `value` (nom du décor, ex. `leds`)      | Petit décor animé dessiné par le moteur (les diodes du lab).                                                       |
 
-Le fond de chaque carte est un export de Tiled (_Fichier → Exporter en tant qu'image_, calques visibles sauf `meta`), converti en WebP sans perte. Tiled agrandit l'image pour inclure les décalages des calques ; le moteur en tient compte.
+### Les images des cartes
 
-L'export de la grande carte mesure 3841 × 3870 px, presque tout en mer : décodé, il occupait environ 60 Mo de mémoire. Il est donc recadré sur ce que la caméra peut montrer. Les propriétés de la carte `crop-x`, `crop-y`, `crop-width` et `crop-height` (_Carte → Propriétés de la carte_) donnent ce cadre en pixels de l'export, et servent telles quelles à `cwebp` :
+Les tuiles font 32 px, mais le pixel art est dessiné à 16 px la tuile : un pixel du dessin couvre 2 × 2 pixels de la carte. `npm run map-art` (`tools/map-art/build.ts`, sans dépendance, mais il faut `cwebp`, de libwebp) fabrique les images du jeu à partir de :
 
-```bash
-cwebp -lossless -z 9 -exact -crop 865 913 2304 1952 world.png -o src/maps/world.webp
-cwebp -lossless -z 9 -exact home.png -o src/maps/home.webp
-```
+- `tools/map-art/world.png` et `home.png` : le fond de chaque carte, à un pixel par pixel du dessin, à retoucher dans un éditeur de pixel art ;
+- `tools/map-art/sea.png` : quatre tuiles sur quatre de mer, que le moteur répète autour de la grande carte ;
+- les sprites de `tools/map-art/sprites/`, écrits en texte : un caractère par pixel, une palette par sprite ;
+- le calque d'objets `art` de chaque carte, hors du groupe `meta` : chaque rectangle porte le nom d'un sprite et sa taille, en coordonnées paires (la grille du dessin), et ils sont dessinés dans l'ordre du calque. La propriété booléenne `solid` marque ce que le héros contourne, comme les panneaux : les tests vérifient que les tuiles dessous sont solides.
 
-Autour du fond recadré, le moteur prolonge la mer avec `src/img/sea.webp`, quatre tuiles sur quatre prises dans la carte, posées sur sa grille. Les tests de `src/game/maps.test.ts` vérifient que l'image a la taille du cadre, que toute tuile hors du calque `Sea` tient dedans, et que la caméra ne montre que l'image sur les écrans courants (téléphones dans les deux sens, tablettes, écrans jusqu'au 21:9). Si les îles s'agrandissent, élargissez le cadre.
+Le script écrit `src/maps/world.webp`, `home.webp` et `src/img/sea.webp`, deux fois plus grands, en WebP sans perte (`cwebp -lossless -z 9 -exact`). `npm run map-art -- --check` vérifie qu'ils sont à jour (il faut aussi `dwebp`).
 
-Après une modification, lancez `npm test` : les tests de `src/game/maps.test.ts` vérifient que chaque lieu, porte et point d'apparition reste accessible à pied depuis le point de départ. Contrôlez ensuite avec `?debug`.
+Ces fonds viennent des exports de Tiled d'origine, dont les tuiles de 16 px avaient été agrandies en lissant : bords flous, liserés autour des maisons, coutures entre les tuiles. Ils ont été redessinés une fois sur la grille de 16 px, avec une palette réduite et des chemins nettoyés ; un nouvel export de Tiled n'est donc plus la source des images.
+
+La grande carte est recadrée sur ce que la caméra peut montrer : l'export de Tiled mesurait 3841 × 3870 px, presque tout en mer, soit environ 60 Mo décodés. Les propriétés de la carte `crop-x`, `crop-y`, `crop-width` et `crop-height` (_Carte → Propriétés de la carte_) donnent ce cadre en pixels de l'export, qui s'agrandit pour inclure les décalages des calques ; le moteur en déduit où poser l'image.
+
+Autour du fond recadré, le moteur prolonge la mer avec `src/img/sea.webp`, posée sur la grille de la carte. Les tests de `src/game/maps.test.ts` vérifient que l'image a la taille du cadre, que toute tuile hors du calque `Sea` tient dedans, et que la caméra ne montre que l'image sur les écrans courants (téléphones dans les deux sens, tablettes, écrans jusqu'au 21:9). Si les îles s'agrandissent, élargissez le cadre et `world.png`.
+
+Après une modification, lancez `npm test` : les tests de `src/game/maps.test.ts` vérifient que chaque lieu, porte et point d'apparition reste accessible à pied depuis le point de départ, et ceux de `tools/map-art` que chaque sprite tombe sur la grille du dessin. Contrôlez ensuite avec `?debug`.
 
 ## Ajouter un lieu
 
 1. Ajoutez l'identifiant à `PlaceId` dans `src/content/types.ts` et à `PLACE_ORDER` dans `src/content/places.ts` (le compilateur signale ce qui manque).
 2. Écrivez son contenu dans `site.ts` et dans `site.placeholder.ts` : étiquette (12 caractères au plus), zone, titre, blocs, liens, objectif de quête.
-3. Dans Tiled, ajoutez au calque `meta/objects` un rectangle nommé par l'identifiant, avec `action` = `place`. Pour un nouveau bâtiment, ajoutez aussi les tuiles solides et, si besoin, un `decor`.
+3. Dans Tiled, ajoutez au calque `meta/objects` un rectangle nommé par l'identifiant, avec `action` = `place`. Pour un nouveau bâtiment, dessinez-le dans `tools/map-art` et ajoutez les tuiles solides et, si besoin, un `decor`.
 4. Pour lui donner sa propre URL, comme `/work`, déclarez-la dans `PATHS` et `STATIC_PAGES` (`src/app/pages.ts`) et dans `placeRoutes` (`src/game/maps.ts`), puis ajoutez son écran dans `src/app/router.tsx`.
 5. Lancez `npm test` : le journal de quête et la version texte prennent le lieu en compte d'eux-mêmes.
 
@@ -181,4 +188,5 @@ jobs:
 ## Licences et crédits
 
 - Police [Pixelify Sans](https://github.com/eifetx/Pixelify-Sans), sous SIL Open Font License 1.1 (`src/fonts/pixelify-sans/OFL.txt`), auto-hébergée. Elle remplace la police Minecraft d'origine, qui ne contenait aucune lettre accentuée.
-- Les cartes et les sprites viennent des packs cités dans les fichiers Tiled, qui gardent leurs licences d'origine. Les icônes et l'image `og-image.png` en sont dérivées.
+- Les fonds des cartes et le héros viennent des packs cités dans les fichiers Tiled, qui gardent leurs licences d'origine. Les icônes et l'image `og-image.png` en sont dérivées.
+- Les sprites de `tools/map-art/sprites/` (les panneaux) sont dessinés pour ce site.

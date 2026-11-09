@@ -16,7 +16,8 @@
     "format:check": "prettier --check .",
     "typecheck": "tsc -b",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "map-art": "node tools/map-art/build.ts"
   },
   "dependencies": {
     "react": "^19.3.1",

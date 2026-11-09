@@ -116,6 +116,14 @@ interface TiledLayer {
   offsetx?: number;
   offsety?: number;
   layers?: TiledLayer[];
+  objects?: {
+    name: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    properties?: { name: string; value: unknown }[];
+  }[];
 }
 
 /** Bounding box, in map pixels, of the tiles drawn by the visual layers except `Sea`. */
@@ -228,6 +236,62 @@ describe('the cropped world image', () => {
     expect(MAPS.home.sea).toBe(false);
   });
 });
+
+/** Sprites of the `art` layer marked `solid`: furniture, signs (tools/map-art draws them). */
+function solidArt(layers: TiledLayer[]): (Rect & { name: string })[] {
+  const art = layers.find((layer) => layer.type === 'objectgroup' && layer.name === 'art');
+  return (art?.objects ?? [])
+    .filter((object) => object.properties?.some((p) => p.name === 'solid' && p.value === true))
+    .map(({ name, x, y, width, height }) => ({ name, x, y, width, height }));
+}
+
+describe.each([['world', worldTiled.layers, MAPS.world.data]])(
+  'the solid art of the %s map',
+  (_, layers, map) => {
+    const objects = solidArt(layers);
+    const { collisions, tileSize } = map;
+
+    it('exists', () => {
+      expect(objects.length).toBeGreaterThan(0);
+    });
+
+    it('stands on solid tiles: the hero walks around it, not over it', () => {
+      for (const object of objects) {
+        // Where it touches the floor (its last rows are a shadow), then every tile it half covers.
+        const column = Math.floor((object.x + object.width / 2) / tileSize);
+        const row = Math.floor((object.y + object.height - 4) / tileSize);
+        expect(isSolidTile(collisions, column, row), `${object.name} on ${column},${row}`).toBe(
+          true,
+        );
+        for (
+          let r = Math.floor(object.y / tileSize);
+          r * tileSize < object.y + object.height;
+          r++
+        ) {
+          for (
+            let c = Math.floor(object.x / tileSize);
+            c * tileSize < object.x + object.width;
+            c++
+          ) {
+            const tile = { x: c * tileSize, y: r * tileSize, width: tileSize, height: tileSize };
+            const covered =
+              Math.max(
+                0,
+                Math.min(tile.x + tileSize, object.x + object.width) - Math.max(tile.x, object.x),
+              ) *
+              Math.max(
+                0,
+                Math.min(tile.y + tileSize, object.y + object.height) - Math.max(tile.y, object.y),
+              );
+            if (covered >= (tileSize * tileSize) / 2) {
+              expect(isSolidTile(collisions, c, r), `${object.name} over ${c},${r}`).toBe(true);
+            }
+          }
+        }
+      }
+    });
+  },
+);
 
 describe('map content', () => {
   const world = MAPS.world.data;

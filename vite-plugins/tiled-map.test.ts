@@ -13,6 +13,7 @@ describe('stripVisualData', () => {
         name: 'decor',
         layers: [{ type: 'tilelayer', name: 'trees', data: [3, 0] }],
       },
+      { type: 'objectgroup', name: 'art', objects: [{ id: 2, name: 'sign' }] },
       {
         type: 'group',
         name: 'meta',
@@ -24,14 +25,15 @@ describe('stripVisualData', () => {
     ],
   };
 
-  it('drops tilesets and the tile data of visual layers, keeping their offsets', () => {
+  it('drops tilesets, the tile data of visual layers and the art objects, keeping offsets', () => {
     expect(stripVisualData(map)).toEqual({
       width: 2,
       height: 1,
       layers: [
         { type: 'tilelayer', name: 'ground', offsety: -16 },
         { type: 'group', name: 'decor', layers: [{ type: 'tilelayer', name: 'trees' }] },
-        map.layers[2],
+        { type: 'objectgroup', name: 'art' },
+        map.layers[3],
       ],
     });
   });

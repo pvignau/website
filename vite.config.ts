@@ -50,7 +50,11 @@ export default defineConfig({
       },
       {
         extends: true,
-        test: { name: 'build', environment: 'node', include: ['vite-plugins/**/*.test.ts'] },
+        test: {
+          name: 'build',
+          environment: 'node',
+          include: ['vite-plugins/**/*.test.ts', 'tools/**/*.test.ts'],
+        },
       },
     ],
   },
