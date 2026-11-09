@@ -1,6 +1,8 @@
 import { PATHS } from '../app/pages';
 import type { PlaceId } from '../content';
 import { PLACE_IDS } from '../content';
+import type { MinimapLayout } from '../engine/minimap';
+import { minimapLayout } from '../engine/minimap';
 import type { GameMap } from '../engine/tiled';
 import { parseTiledMap } from '../engine/tiled';
 import homeData from '../maps/home.json?tiled';
@@ -35,9 +37,16 @@ export interface MapDefinition {
    * house greets you with the bio ("La porte grince..."); its desk reopens it.
    */
   readonly introPlace: PlaceId | null;
+  /**
+   * Layout of the minimap, drawn from the background image; null for none. The
+   * house has none: one room of 15 by 8 tiles, which the camera shows nearly
+   * whole, with a single way out, the door the hero came in by.
+   */
+  readonly minimap: MinimapLayout<PlaceId> | null;
 }
 
 const options = { placeIds: PLACE_IDS };
+const world = parseTiledMap(worldData, options);
 
 /** Parsed once, when the module loads: a data error fails fast (and in the tests). */
 export const MAPS: Readonly<Record<MapId, MapDefinition>> = {
@@ -45,12 +54,13 @@ export const MAPS: Readonly<Record<MapId, MapDefinition>> = {
     id: 'world',
     path: PATHS.world,
     placeRoutes: { work: PATHS.work },
-    data: parseTiledMap(worldData, options),
+    data: world,
     image: worldImage,
     backdrop: '#67e6d2',
     sea: true,
     place: null,
     introPlace: null,
+    minimap: minimapLayout(world),
   },
   home: {
     id: 'home',
@@ -62,5 +72,6 @@ export const MAPS: Readonly<Record<MapId, MapDefinition>> = {
     sea: false,
     place: 'home',
     introPlace: 'home',
+    minimap: null,
   },
 };

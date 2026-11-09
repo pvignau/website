@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
+import { PLACE_IDS } from '../content';
 import { computeCamera, computeScale } from '../engine/camera';
 import { isSolidTile, rectHitsSolid } from '../engine/collision';
 import type { Rect } from '../engine/geometry';
 import { HERO, heroHitbox } from '../engine/hero';
+import { MINIMAP_MARGIN_TILES, MINIMAP_MAX_PIXELS } from '../engine/minimap';
 import type { GameMap } from '../engine/tiled';
 import { findSpawn } from '../engine/tiled';
 import { ZOOM_LEVELS, zoomedScale } from '../engine/zoom';
@@ -253,6 +255,52 @@ describe('the cropped world image', () => {
     expect(world.background.x % world.tileSize).toBe(0);
     expect(world.background.y % world.tileSize).toBe(0);
     expect(MAPS.home.sea).toBe(false);
+  });
+});
+
+describe('the minimap', () => {
+  const world = MAPS.world.data;
+  const layout = MAPS.world.minimap;
+  const within = (outer: Rect, inner: Rect) =>
+    inner.x >= outer.x &&
+    inner.y >= outer.y &&
+    inner.x + inner.width <= outer.x + outer.width &&
+    inner.y + inner.height <= outer.y + outer.height;
+
+  it('lies within the cropped image, in whole blocks, small enough', () => {
+    expect(layout).not.toBeNull();
+    if (!layout) return;
+    expect(within(world.background, layout.frame)).toBe(true);
+    expect(layout.width * layout.blockSize).toBe(layout.frame.width);
+    expect(layout.height * layout.blockSize).toBe(layout.frame.height);
+    expect(Math.max(layout.width, layout.height)).toBeLessThanOrEqual(MINIMAP_MAX_PIXELS);
+  });
+
+  it('shows every tile the hero can reach, with sea around', () => {
+    if (!layout) throw new Error('No minimap.');
+    const margin = MINIMAP_MARGIN_TILES * world.tileSize;
+    const misses = reachableTiles(world).filter(
+      (tile) =>
+        !within(layout.frame, {
+          x: tile.x - margin,
+          y: tile.y - margin,
+          width: tile.width + 2 * margin,
+          height: tile.height + 2 * margin,
+        }),
+    );
+    expect(misses).toEqual([]);
+  });
+
+  it('marks the house, the projects, the lab and the boat, each on the minimap', () => {
+    if (!layout) throw new Error('No minimap.');
+    expect(layout.places.map(({ placeId }) => placeId).sort()).toEqual([...PLACE_IDS].sort());
+    for (const { placeId, x, y } of layout.places) {
+      expect(x > 0 && x < layout.width && y > 0 && y < layout.height, placeId).toBe(true);
+    }
+  });
+
+  it('leaves the house out: one room, shown whole on most screens', () => {
+    expect(MAPS.home.minimap).toBeNull();
   });
 });
 
