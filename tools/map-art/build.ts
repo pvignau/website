@@ -15,6 +15,7 @@
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { Image } from './image.ts';
 import { drawImage, enlarge } from './image.ts';
 import { decodePng, encodePng } from './png.ts';
@@ -25,8 +26,8 @@ export const ART_SCALE = 2;
 /** Name of the Tiled object layer that places sprites. */
 export const ART_LAYER = 'art';
 
-const ROOT = new URL('../../', import.meta.url).pathname;
-const HERE = new URL('./', import.meta.url).pathname;
+const ROOT = fileURLToPath(new URL('../../', import.meta.url));
+const HERE = fileURLToPath(new URL('./', import.meta.url));
 /** Work files (PNG for cwebp, PAM from dwebp): node_modules is ignored by git. */
 const CACHE = join(ROOT, 'node_modules/.cache/map-art');
 
@@ -43,7 +44,7 @@ export interface ArtObject {
   y: number;
   width: number;
   height: number;
-  /** Furniture the hero cannot walk through (checked against the collision tiles by the tests). */
+  /** Something the hero walks around, a sign or furniture (the tests check its collision tiles). */
   solid: boolean;
 }
 
@@ -234,4 +235,4 @@ function main(check: boolean): void {
   }
 }
 
-if (import.meta.url === `file://${process.argv[1] ?? ''}`) main(process.argv.includes('--check'));
+if (process.argv[1] === fileURLToPath(import.meta.url)) main(process.argv.includes('--check'));
