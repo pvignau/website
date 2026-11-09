@@ -88,7 +88,7 @@ Le moteur lit seulement le groupe de calques `meta` :
 | `place`    | un `PlaceId`           | `radius` (facultatif, 24 px par défaut) | Ouvre le dialogue du lieu. Plusieurs objets peuvent ouvrir le même lieu.                                           |
 | `redirect` | libre, ou un `PlaceId` | `value` (route, ex. `/home`), `radius`  | Mène à une autre route. Nommé par un lieu, il en prend l'étiquette et la zone ; sinon « Sortir ».                  |
 | `spawn`    | libre                  | `value` (route d'arrivée), `direction`  | Point d'apparition : sans `value`, celui par défaut ; sinon pour une arrivée depuis cette route ou ce lien direct. |
-| `decor`    | libre                  | `value` (nom du décor, ex. `leds`)      | Petit décor animé dessiné par le moteur (les diodes du lab).                                                       |
+| `decor`    | libre                  | `value` (nom du décor, ex. `leds`)      | Petit décor animé dessiné par le moteur : diodes (`leds`), voyant de l'antenne (`beacon`) et néon (`neon`) du lab. |
 
 ### Les images des cartes
 
@@ -189,4 +189,4 @@ jobs:
 
 - Police [Pixelify Sans](https://github.com/eifetx/Pixelify-Sans), sous SIL Open Font License 1.1 (`src/fonts/pixelify-sans/OFL.txt`), auto-hébergée. Elle remplace la police Minecraft d'origine, qui ne contenait aucune lettre accentuée.
 - Les fonds des cartes et le héros viennent des packs cités dans les fichiers Tiled, qui gardent leurs licences d'origine. Les icônes et l'image `og-image.png` en sont dérivées.
-- Les sprites de `tools/map-art/sprites/` (les panneaux) sont dessinés pour ce site.
+- Les sprites de `tools/map-art/sprites/` (panneaux, lab) sont dessinés pour ce site.

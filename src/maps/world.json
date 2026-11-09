@@ -2046,6 +2046,45 @@
          "width":32,
          "x":2496,
          "y":2080
+        }, 
+        {
+         "height":46,
+         "id":13,
+         "name":"lab-door",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":28,
+         "x":2536,
+         "y":2002
+        }, 
+        {
+         "height":32,
+         "id":14,
+         "name":"lab-antenna",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":6,
+         "x":2584,
+         "y":1902
+        }, 
+        {
+         "height":24,
+         "id":15,
+         "name":"lab-sign",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":52,
+         "x":2530,
+         "y":1960
         }],
          "opacity":1,
          "type":"objectgroup",
@@ -2272,7 +2311,7 @@
          "y":2000
         }, 
         {
-         "height":13,
+         "height":18,
          "id":5,
          "name":"lab-leds",
          "properties":[
@@ -2289,9 +2328,9 @@
          "rotation":0,
          "type":"",
          "visible":true,
-         "width":13,
-         "x":2544,
-         "y":2011
+         "width":18,
+         "x":2542,
+         "y":2014
         }, 
         {
          "height":120,
@@ -2388,6 +2427,50 @@
          "width":0,
          "x":2476,
          "y":2104
+        }, 
+        {
+         "height":8,
+         "id":16,
+         "name":"lab-beacon",
+         "properties":[
+                {
+                 "name":"action",
+                 "type":"string",
+                 "value":"decor"
+                }, 
+                {
+                 "name":"value",
+                 "type":"string",
+                 "value":"beacon"
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":6,
+         "x":2584,
+         "y":1900
+        }, 
+        {
+         "height":18,
+         "id":17,
+         "name":"lab-neon",
+         "properties":[
+                {
+                 "name":"action",
+                 "type":"string",
+                 "value":"decor"
+                }, 
+                {
+                 "name":"value",
+                 "type":"string",
+                 "value":"neon"
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":52,
+         "x":2530,
+         "y":1960
         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -2403,7 +2486,7 @@
          "y":0
         }],
  "nextlayerid":25,
- "nextobjectid":13,
+ "nextobjectid":18,
  "orientation":"orthogonal",
  "properties":[
         {

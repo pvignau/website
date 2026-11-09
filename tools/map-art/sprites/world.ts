@@ -1,4 +1,4 @@
-/** Sprites of the world map: the signs. */
+/** Sprites of the world map: the signs and the AI lab. */
 import type { Image } from '../image.ts';
 import type { Palette } from '../sprite.ts';
 import { parseSprite } from '../sprite.ts';
@@ -78,8 +78,95 @@ const SIGN_WORK = `
   ...ss......ss...
 `;
 
+/** The AI lab, in the annex of the workshop: steel and neon. */
+const LAB: Palette = {
+  k: '#3a3a50', // frames
+  d: '#2b2d42', // sign plate
+  c: '#a0f2e5', // cyan neon
+  m: '#f07fc0', // pink neon
+  g: '#8e8f8e', // metal
+  G: '#d3cdc4', // light metal
+  r: '#a33a3a', // beacon, off (blinks over it: decor "beacon")
+  w: '#f1e6d6', // wall
+  W: '#d3cdc4', // wall, shaded
+  1: '#baafa7', // wall base, top to bottom
+  2: '#99a49b',
+  3: '#d3cdc4',
+  4: '#8e8f8e',
+  5: '#7a7b64',
+  q: '#2d4f63', // glass
+  Q: '#4f8197', // glass, reflection
+  l: '#60dac7', // light from inside
+};
+
+/** Rooftop sign: LAB IA in neon letters. */
+const LAB_SIGN = `
+  kkkkkkkkkkkkkkkkkkkkkkkkkk
+  kddddddddddddddddddddddddk
+  kdcddddcddccdddddmmmddmddk
+  kdcdddcdcdcdcdddddmddmdmdk
+  kdcdddcccdccddddddmddmmmdk
+  kdcdddcdcdcdcdddddmddmdmdk
+  kdcccdcdcdccdddddmmmdmdmdk
+  kddddddddddddddddddddddddk
+  kkkkkkkkkkkkkkkkkkkkkkkkkk
+  ...gg................gg...
+  ...gg................gg...
+  ...gg................gg...
+`;
+
+/** Antenna on the roof; its red light blinks (decor "beacon"). */
+const LAB_ANTENNA = `
+  .r.
+  .r.
+  .G.
+  GgG
+  .G.
+  G.g
+  .G.
+  G.g
+  .G.
+  G.g
+  .G.
+  G.g
+  .G.
+  G.g
+  .G.
+  GGg
+`;
+
+/** Glass door, lit from inside, where the round window was. */
+const LAB_DOOR = `
+  wwwwwwwwwwwwww
+  wwwwwwwwwwwwww
+  wwwwwwwwwwwwww
+  wwwwwwwwwwwwww
+  wwllllllllllww
+  wWkkkkkkkkkkkw
+  wWkqqqqkqqqqkw
+  wWkqQqqkqQqqkw
+  wWkqqQqkqqQqkw
+  wWkqqqQkqqqQkw
+  wWkqqqqkqqqqkw
+  wWkqqqqkqqqqkw
+  wWkqqqqkqqqqkw
+  wWkqqqqkqqqqkw
+  wWkqqqqkqqqqkw
+  wWkqqqqkqqqqkw
+  11kqqqqkqqqqk1
+  22kllllkllllk2
+  33kllllkllllk3
+  44kllllkllllk4
+  44kllllkllllk4
+  44kkkkkkkkkkk4
+  55kkkkkkkkkkk5
+`;
+
 export const WORLD_SPRITES: Readonly<Record<string, Image>> = {
   'sign-home': parseSprite('sign-home', OUTDOOR, SIGN_HOME),
   'sign-pier': parseSprite('sign-pier', OUTDOOR, SIGN_PIER),
   'sign-work': parseSprite('sign-work', OUTDOOR, SIGN_WORK),
+  'lab-sign': parseSprite('lab-sign', LAB, LAB_SIGN),
+  'lab-antenna': parseSprite('lab-antenna', LAB, LAB_ANTENNA),
+  'lab-door': parseSprite('lab-door', LAB, LAB_DOOR),
 };

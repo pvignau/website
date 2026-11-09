@@ -126,7 +126,7 @@
   pointer-events: none;
 }
 
-/* Lab window: blinking diodes. */
+/* Lab door: diodes blinking behind the glass. */
 .decor--leds::before,
 .decor--leds::after {
   content: '';
@@ -137,17 +137,17 @@
 }
 
 .decor--leds::before {
-  left: calc(3px * var(--s));
-  top: calc(3px * var(--s));
+  left: calc(2px * var(--s));
+  top: calc(6px * var(--s));
   background: #6ee7b7;
-  box-shadow: calc(5px * var(--s)) calc(2px * var(--s)) 0 #ef8354;
+  box-shadow: calc(2px * var(--s)) calc(6px * var(--s)) 0 #ef8354;
 }
 
 .decor--leds::after {
-  left: calc(5px * var(--s));
-  top: calc(8px * var(--s));
+  left: calc(12px * var(--s));
+  top: calc(4px * var(--s));
   background: #ffd166;
-  box-shadow: calc(4px * var(--s)) calc(1px * var(--s)) 0 #6ee7b7;
+  box-shadow: calc(2px * var(--s)) calc(10px * var(--s)) 0 #6ee7b7;
   animation-duration: 0.7s;
   animation-direction: reverse;
 }
@@ -155,6 +155,46 @@
 @keyframes leds-blink {
   50% {
     opacity: 0.2;
+  }
+}
+
+/* Lab antenna: a red light, seen from afar, with a one-pixel halo. */
+.decor--beacon::before {
+  content: '';
+  position: absolute;
+  left: calc(2px * var(--s));
+  top: calc(2px * var(--s));
+  width: calc(2px * var(--s));
+  height: calc(4px * var(--s));
+  background: #ff5a4f;
+  box-shadow: 0 0 0 calc(2px * var(--s)) rgb(255 90 79 / 35%);
+  animation: beacon-blink 1.6s steps(1) infinite;
+}
+
+@keyframes beacon-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Lab sign: the neon glows, and flickers now and then. */
+.decor--neon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: 0 0 0 calc(2px * var(--s)) rgb(160 242 229 / 40%);
+  animation: neon-flicker 5s steps(1) infinite;
+}
+
+@keyframes neon-flicker {
+  92%,
+  96% {
+    opacity: 0.25;
+  }
+
+  94%,
+  98% {
+    opacity: 1;
   }
 }
 

@@ -73,7 +73,7 @@ export const ui: UiCopy = {
     outdoorZone: "Sur l'île",
     mapAlt: {
       world:
-        'Deux îles en pixel art reliées par un pont : une maison, un atelier avec son annexe et un ponton où attend un bateau.',
+        'Deux îles en pixel art reliées par un pont : une maison, un atelier, son annexe devenue le lab IA sous une enseigne au néon, et un ponton où attend un bateau.',
       home: 'Intérieur de la maison : un salon avec un canapé, une chambre avec un bureau.',
     },
   },
