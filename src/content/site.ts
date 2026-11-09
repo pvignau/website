@@ -20,7 +20,7 @@ export const content: SiteContent = {
   description:
     'Le portfolio de Pierre-Yves Vignau, alias Pyve, software architect : un archipel en pixel art à explorer comme un mini-RPG, ou à lire en version texte.',
   pitch:
-    'Pierre-Yves Vignau, alias Pyve, est software architect : son portfolio est un petit archipel en pixel art, à explorer comme un mini-RPG. Chaque lieu raconte une partie de son travail, de la maison au ponton. Une version texte reprend tout, pour qui préfère lire.',
+    'Pierre-Yves Vignau, alias Pyve, est software architect : son portfolio est un petit archipel en pixel art, à explorer comme un mini-RPG. Chaque lieu raconte une partie de son travail, de la maison au ponton, et une version texte reprend tout.',
 
   places: {
     home: {
@@ -138,8 +138,7 @@ export const content: SiteContent = {
             },
             {
               name: 'Ce mini-RPG',
-              summary:
-                'Le site où tu te promènes : un portfolio en pixel art, codé en TypeScript, avec une version texte pour qui préfère lire.',
+              summary: 'Le site où tu te promènes, codé en TypeScript, avec sa version texte.',
               tags: ['TypeScript', 'Pixel art', 'Jeu web'],
               links: [{ label: 'Le code', href: `${GITHUB}/website` }],
             },
@@ -162,11 +161,11 @@ export const content: SiteContent = {
         },
         {
           kind: 'paragraph',
-          text: "Sur mes projets récents, je code en binôme avec Claude, un agent IA. Il cosigne les commits : c'est écrit dans l'historique.",
+          text: 'Sur mes projets récents, je code en binôme avec Claude, un agent IA.',
         },
         {
           kind: 'paragraph',
-          text: "L'agent écrit vite. Moi, je fixe le cadre, je relis et je teste.",
+          text: "Il écrit vite ; je fixe le cadre, puis je relis et teste ce qu'il propose.",
         },
         {
           kind: 'paragraph',

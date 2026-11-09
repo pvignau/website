@@ -75,7 +75,8 @@ const tagline = 'portfolio et expériences interactives';
 export const ui: UiCopy = {
   siteName,
   pageTitle: (page) => (page === null ? `${siteName} : ${tagline}` : `${page} · ${siteName}`),
-  ogImageAlt: 'En pixel art, le héros marche sur le ponton entre la maison et le bateau.',
+  ogImageAlt:
+    "En pixel art, le héros sur le chemin devant sa maison, le pont vers l'autre île et un bateau à quai.",
   skipLink: 'Aller à la version texte',
   loading: "Chargement de l'île…",
   noscript:

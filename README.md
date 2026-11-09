@@ -2,9 +2,9 @@
 
 Le portfolio de Pyve, à explorer comme un mini-RPG en pixel art : [pyve.is-a.dev](https://pyve.is-a.dev).
 
-![Le héros sur le ponton, entre la maison et le bateau](public/og-image.png)
+![Le héros sur le chemin devant sa maison, avec le pont et le bateau](public/og-image.png)
 
-Le visiteur se promène sur deux îles reliées par un pont. Il entre dans la maison (la bio), lit le panneau de l'atelier (les projets), visite le lab dans l'annexe et rejoint le bateau au ponton (le contact). Une version texte reprend tout le contenu, pour qui préfère lire, et pour les lecteurs d'écran comme pour les moteurs de recherche.
+Le visiteur se promène sur deux îles reliées par un pont. Il entre dans la maison (la bio), lit le panneau de l'atelier (les projets), visite le lab dans l'annexe et rejoint le bateau au ponton (le contact). Une version texte reprend tout le contenu, pour qui préfère lire, pour les lecteurs d'écran et pour les moteurs de recherche.
 
 ## Démarrer
 
@@ -43,14 +43,37 @@ tools/map-art/ fabrique les fonds des cartes : dessin à 16 px, sprites, script
 vite-plugins/ tiled-map.ts (cartes allégées) et site-pages.ts (métadonnées, pages statiques)
 ```
 
-- **Boucle de jeu.** `useAnimationFrame` appelle le contrôleur du héros à chaque frame avec un delta-time, plafonné à 50 ms pour ne jamais traverser un mur après un onglet en pause. La vitesse est de 120 px/s. Le héros et la caméra bougent par `transform`, écrits directement dans le DOM via des refs : React ne se re-rend que lorsque l'objet à proximité change.
-- **Collisions.** La grille vient du calque `collisions` de Tiled. Le déplacement est résolu axe par axe (X puis Y) contre les tuiles solides, ce qui fait glisser le héros le long des murs. Sa hitbox couvre ses pieds (14 × 8 px), comme dans les RPG vus de dessus.
-- **Caméra.** Elle centre le héros sans jamais montrer l'extérieur de la carte, et centre une carte plus petite que l'écran. L'échelle donne un nombre entier de pixels physiques par pixel de la carte (`image-rendering: pixelated`), avec environ douze tuiles sur le petit côté de l'écran.
-- **Zoom.** Quatre paliers autour de ce cadrage, ×0,5, ×1, ×1,5 et ×2 (`src/engine/zoom.ts`), arrondis eux aussi à un nombre entier de pixels physiques par pixel de carte ; un palier qui donnerait la même échelle que son voisin est sauté. Touches + et -, molette (un cran, ou un glissement sur un pavé tactile, vaut un palier) et boutons en bas à droite. La caméra est recalculée à chaque palier ; collisions et proximité, en pixels de carte, ne changent pas. Le palier est gardé dans `localStorage` (`pyve:zoom:v1`), pour les deux cartes.
-- **Minicarte.** Sur la carte du monde seulement. `src/engine/minimap.ts` en tire le cadre de la carte elle-même : les tuiles praticables (remplissage depuis le point de départ) et les objets interactifs, avec trois tuiles de mer autour, dans l'image de fond, par blocs carrés (une puissance de deux, 16 px aujourd'hui, pour 128 pixels de côté au plus). Une fois l'image décodée, au premier moment libre, `src/ui/drawMinimap.ts` en fait une image de 96 × 76 pixels dont chacun est la moyenne exacte de son bloc : `createImageBitmap` recadre et réduit de moitié (sans second décodage en mémoire), puis des demi-réductions sur canvas. La minicarte suit donc d'elle-même `world.json` et `world.webp`. Le héros y bouge par `transform`, écrit par la boucle quand il change de pixel de minicarte, soit une fois toutes les 16 px de marche. Les lieux de la quête y sont des carrés, pleins une fois visités, écartés s'ils se chevauchent. Un bouton la replie (`pyve:minimap:v1`) ; sans choix enregistré, elle est repliée sur un écran de moins de 30rem de haut (téléphone couché). La maison n'en a pas : une pièce de 15 × 8 tuiles, que la caméra montre presque entière, avec une seule sortie, la porte d'entrée.
-- **Pas de Redux.** L'état qui change à chaque frame vit dans des refs. Ce qui est ouvert (un lieu, l'aide, la version texte) se lit dans l'adresse et l'entrée d'historique, si bien que Retour le referme ; seuls l'accueil de la maison et l'aide de première visite, qui s'ouvrent d'eux-mêmes, sont un état local. La quête est un petit store branché sur `useSyncExternalStore`. Un store global n'apportait rien.
-- **Routage en mode history**, sans bibliothèque : `src/app/history.ts` tient l'historique (`pushState`, `replaceState`, `popstate`) et `src/app/router.tsx` choisit l'écran. Pour trois routes statiques, React Router pesait 90 ko sur 390 (25 ko compressés). `/` et `/work` partagent le même écran : `/work` ouvre les projets, et fermer le dialogue ramène à `/`. `/home` est l'intérieur de la maison. Toute autre URL affiche la page 404 du jeu, et une frontière d'erreur (`RouteError`) remplace un écran blanc par la page d'erreur du jeu. Avant le premier rendu, `src/app/location.ts` réécrit les adresses que GitHub Pages sert aussi (`/home.html`, `/work/`, `/index.html`) et les anciens liens `/#/home` et `/#/work`. Le mode history donne des URL réelles, distinctes pour les moteurs de recherche et les aperçus de liens, au prix des pages statiques décrites plus bas.
-- **Build.** `vite-plugins/tiled-map.ts` sert les imports `*.json?tiled` sans les tilesets ni les tuiles visuelles, déjà dessinées dans le `.webp` (world.json passe de ~850 kB à ~90 kB). `vite-plugins/site-pages.ts` écrit dans `index.html`, à partir de `src/content`, le titre, la description, l'URL canonique, les balises Open Graph, le préchargement de la carte et la version texte du portfolio (`vite-plugins/static-page.ts`). Celle-ci est remplacée par le jeu quand il démarre ; elle s'affiche sans JavaScript, ou quand le jeu ne peut pas démarrer (script bloqué ou en erreur). Il produit aussi `home.html`, `work.html` et `404.html`, ainsi que `sitemap.xml` et `robots.txt`, écrits pour le domaine de `public/CNAME`. `public/.nojekyll` évite à GitHub Pages de passer le site dans Jekyll.
+### Boucle de jeu
+
+`useAnimationFrame` appelle le contrôleur du héros à chaque frame avec un delta-time, plafonné à 50 ms pour ne jamais traverser un mur après un onglet en pause. La vitesse est de 120 px/s. Le héros et la caméra bougent par `transform`, écrits directement dans le DOM via des refs : React ne se re-rend que lorsque l'objet à proximité change.
+
+### Collisions
+
+La grille vient du calque `collisions` de Tiled. Le déplacement est résolu axe par axe (X puis Y) contre les tuiles solides, ce qui fait glisser le héros le long des murs. Sa hitbox couvre ses pieds (14 × 8 px), comme dans les RPG vus de dessus.
+
+### Caméra
+
+La caméra centre le héros sans jamais montrer l'extérieur de la carte, et centre une carte plus petite que l'écran. L'échelle donne un nombre entier de pixels physiques par pixel de la carte (`image-rendering: pixelated`), avec environ douze tuiles sur le petit côté de l'écran.
+
+### Zoom
+
+Quatre paliers autour de ce cadrage, ×0,5, ×1, ×1,5 et ×2 (`src/engine/zoom.ts`), arrondis eux aussi à un nombre entier de pixels physiques par pixel de carte ; un palier qui donnerait la même échelle que son voisin est sauté. Touches + et -, molette (un cran, ou un glissement sur un pavé tactile, vaut un palier) et boutons en bas à droite. La caméra est recalculée à chaque palier ; collisions et proximité, en pixels de carte, ne changent pas. Le palier est gardé dans `localStorage` (`pyve:zoom:v1`), pour les deux cartes.
+
+### Minicarte
+
+Sur la carte du monde seulement. `src/engine/minimap.ts` en tire le cadre de la carte elle-même : les tuiles praticables (remplissage depuis le point de départ) et les objets interactifs, avec trois tuiles de mer autour, dans l'image de fond, par blocs carrés (une puissance de deux, 16 px aujourd'hui, pour 128 pixels de côté au plus). Une fois l'image décodée, au premier moment libre, `src/ui/drawMinimap.ts` en fait une image de 96 × 76 pixels dont chacun est la moyenne exacte de son bloc : `createImageBitmap` recadre et réduit de moitié (sans second décodage en mémoire), puis des demi-réductions sur canvas. La minicarte suit donc d'elle-même `world.json` et `world.webp`. Le héros y bouge par `transform`, écrit par la boucle quand il change de pixel de minicarte, soit une fois toutes les 16 px de marche. Les lieux de la quête y sont des carrés, pleins une fois visités, écartés s'ils se chevauchent. Un bouton la replie (`pyve:minimap:v1`) ; sans choix enregistré, elle est repliée sur un écran de moins de 30rem de haut (téléphone couché). La maison n'en a pas : une pièce de 15 × 8 tuiles, que la caméra montre presque entière, avec une seule sortie, la porte d'entrée.
+
+### État
+
+Pas de Redux. L'état qui change à chaque frame vit dans des refs. Ce qui est ouvert (un lieu, l'aide, la version texte) se lit dans l'adresse et l'entrée d'historique, si bien que Retour le referme ; seuls l'accueil de la maison et l'aide de première visite, qui s'ouvrent d'eux-mêmes, sont un état local. La quête est un petit store branché sur `useSyncExternalStore`.
+
+### Routage
+
+Le routage est en mode history, sans bibliothèque : `src/app/history.ts` tient l'historique (`pushState`, `replaceState`, `popstate`) et `src/app/router.tsx` choisit l'écran. Pour trois routes statiques, React Router pesait 90 ko sur 390 (25 ko compressés). `/` et `/work` partagent le même écran : `/work` ouvre les projets, et fermer le dialogue ramène à `/`. `/home` est l'intérieur de la maison. Toute autre URL affiche la page 404 du jeu, et une frontière d'erreur (`RouteError`) remplace un écran blanc par la page d'erreur du jeu. Avant le premier rendu, `src/app/location.ts` réécrit les adresses que GitHub Pages sert aussi (`/home.html`, `/work/`, `/index.html`) et les anciens liens `/#/home` et `/#/work`. Le mode history donne des URL réelles, distinctes pour les moteurs de recherche et les aperçus de liens, au prix des pages statiques décrites plus bas.
+
+### Build
+
+`vite-plugins/tiled-map.ts` sert les imports `*.json?tiled` sans les tilesets ni les tuiles visuelles, déjà dessinées dans le `.webp` (world.json passe de ~850 kB à ~90 kB). `vite-plugins/site-pages.ts` écrit dans `index.html`, à partir de `src/content`, le titre, la description, l'URL canonique, les balises Open Graph, le préchargement de la carte et la version texte du portfolio (`vite-plugins/static-page.ts`). Celle-ci est remplacée par le jeu quand il démarre ; elle s'affiche sans JavaScript, ou quand le jeu ne peut pas démarrer (script bloqué ou en erreur). Il produit aussi `home.html`, `work.html` et `404.html`, ainsi que `sitemap.xml` et `robots.txt`, écrits pour le domaine de `public/CNAME`. `public/.nojekyll` évite à GitHub Pages de passer le site dans Jekyll.
 
 ### GitHub Pages
 
@@ -104,7 +127,7 @@ Les tuiles font 32 px, mais le pixel art est dessiné à 16 px la tuile : un pix
 
 Le script écrit `src/maps/world.webp`, `home.webp` et `src/img/sea.webp`, deux fois plus grands, en WebP sans perte (`cwebp -lossless -z 9 -exact`). `npm run map-art -- --check` vérifie qu'ils sont à jour (il faut aussi `dwebp`).
 
-Ces fonds viennent des exports de Tiled d'origine, dont les tuiles de 16 px avaient été agrandies en lissant : bords flous, liserés autour des maisons, coutures entre les tuiles. Ils ont été redessinés une fois sur la grille de 16 px, avec une palette réduite et des chemins nettoyés ; un nouvel export de Tiled n'est donc plus la source des images.
+Les fonds sont redessinés sur la grille de 16 px à partir des exports de Tiled d'origine, dont les tuiles avaient été agrandies en lissant. Un nouvel export de Tiled n'est donc plus la source des images.
 
 La grande carte est recadrée sur ce que la caméra peut montrer : l'export de Tiled mesurait 3841 × 3870 px, presque tout en mer, soit environ 60 Mo décodés. Les propriétés de la carte `crop-x`, `crop-y`, `crop-width` et `crop-height` (_Carte → Propriétés de la carte_) donnent ce cadre en pixels de l'export, qui s'agrandit pour inclure les décalages des calques ; le moteur en déduit où poser l'image.
 
@@ -193,6 +216,6 @@ jobs:
 
 ## Licences et crédits
 
-- Police [Pixelify Sans](https://github.com/eifetx/Pixelify-Sans), sous SIL Open Font License 1.1 (`src/fonts/pixelify-sans/OFL.txt`), auto-hébergée. Elle remplace la police Minecraft d'origine, qui ne contenait aucune lettre accentuée.
+- Police [Pixelify Sans](https://github.com/eifetx/Pixelify-Sans), sous SIL Open Font License 1.1 (`src/fonts/pixelify-sans/OFL.txt`), auto-hébergée. Elle couvre les lettres accentuées du français.
 - Les fonds des cartes et le héros viennent des packs cités dans les fichiers Tiled, qui gardent leurs licences d'origine. Les icônes et l'image `og-image.png` en sont dérivées.
 - Les sprites de `tools/map-art/sprites/` (panneaux, lab, mobilier de la maison) sont dessinés pour ce site.
