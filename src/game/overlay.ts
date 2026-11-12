@@ -1,5 +1,5 @@
-import type { PlaceId } from '../content';
-import { isPlaceId } from '../content';
+import type { PlaceId, PlaceViewId } from '../content';
+import { isPlaceId, isPlaceViewId } from '../content';
 
 /**
  * What a history entry added by the game shows over it: a place, the help or
@@ -10,6 +10,8 @@ export type Overlay = PlaceId | 'help' | 'text';
 
 export interface OverlayState {
   readonly overlay: Overlay;
+  /** The view of the place, when an object inside it opened it (the desk of the house). */
+  readonly view?: PlaceViewId;
 }
 
 /** The overlay of a history entry's state; anything else (null, a door's state) reads as none. */
@@ -23,4 +25,11 @@ export function overlayOf(state: unknown): Overlay | null {
 /** The place an overlay shows, if it is one. */
 export function overlayPlace(overlay: Overlay | null): PlaceId | null {
   return overlay === null || overlay === 'help' || overlay === 'text' ? null : overlay;
+}
+
+/** The view of the place a history entry shows; none for anything else. */
+export function overlayView(state: unknown): PlaceViewId | null {
+  if (overlayPlace(overlayOf(state)) === null) return null;
+  const { view } = state as { view?: unknown };
+  return typeof view === 'string' && isPlaceViewId(view) ? view : null;
 }

@@ -3,7 +3,7 @@ import { isSolidTile } from './collision';
 import { DEFAULT_INTERACTION_RADIUS, findSpawn, parseTiledMap } from './tiled';
 
 const PLACE_IDS = ['home', 'work', 'lab', 'contact'] as const;
-const options = { placeIds: PLACE_IDS, noteIds: ['tv'] };
+const options = { placeIds: PLACE_IDS, noteIds: ['tv'], viewIds: ['office'] };
 
 const property = (name: string, value: string | number) => ({
   name,
@@ -104,10 +104,26 @@ describe('parseTiledMap', () => {
         id: '2',
         name: 'work',
         placeId: 'work',
+        view: null,
         rect: { x: 64, y: 0, width: 32, height: 32 },
         radius: DEFAULT_INTERACTION_RADIUS,
       },
     ]);
+  });
+
+  it('reads the view a place object opens', () => {
+    const desk = {
+      name: 'home',
+      x: 0,
+      y: 32,
+      width: 32,
+      height: 16,
+      props: { action: 'place', view: 'office' },
+    };
+    const map = parseTiledMap(tiledMap({ objects: [...DEFAULT_OBJECTS, desk] }), options);
+    expect(map.interactables.find((item) => item.name === 'home')).toEqual(
+      expect.objectContaining({ kind: 'place', placeId: 'home', view: 'office' }),
+    );
   });
 
   it('reads redirects, their route and the place they belong to', () => {
@@ -368,6 +384,23 @@ describe('parseTiledMap', () => {
           ],
         }),
         /note object "radio" is not a known note id/,
+      ],
+      [
+        'a place with an unknown view',
+        tiledMap({
+          objects: [
+            ...DEFAULT_OBJECTS,
+            {
+              name: 'home',
+              x: 0,
+              y: 32,
+              width: 8,
+              height: 8,
+              props: { action: 'place', view: 'attic' },
+            },
+          ],
+        }),
+        /place object "home" has an unknown view "attic"/,
       ],
       [
         'a note on a point',

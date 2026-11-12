@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { content } from './site';
-import type { Link, Place, PlaceId, Project } from './types';
+import type { Link, Place, PlaceId, PlaceView, Project } from './types';
 
 const PLACE_IDS: PlaceId[] = ['home', 'work', 'lab', 'contact'];
 const places: Place[] = PLACE_IDS.map((id) => content.places[id]);
+
+const views: PlaceView[] = places.flatMap((place) => Object.values(place.views ?? {}));
 
 const projects: Project[] = content.places.work.body.flatMap((block) =>
   block.kind === 'projects' ? block.items : [],
@@ -41,8 +43,8 @@ describe('site content', () => {
     expect(misfiled).toEqual([]);
   });
 
-  it('keeps every place and note label within 12 characters', () => {
-    const tooLong = [...places, ...Object.values(content.notes)]
+  it('keeps every place, view and note label within 12 characters', () => {
+    const tooLong = [...places, ...views, ...Object.values(content.notes)]
       .filter((item) => Array.from(item.label).length > 12)
       .map((item) => item.label);
     expect(tooLong).toEqual([]);
@@ -63,6 +65,15 @@ describe('site content', () => {
       .filter((place) => !place.zone || !place.title || !place.quest || place.body.length === 0)
       .map((place) => place.id);
     expect(incomplete).toEqual([]);
+  });
+
+  it('gives every view a zone, a title and a lead, over a body that opens on a paragraph', () => {
+    expect(views.length).toBeGreaterThan(0);
+    expect(views.filter((view) => !view.zone || !view.title || !view.lead)).toEqual([]);
+    const misread = places
+      .filter((place) => place.views && place.body[0]?.kind !== 'paragraph')
+      .map((place) => place.id);
+    expect(misread).toEqual([]);
   });
 
   it('opens the pitch with a first sentence of 160 characters at most', () => {

@@ -1,6 +1,6 @@
 import { PATHS } from '../app/pages';
 import type { PlaceId } from '../content';
-import { NOTE_IDS, PLACE_IDS } from '../content';
+import { NOTE_IDS, PLACE_IDS, PLACE_VIEW_IDS } from '../content';
 import type { MinimapLayout } from '../engine/minimap';
 import { minimapLayout } from '../engine/minimap';
 import type { GameMap } from '../engine/tiled';
@@ -34,7 +34,8 @@ export interface MapDefinition {
   readonly place: PlaceId | null;
   /**
    * Place whose dialog opens on arrival while it has never been visited. The
-   * house greets you with the bio ("La porte grince..."); its desk reopens it.
+   * house greets you with the bio ("La porte grince..."); its desk reopens it
+   * as the office tells it (the `office` view of the place).
    */
   readonly introPlace: PlaceId | null;
   /**
@@ -46,7 +47,7 @@ export interface MapDefinition {
   readonly minimap: MinimapLayout<PlaceId> | null;
 }
 
-const options = { placeIds: PLACE_IDS, noteIds: NOTE_IDS };
+const options = { placeIds: PLACE_IDS, noteIds: NOTE_IDS, viewIds: PLACE_VIEW_IDS };
 const world = parseTiledMap(worldData, options);
 
 /** Parsed once, when the module loads: a data error fails fast (and in the tests). */

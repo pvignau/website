@@ -75,6 +75,14 @@ export const content: SiteContent = {
         },
       ],
       links: [{ label: 'Mon parcours sur LinkedIn', href: LINKEDIN }],
+      views: {
+        office: {
+          label: 'Bureau',
+          zone: 'Bureau de Pyve',
+          title: 'Au bureau',
+          lead: "Deux écrans, du code partout : ici, on parle boulot. Salut, moi c'est Pyve. Pierre-Yves Vignau, pour l'état civil.",
+        },
+      },
     },
 
     work: {

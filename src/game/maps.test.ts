@@ -394,7 +394,7 @@ describe('map content', () => {
   const home = MAPS.home.data;
   const summary = (map: GameMap) =>
     map.interactables.map((item) => {
-      if (item.kind === 'place') return `place:${item.placeId}`;
+      if (item.kind === 'place') return `place:${item.placeId}${item.view ? `:${item.view}` : ''}`;
       if (item.kind === 'note') return `note:${item.noteId}`;
       return `warp:${item.name}->${item.to}`;
     });
@@ -407,12 +407,12 @@ describe('map content', () => {
     expect(findSpawn(world, '/work').name).toBe('spawn-work');
   });
 
-  it('puts the bio, the way out and three things to inspect in the house', () => {
+  it('puts the bio at the desk, the way out and three things to inspect in the house', () => {
     expect(summary(home).sort()).toEqual([
       'note:console',
       'note:helmet',
       'note:tv',
-      'place:home',
+      'place:home:office',
       'warp:exit->/',
     ]);
   });

@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { NOTE_IDS } from '../../src/content/notes.ts';
-import { PLACE_IDS } from '../../src/content/places.ts';
+import { PLACE_IDS, PLACE_VIEW_IDS } from '../../src/content/places.ts';
 import { parseTiledMap } from '../../src/engine/tiled.ts';
 import { ART_SCALE, artObjects, backgroundRect, compose } from './build.ts';
 import type { Image } from './image.ts';
@@ -34,7 +34,11 @@ describe.each(MAPS)('the $name map', ({ name, base, image }) => {
   >[0];
 
   it('places its background like the engine does', () => {
-    const engine = parseTiledMap(tiled, { placeIds: PLACE_IDS, noteIds: NOTE_IDS });
+    const engine = parseTiledMap(tiled, {
+      placeIds: PLACE_IDS,
+      noteIds: NOTE_IDS,
+      viewIds: PLACE_VIEW_IDS,
+    });
     expect(backgroundRect(tiled)).toEqual(engine.background);
   });
 

@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { AppLocation } from '../app/history';
 import { routeOf } from '../app/location';
 import { useHistory, useLocation, useNavigate } from '../app/navigation';
 import { pageOf } from '../app/pages';
 import { usePageMeta } from '../app/usePageMeta';
-import type { PlaceId } from '../content';
+import type { Place, PlaceId, PlaceViewId } from '../content';
 import { content, ui } from '../content';
 import { computeScale } from '../engine/camera';
 import type { Direction } from '../engine/input';
@@ -30,11 +30,11 @@ import { TouchPad } from '../ui/TouchPad';
 import './GameScreen.css';
 import { helpSeen } from './helpSeen';
 import { HERO_SPRITE_URLS } from './heroSprites';
-import { noteOf, objectLabel, zoneName } from './labels';
+import { noteOf, objectLabel, objectView, placeAs, zoneName } from './labels';
 import type { MapDefinition, MapId } from './maps';
 import { MAPS } from './maps';
 import type { Overlay, OverlayState } from './overlay';
-import { overlayOf, overlayPlace } from './overlay';
+import { overlayOf, overlayPlace, overlayView } from './overlay';
 import { minimapPreference, zoomPreference } from './preferences';
 import { useHeroController } from './useHeroController';
 import { useKeyboardControls } from './useKeyboardControls';
@@ -72,8 +72,8 @@ function placeAtPath(map: MapDefinition, pathname: string): PlaceId | null {
   return (entry?.[0] as PlaceId | undefined) ?? null;
 }
 
-function pageTitle(map: MapDefinition, openPlace: PlaceId | null): string {
-  if (openPlace !== null) return ui.pageTitle(content.places[openPlace].title);
+function pageTitle(map: MapDefinition, shown: Place | null): string {
+  if (shown !== null) return ui.pageTitle(shown.title);
   return ui.pageTitle(map.place === null ? null : content.places[map.place].zone);
 }
 
@@ -104,6 +104,12 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
     return intro !== null && !quiet && !questStore.getSnapshot().includes(intro) ? intro : null;
   });
   const openPlace = routePlace ?? overlayPlace(entryOverlay) ?? greeting;
+  // Only an object of the map opens a view: a deep link and the greeting show the place itself.
+  const openView = routePlace === null ? overlayView(location.state) : null;
+  const shownPlace = useMemo(
+    () => (openPlace === null ? null : placeAs(openPlace, openView, content)),
+    [openPlace, openView],
+  );
   const textOpen = entryOverlay === 'text';
   const [helpWasSeen, setHelpWasSeen] = useState(helpSeen.get);
   // First visit: the help shows as soon as nothing else is open, after a dialog opened by
@@ -146,7 +152,7 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
   };
 
   const playing = ready && openPlace === null && !helpOpen && !textOpen;
-  useDocumentTitle(pageTitle(map, openPlace));
+  useDocumentTitle(pageTitle(map, shownPlace));
   usePageMeta(pageOf(routeOf(location.pathname) ?? map.path));
 
   // A place counts as visited as soon as its dialog opens.
@@ -207,8 +213,10 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
     leaveOverlay('text');
   }, [leaveOverlay]);
 
-  const showPlace = (place: PlaceId) => {
-    openOverlay(place, map.placeRoutes[place] ?? location.pathname);
+  const showPlace = (place: PlaceId, view: PlaceViewId | null) => {
+    const path = map.placeRoutes[place] ?? location.pathname;
+    const state: OverlayState = view === null ? { overlay: place } : { overlay: place, view };
+    navigate(`${path}${location.search}`, { state });
   };
   const closePlace = (place: PlaceId) => {
     if (leaveOverlay(place)) return;
@@ -235,7 +243,7 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
     }
     setMessage(null);
     if (nearest.kind === 'place') {
-      showPlace(nearest.placeId);
+      showPlace(nearest.placeId, objectView(nearest));
       return;
     }
     const arrival: ArrivalState = { from: location.pathname };
@@ -413,10 +421,10 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
         <TextVersion open={textOpen} onClose={closeTextVersion} returnFocus={textButtonRef} />
       </main>
 
-      {openPlace && (
+      {openPlace && shownPlace && (
         <PlaceDialog
           key={openPlace}
-          place={content.places[openPlace]}
+          place={shownPlace}
           onClose={() => {
             closePlace(openPlace);
           }}

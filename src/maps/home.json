@@ -672,6 +672,11 @@
                  "name":"action",
                  "type":"string",
                  "value":"place"
+                },
+                {
+                 "name":"view",
+                 "type":"string",
+                 "value":"office"
                 }],
          "rotation":0,
          "type":"",

@@ -26,12 +26,16 @@ export type MapObjectAction = 'place' | 'redirect' | 'note' | 'spawn' | 'decor';
 
 const ACTIONS: readonly MapObjectAction[] = ['place', 'redirect', 'note', 'spawn', 'decor'];
 
-/** Opens the dialog of a place. The object is named after the place id. */
+/**
+ * Opens the dialog of a place. The object is named after the place id; its
+ * `view` property, if any, names the view of the place it opens.
+ */
 export interface PlaceObject<P extends string> {
   readonly kind: 'place';
   readonly id: string;
   readonly name: string;
   readonly placeId: P;
+  readonly view: string | null;
   readonly rect: Rect;
   readonly radius: number;
 }
@@ -107,6 +111,8 @@ export interface ParseOptions<P extends string> {
   readonly placeIds: readonly P[];
   /** Valid note ids, likewise for `note` objects. */
   readonly noteIds?: readonly string[];
+  /** Valid views of a place, likewise for the `view` property of `place` objects. */
+  readonly viewIds?: readonly string[];
 }
 
 type JsonObject = Readonly<Record<string, unknown>>;
@@ -356,7 +362,14 @@ export function parseTiledMap<P extends string>(
           if (rect.width <= 0 || rect.height <= 0) {
             throw new TiledMapError(objectPath, 'a place needs a rectangle, not a point');
           }
-          interactables.push({ kind: 'place', id, name, placeId, rect, radius });
+          const view = stringProperty(objectProperties, 'view', `${objectPath}.properties`) ?? null;
+          if (view !== null && !options.viewIds?.includes(view)) {
+            throw new TiledMapError(
+              objectPath,
+              `place object "${name}" has an unknown view "${view}"`,
+            );
+          }
+          interactables.push({ kind: 'place', id, name, placeId, view, rect, radius });
           break;
         }
         case 'redirect': {

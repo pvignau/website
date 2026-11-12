@@ -12,6 +12,9 @@ export type PlaceId = 'home' | 'work' | 'lab' | 'contact';
 /** Identifier of an object that says one sentence when inspected (a `note` object in Tiled). */
 export type NoteId = 'tv' | 'console' | 'helmet';
 
+/** Identifier of another way into a place's dialog (a `view` property on a `place` object in Tiled). */
+export type PlaceViewId = 'office';
+
 export interface Link {
   label: string;
   href: string;
@@ -48,6 +51,23 @@ export interface Place {
    * /work): what search results show under the title, 160 characters at most.
    */
   description?: string;
+  /** Other ways into this dialog, from objects of the map that set the scene elsewhere. */
+  views?: Partial<Record<PlaceViewId, PlaceView>>;
+}
+
+/**
+ * A place's dialog opened from an object of its map rather than on arrival:
+ * the house greets you at its door with the bio, and the desk of its office
+ * reopens it. The view names the object, the zone and the dialog, and its lead
+ * takes the place of the first paragraph, the one that sets the scene; the rest
+ * of the body stays the place's own. The text version keeps the place as is.
+ */
+export interface PlaceView {
+  /** Shown near the object (≤ 12 chars). */
+  label: string;
+  zone: string;
+  title: string;
+  lead: string;
 }
 
 /**

@@ -58,7 +58,7 @@ function mapOf(
 }
 
 function place(id: string, placeId: Place, rect: Rect): Interactable<Place> {
-  return { kind: 'place', id, name: placeId, placeId, rect, radius: 24 };
+  return { kind: 'place', id, name: placeId, placeId, view: null, rect, radius: 24 };
 }
 
 /** 12 × 10 tiles: a 4 × 3 island ringed by rocks, a pond of free tiles out of reach. */

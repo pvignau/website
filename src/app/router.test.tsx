@@ -82,10 +82,26 @@ describe('routes', () => {
 
   it('enters the house on /home, greeted by the bio on the first visit', async () => {
     renderAt('/home');
-    expect(
-      await screen.findByRole('dialog', { name: named(content.places.home.title) }),
-    ).toBeInTheDocument();
+    const dialog = await screen.findByRole('dialog', { name: named(content.places.home.title) });
     expect(screen.getByRole('img', { name: ui.game.mapAlt.home })).toBeInTheDocument();
+    const [door] = content.places.home.body;
+    if (door?.kind !== 'paragraph') throw new Error('The bio opens on no paragraph.');
+    expect(within(dialog).getByText(text(door.text))).toBeInTheDocument();
+  });
+
+  it('reopens the bio from the desk as the office tells it', async () => {
+    const office = content.places.home.views?.office;
+    if (!office) throw new Error('The house has no office view.');
+    questStore.markVisited('home');
+    renderAt('/home');
+    // As the desk does: an entry of its own, which names the view.
+    const state = { overlay: 'home', view: 'office' };
+    window.history.pushState(state, '', '/home');
+    window.dispatchEvent(new PopStateEvent('popstate', { state }));
+    const dialog = await screen.findByRole('dialog', { name: named(office.title) });
+    expect(within(dialog).getByText(text(office.lead))).toBeInTheDocument();
+    expect(within(dialog).queryByText(/La porte grince/)).toBeNull();
+    expect(document.title).toBe(ui.pageTitle(office.title));
   });
 
   it('opens the help screen on the very first visit only', async () => {

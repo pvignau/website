@@ -9,7 +9,7 @@
  */
 export { isNoteId, NOTE_IDS } from './notes.ts';
 export { content } from './site.ts';
-export { isPlaceId, PLACE_IDS } from './places.ts';
+export { isPlaceId, isPlaceViewId, PLACE_IDS, PLACE_VIEW_IDS } from './places.ts';
 export type * from './types.ts';
 export { ui } from './ui.ts';
 export type { UiCopy } from './ui.ts';

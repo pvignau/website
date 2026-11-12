@@ -12,6 +12,7 @@ Ces textes restent volontairement génériques. Pierre-Yves peut les corriger li
 | `places.lab`, agent         | Il écrit vite ; je fixe le cadre, puis je relis et teste ce qu'il propose.         | Sa façon de travailler avec Claude Code : brief, revue de code, recette, PR relues avant fusion.                                        |
 | `places.lab`, arrière-salle | Un homelab qui héberge mes services. Un assistant IA branché sur mes notes.        | Son homelab et son assistant de notes, sans nom de machine, d'adresse, de service ni de détail d'infrastructure.                        |
 | `places.contact`            | LinkedIn et GitHub seulement, pas d'e-mail.                                        | Aucune adresse publique. `contact@pyve.is-a.dev` n'existe pas (is-a.dev ne fournit pas de mail). Ajouter un `mailto:` pour en avoir un. |
+| `places.home`, bureau       | Deux écrans, du code partout : ici, on parle boulot.                               | Le décor du bureau sur la carte (deux écrans de code), sans rien dire de son installation réelle.                                       |
 | `pitch`                     | « un petit archipel en pixel art »                                                 | La carte compte deux îles reliées par un pont.                                                                                          |
 
 ## Faits vérifiés
