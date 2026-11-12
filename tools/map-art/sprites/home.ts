@@ -366,11 +366,11 @@ const TOY_CHEST = `
   kRRRRRRRRRRRRRRk
   kRrrrrrrrrrrrrRk
   kkkkkkkkkkkkkkkk
-  kcccccccccccccck
-  kccccccYYcccccck
-  kcccccYYYYccccck
-  kccccccYYcccccck
-  kccccccYYcccccck
+  kcccccccYcccccck
+  kccccccYYYccccck
+  kccccYYYYYYYccck
+  kcccccYYYYYcccck
+  kcccccYYcYYcccck
   kbbbbbbbbbbbbbbk
   kkkkkkkkkkkkkkkk
   .k............k.
