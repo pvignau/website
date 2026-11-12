@@ -1,0 +1,83 @@
+/*
+ * Bottom-right corner, over the map. Touch screens keep it clear of the touch
+ * pad (TouchPad.css: 1rem from the edges, a 9.5rem cross on the left, a 4.5rem
+ * A button on the right): above A when the screen stands, next to A when it
+ * lies on its side. Under the top bar (z-index 10): an open quest log may
+ * cover it, never the reverse.
+ */
+.map-controls {
+  position: absolute;
+  right: calc(0.75rem + var(--safe-right));
+  bottom: calc(0.75rem + var(--safe-bottom));
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+@media (pointer: coarse) {
+  .map-controls {
+    right: calc(1rem + var(--safe-right));
+    bottom: calc(1rem + 4.5rem + 0.75rem + var(--safe-bottom));
+  }
+}
+
+@media (pointer: coarse) and (orientation: landscape) {
+  .map-controls {
+    right: calc(1rem + 4.5rem + 0.75rem + var(--safe-right));
+    bottom: calc(1rem + var(--safe-bottom));
+  }
+}
+
+/*
+ * One strip, the buttons sharing their borders: narrow enough to clear the
+ * cross on a 320 px phone. The rules go through the strip to outweigh
+ * .pixel-button, whose stylesheet comes later.
+ */
+.map-controls__buttons {
+  display: flex;
+  box-shadow: 3px 3px 0 var(--shadow);
+  pointer-events: auto;
+}
+
+.map-controls__buttons .map-controls__button {
+  padding-inline: 0;
+}
+
+/* The strip casts the shadow; the focus ring keeps its dark edge (global.css). */
+.map-controls__buttons .map-controls__button:not(:focus-visible) {
+  box-shadow: none;
+}
+
+.map-controls__buttons .map-controls__button + .map-controls__button {
+  margin-left: -3px;
+}
+
+/* The focus ring of a button goes over its neighbours. */
+.map-controls__buttons .map-controls__button:focus-visible {
+  position: relative;
+  z-index: 1;
+}
+
+/* A strip does not sink one button: it darkens instead. */
+.map-controls__buttons .map-controls__button:active {
+  translate: none;
+  background: var(--panel-solid);
+}
+
+.map-controls__buttons .map-controls__button[aria-disabled='true'] {
+  color: var(--ink-muted);
+  background: var(--panel-raised);
+  cursor: default;
+}
+
+.map-controls__buttons .map-controls__button[aria-disabled='true'] > svg {
+  opacity: 0.4;
+}
+
+/* The minimap button lights up while the minimap shows. */
+.map-controls__buttons .map-controls__button[aria-pressed='true'] {
+  color: var(--accent);
+}

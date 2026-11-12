@@ -1,0 +1,76 @@
+.text-version {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--panel-solid);
+  color: var(--ink);
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Closed: visually hidden, still read by screen readers and crawlers. */
+.text-version:not(.text-version--open) {
+  position: absolute;
+  inset: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Focused when it opens, to move the reading position: no ring around the whole screen. */
+.text-version:focus,
+.text-version:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.text-version__inner {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: calc(1.5rem + var(--safe-top)) calc(1.25rem + var(--safe-right))
+    calc(3rem + var(--safe-bottom)) calc(1.25rem + var(--safe-left));
+  font-size: 1.05rem;
+}
+
+.text-version h1,
+.text-version h2 {
+  margin: 0 0 0.75rem;
+  color: var(--accent);
+  font-family: var(--font-pixel);
+  font-weight: 700;
+  line-height: 1.1;
+  text-shadow: 3px 3px 0 var(--shadow);
+}
+
+.text-version h1 {
+  font-size: clamp(2.25rem, 8vw, 3.5rem);
+}
+
+.text-version h2 {
+  font-size: clamp(1.5rem, 5vw, 2rem);
+}
+
+.text-version__header {
+  padding-bottom: 1.5rem;
+  border-bottom: 3px solid var(--wood-dark);
+}
+
+.text-version__role {
+  margin: 0 0 1rem;
+  color: var(--mint);
+  font-family: var(--font-pixel);
+  font-size: 1.25rem;
+}
+
+.text-version__close {
+  margin-top: 0.5rem;
+}
+
+.text-version__place {
+  padding: 1.5rem 0;
+  border-bottom: 3px solid var(--wood-dark);
+}

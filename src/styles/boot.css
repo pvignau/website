@@ -1,0 +1,170 @@
+/*
+ * Loaded by index.html before any script: the boot loader shown until the
+ * game is ready. <Loader> renders the same markup, so the hand-over from the
+ * static page to React does not flash.
+ */
+:root {
+  --loader-size: 3rem;
+  --loader-ink: #f7ecd0;
+  --loader-background: #101820;
+}
+
+html {
+  background: var(--loader-background);
+}
+
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1rem;
+  background: var(--loader-background);
+  color: var(--loader-ink);
+  font:
+    1rem/1.2 'Pixelify Sans',
+    ui-monospace,
+    monospace;
+}
+
+#loader .loader__squares {
+  position: relative;
+  width: var(--loader-size);
+  height: var(--loader-size);
+}
+
+#loader .loader__squares span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 50%;
+  background: #e15b64;
+  animation: loader-walk 2s infinite;
+}
+
+#loader .loader__squares span:nth-child(2) {
+  background: #f8b26a;
+  animation-delay: -0.5s;
+}
+
+#loader .loader__squares span:nth-child(3) {
+  background: #abbd81;
+  animation-delay: -1s;
+}
+
+#loader .loader__label:empty {
+  display: none;
+}
+
+/* The three squares walk around a 2 × 2 grid, pausing on each cell. */
+@keyframes loader-walk {
+  0% {
+    translate: 0 0;
+  }
+  8%,
+  25% {
+    translate: 100% 0;
+  }
+  33%,
+  50% {
+    translate: 100% 100%;
+  }
+  58%,
+  75% {
+    translate: 0 100%;
+  }
+  83%,
+  100% {
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #loader .loader__squares span {
+    animation: none;
+  }
+
+  #loader .loader__squares span:nth-child(2) {
+    translate: 100% 0;
+  }
+
+  #loader .loader__squares span:nth-child(3) {
+    translate: 100% 100%;
+  }
+}
+
+/*
+ * The text version written in each page (vite-plugins/static-page.ts). Hidden while
+ * the game boots; shown without JavaScript (the <noscript> rules of site-pages.ts)
+ * or when the game cannot start (html.no-game, set by the script in index.html).
+ */
+.static-page {
+  display: none;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+  color: var(--loader-ink);
+  font:
+    1.05rem/1.6 system-ui,
+    sans-serif;
+}
+
+html.no-game #loader {
+  display: none;
+}
+
+html.no-game .static-page {
+  display: block;
+}
+
+html.no-game body {
+  overflow: auto;
+}
+
+.static-page h1,
+.static-page h2,
+.static-page h3 {
+  color: #ffd166;
+  font-family: 'Pixelify Sans', ui-monospace, monospace;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.static-page h1 {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+.static-page h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.6rem;
+}
+
+.static-page h3 {
+  margin: 1.25rem 0 0.25rem;
+  font-size: 1.2rem;
+}
+
+.static-page section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 3px solid #3b2a1a;
+}
+
+.static-page__role {
+  margin-top: 0.25rem;
+  color: #6ee7b7;
+}
+
+.static-page a {
+  color: #ffd166;
+}
+
+/* Links stand alone in lists: 44 px tall targets, easy to hit with a finger. */
+.static-page li > a {
+  display: inline-block;
+  padding-block: 0.6rem;
+}

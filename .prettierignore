@@ -1,0 +1,5 @@
+dist
+coverage
+package-lock.json
+# Tiled exports: edit them in Tiled, never reformat them.
+src/maps/*.json

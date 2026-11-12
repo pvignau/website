@@ -1,0 +1,59 @@
+/* A panel like the HUD's, the world drawn in big square pixels (Minimap.tsx). */
+.minimap {
+  padding: 2px;
+  line-height: 0;
+  pointer-events: none;
+}
+
+.minimap__map {
+  position: relative;
+  overflow: hidden;
+  /* The sea, until the picture is drawn, or where it cannot be. */
+  background: var(--backdrop);
+}
+
+.minimap__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+/* A place of the quest, like in the quest log: an empty square to visit, a filled one once visited. */
+.minimap__place {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  translate: -50% -50%;
+  border: 2px solid var(--accent);
+  background: var(--panel-solid);
+  box-shadow: 0 0 0 1px var(--shadow);
+}
+
+.minimap__place[data-visited] {
+  border-color: var(--mint);
+  background: var(--mint);
+}
+
+/*
+ * The hero: a layer the size of the map, moved by a share of its own size
+ * (the game loop writes its transform), with the dot in its top-left corner.
+ */
+.minimap__hero-layer {
+  position: absolute;
+  inset: 0;
+}
+
+/* Red in a white ring: the one marker that is neither a square of the quest nor of the map. */
+.minimap__hero {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  translate: -50% -50%;
+  background: #e8433f;
+  box-shadow:
+    0 0 0 2px #fff,
+    0 0 0 3px var(--shadow);
+}

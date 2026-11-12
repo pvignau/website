@@ -1,0 +1,84 @@
+.content-paragraph {
+  margin: 0 0 0.85rem;
+}
+
+.content-list {
+  margin: 0 0 1rem;
+  padding-left: 1.25rem;
+}
+
+.content-list li + li {
+  margin-top: 0.3rem;
+}
+
+.content-list li::marker {
+  color: var(--mint);
+}
+
+.projects {
+  display: grid;
+  gap: 0.85rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.project {
+  padding: 0.85rem 1rem;
+  background: var(--panel-raised);
+  border: 2px solid var(--wood-dark);
+}
+
+.project__name {
+  margin: 0 0 0.35rem;
+  color: var(--accent);
+  font-family: var(--font-pixel);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.project__summary {
+  margin: 0 0 0.6rem;
+}
+
+.project__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 0.6rem;
+  padding: 0;
+  list-style: none;
+}
+
+.project__tags li {
+  padding: 0.1rem 0.45rem;
+  border: 2px solid var(--wood);
+  color: var(--ink-muted);
+  font-family: var(--font-pixel);
+  font-size: 0.85rem;
+}
+
+.link-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* At least 44 px tall, like every other control: easy to hit with a finger. */
+.content-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--accent);
+  font-family: var(--font-pixel);
+  font-size: 1rem;
+  text-underline-offset: 0.2em;
+}
+
+.content-link:hover {
+  color: #ffe08f;
+}

@@ -1,0 +1,76 @@
+.status-page {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  overflow: hidden;
+  /* The sea of the world map: 4 × 4 of its tiles, drawn twice their size. */
+  background: #67e6d2 url('../img/sea.webp') 0 0 / 256px 256px repeat;
+  image-rendering: pixelated;
+}
+
+/* The hero, waist-deep in the water. */
+.status-page__splash {
+  position: absolute;
+  top: 16%;
+  left: 50%;
+  width: 48px;
+  height: 72px;
+  translate: -50% 0;
+}
+
+.status-page__hero {
+  position: absolute;
+  inset: 0;
+  background: url('../img/hero/spriteDown.webp') 0 0 / 192px 72px no-repeat;
+  image-rendering: pixelated;
+  clip-path: inset(0 0 42% 0);
+}
+
+/* Ripples around the water line. */
+.status-page__splash::after {
+  content: '';
+  position: absolute;
+  top: 40px;
+  left: -10px;
+  width: 8px;
+  height: 4px;
+  background: rgb(255 255 255 / 85%);
+  box-shadow:
+    60px 0 rgb(255 255 255 / 85%),
+    10px 4px rgb(255 255 255 / 60%),
+    48px 4px rgb(255 255 255 / 60%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .status-page__hero {
+    animation: bob 1.6s steps(2) infinite;
+  }
+}
+
+@keyframes bob {
+  50% {
+    translate: 0 3px;
+  }
+}
+
+.status-page__panel {
+  max-width: 28rem;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.status-page__title {
+  margin: 0 0 0.75rem;
+  color: var(--accent);
+  font-family: var(--font-pixel);
+  font-size: clamp(2.25rem, 9vw, 3.25rem);
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 3px 3px 0 var(--shadow);
+}
+
+.status-page__body {
+  margin: 0 0 1.25rem;
+}

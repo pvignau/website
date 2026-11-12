@@ -1,151 +1,603 @@
 { "compressionlevel":-1,
- "height":8,
+ "height":14,
  "infinite":false,
  "layers":[
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-         "height":8,
-         "id":15,
-         "name":"background",
-         "opacity":1,
-         "type":"tilelayer",
+         "draworder":"index",
+         "id":17,
+         "name":"art",
+         "objects":[
+        {
+         "height":24,
+         "id":20,
+         "name":"poster-rocket",
+         "rotation":0,
+         "type":"",
          "visible":true,
-         "width":15,
-         "x":0,
-         "y":0
+         "width":20,
+         "x":132,
+         "y":14
         }, 
         {
-         "id":9,
-         "layers":[
-                {
-                 "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 535, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 534, 534, 534, 535, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 534, 534, 534, 535, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 534, 534, 534, 535, 0,
-                    0, 0, 19, 0, 0, 0, 0, 0, 0, 534, 534, 534, 535, 535, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 535, 535, 535, 535, 535, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 "height":8,
-                 "id":4,
-                 "name":"Bedroom Floor",
-                 "opacity":1,
-                 "type":"tilelayer",
-                 "visible":true,
-                 "width":15,
-                 "x":0,
-                 "y":0
-                }],
-         "name":"floors",
-         "opacity":1,
-         "type":"group",
+         "height":44,
+         "id":21,
+         "name":"play-mat",
+         "rotation":0,
+         "type":"",
          "visible":true,
-         "x":0,
-         "y":0
+         "width":80,
+         "x":88,
+         "y":92
         }, 
         {
-         "id":12,
-         "layers":[
+         "height":78,
+         "id":22,
+         "name":"bed-blue",
+         "properties":[
                 {
-                 "data":[0, 65, 66, 67, 68, 69, 70, 71, 72, 0, 0, 0, 0, 0, 0,
-                    0, 97, 98, 99, 100, 101, 102, 103, 104, 0, 0, 0, 0, 0, 0,
-                    0, 129, 130, 131, 132, 133, 130, 135, 136, 0, 0, 0, 0, 0, 0,
-                    0, 161, 162, 163, 164, 165, 166, 167, 168, 0, 0, 0, 0, 0, 0,
-                    0, 161, 162, 167, 167, 167, 167, 167, 167, 0, 0, 0, 0, 0, 0,
-                    0, 129, 167, 162, 162, 162, 162, 163, 162, 0, 0, 0, 0, 0, 0,
-                    0, 129, 131, 131, 131, 131, 131, 131, 131, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 "height":8,
-                 "id":1,
-                 "name":"Living",
-                 "opacity":1,
-                 "type":"tilelayer",
-                 "visible":true,
-                 "width":15,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 577, 578, 0, 0, 578, 578, 578, 578, 0, 0, 0, 0, 0, 0,
-                    0, 609, 610, 0, 0, 610, 610, 610, 610, 0, 0, 0, 0, 0, 0],
-                 "height":8,
-                 "id":5,
-                 "name":"Living walls 2",
-                 "offsetx":0,
-                 "offsety":2,
-                 "opacity":1,
-                 "type":"tilelayer",
-                 "visible":true,
-                 "width":15,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 469, 470, 471, 476, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 501, 502, 503, 508, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 513, 0, 0, 540, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 366, 367, 370, 0, 0, 540, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 572, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 603, 603, 603, 603, 604, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 635, 635, 635, 635, 636, 0],
-                 "height":8,
-                 "id":3,
-                 "name":"Bedroom Walls",
-                 "opacity":1,
-                 "type":"tilelayer",
-                 "visible":true,
-                 "width":15,
-                 "x":0,
-                 "y":0
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
                 }],
-         "name":"wall",
-         "opacity":1,
-         "type":"group",
+         "rotation":0,
+         "type":"",
          "visible":true,
-         "x":0,
-         "y":0
+         "width":48,
+         "x":36,
+         "y":34
         }, 
         {
-         "id":8,
-         "layers":[
+         "height":18,
+         "id":23,
+         "name":"teddy",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":16,
+         "x":44,
+         "y":44
+        }, 
+        {
+         "height":16,
+         "id":24,
+         "name":"toy-blocks",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":16,
+         "x":100,
+         "y":54
+        }, 
+        {
+         "height":12,
+         "id":25,
+         "name":"toy-car",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":18,
+         "x":104,
+         "y":118
+        }, 
+        {
+         "height":26,
+         "id":26,
+         "name":"toy-chest",
+         "properties":[
                 {
-                 "data":[0, 1796, 1797, 1798, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 1828, 1813, 1814, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 1844, 0, 0, 1830, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1285, 1286, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1301, 1302, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 "height":8,
-                 "id":13,
-                 "name":"couch",
-                 "offsetx":13,
-                 "offsety":1,
-                 "opacity":1,
-                 "type":"tilelayer",
-                 "visible":true,
-                 "width":15,
-                 "x":0,
-                 "y":0
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
                 }],
-         "name":"objects",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":32,
+         "x":156,
+         "y":128
+        }, 
+        {
+         "height":24,
+         "id":27,
+         "name":"poster-dino",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":20,
+         "x":276,
+         "y":14
+        }, 
+        {
+         "height":36,
+         "id":28,
+         "name":"rug-rainbow",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":60,
+         "x":256,
+         "y":100
+        }, 
+        {
+         "height":22,
+         "id":29,
+         "name":"drawing-table",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":32,
+         "x":232,
+         "y":60
+        }, 
+        {
+         "height":78,
+         "id":30,
+         "name":"bed-orange",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":48,
+         "x":332,
+         "y":34
+        }, 
+        {
+         "height":12,
+         "id":31,
+         "name":"toy-ball",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":12,
+         "x":300,
+         "y":140
+        }, 
+        {
+         "height":16,
+         "id":32,
+         "name":"toy-blocks",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":16,
+         "x":236,
+         "y":124
+        }, 
+        {
+         "height":20,
+         "id":33,
+         "name":"frame-flowers",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":24,
+         "x":464,
+         "y":14
+        }, 
+        {
+         "height":36,
+         "id":34,
+         "name":"rug-sage",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":96,
+         "x":484,
+         "y":112
+        }, 
+        {
+         "height":60,
+         "id":35,
+         "name":"wardrobe",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":44,
+         "x":420,
+         "y":4
+        }, 
+        {
+         "height":30,
+         "id":36,
+         "name":"nightstand",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":24,
+         "x":472,
+         "y":36
+        }, 
+        {
+         "height":76,
+         "id":37,
+         "name":"bed-double",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":72,
+         "x":496,
+         "y":22
+        }, 
+        {
+         "height":30,
+         "id":38,
+         "name":"nightstand",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":24,
+         "x":568,
+         "y":36
+        }, 
+        {
+         "height":36,
+         "id":39,
+         "name":"plant-big",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":28,
+         "x":604,
+         "y":28
+        }, 
+        {
+         "height":20,
+         "id":40,
+         "name":"frame-sea",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":24,
+         "x":200,
+         "y":174
+        }, 
+        {
+         "height":20,
+         "id":41,
+         "name":"frame-mountain",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":24,
+         "x":400,
+         "y":174
+        }, 
+        {
+         "height":20,
+         "id":42,
+         "name":"runner",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":352,
+         "x":144,
+         "y":220
+        }, 
+        {
+         "height":22,
+         "id":43,
+         "name":"plant-small",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":20,
+         "x":36,
+         "y":204
+        }, 
+        {
+         "height":44,
+         "id":44,
+         "name":"desk",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":72,
+         "x":36,
+         "y":268
+        }, 
+        {
+         "height":28,
+         "id":45,
+         "name":"office-chair",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":24,
+         "x":60,
+         "y":312
+        }, 
+        {
+         "height":44,
+         "id":46,
+         "name":"gaming-desk",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":64,
+         "x":160,
+         "y":268
+        }, 
+        {
+         "height":28,
+         "id":47,
+         "name":"chair",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":24,
+         "x":172,
+         "y":312
+        }, 
+        {
+         "height":44,
+         "id":48,
+         "name":"game-shelf",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":48,
+         "x":36,
+         "y":352
+        }, 
+        {
+         "height":22,
+         "id":49,
+         "name":"plant-small",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":20,
+         "x":196,
+         "y":384
+        }, 
+        {
+         "height":48,
+         "id":50,
+         "name":"rug",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":112,
+         "x":296,
+         "y":302
+        }, 
+        {
+         "height":36,
+         "id":51,
+         "name":"plant-big",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":28,
+         "x":260,
+         "y":276
+        }, 
+        {
+         "height":24,
+         "id":52,
+         "name":"tv-frame",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":52,
+         "x":304,
+         "y":270
+        }, 
+        {
+         "height":28,
+         "id":53,
+         "name":"tv-stand",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":64,
+         "x":298,
+         "y":292
+        }, 
+        {
+         "height":52,
+         "id":54,
+         "name":"bookshelf",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":48,
+         "x":396,
+         "y":268
+        }, 
+        {
+         "height":32,
+         "id":55,
+         "name":"sofa",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":92,
+         "x":306,
+         "y":352
+        }, 
+        {
+         "height":22,
+         "id":56,
+         "name":"plant-small",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":20,
+         "x":484,
+         "y":384
+        }, 
+        {
+         "height":24,
+         "id":57,
+         "name":"poster-moto",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":36,
+         "x":588,
+         "y":270
+        }, 
+        {
+         "height":14,
+         "id":58,
+         "name":"doormat",
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":56,
+         "x":548,
+         "y":398
+        }, 
+        {
+         "height":42,
+         "id":59,
+         "name":"helmet-cabinet",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":28,
+         "x":606,
+         "y":316
+        }, 
+        {
+         "height":38,
+         "id":60,
+         "name":"coat-rack",
+         "properties":[
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":24,
+         "x":610,
+         "y":372
+        }],
          "opacity":1,
-         "type":"group",
+         "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
@@ -154,45 +606,21 @@
          "id":6,
          "layers":[
                 {
-                 "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 642, 642, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 "height":8,
-                 "id":14,
-                 "name":"path-world",
-                 "opacity":1,
-                 "properties":[
-                        {
-                         "name":"action",
-                         "type":"string",
-                         "value":"redirect"
-                        }, 
-                        {
-                         "name":"value",
-                         "type":"string",
-                         "value":"\/"
-                        }],
-                 "type":"tilelayer",
-                 "visible":true,
-                 "width":15,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "data":[641, 641, 641, 641, 641, 641, 641, 641, 641, 641, 641, 641, 641, 641, 641,
-                    641, 0, 0, 0, 0, 0, 0, 0, 0, 641, 0, 0, 0, 0, 641,
-                    641, 0, 0, 0, 0, 0, 0, 0, 0, 641, 0, 0, 0, 0, 641,
-                    641, 0, 0, 0, 0, 0, 0, 0, 0, 641, 0, 0, 0, 0, 641,
-                    641, 0, 0, 0, 0, 0, 0, 0, 0, 641, 0, 0, 0, 0, 641,
-                    641, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 641,
-                    641, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 641,
-                    641, 641, 641, 0, 0, 641, 641, 641, 641, 641, 641, 641, 641, 641, 641],
-                 "height":8,
+                 "data":[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1,
+                    1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1,
+                    1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,
+                    1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1,
+                    1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                    1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1,
+                    1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1,
+                    1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+                    1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1,
+                    1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1,
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1],
+                 "height":14,
                  "id":7,
                  "name":"collisions",
                  "opacity":1,
@@ -204,7 +632,136 @@
                         }],
                  "type":"tilelayer",
                  "visible":true,
-                 "width":15,
+                 "width":21,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "id":16,
+                 "name":"objects",
+                 "objects":[
+        {
+         "height":32,
+         "id":1,
+         "name":"exit",
+         "properties":[
+                {
+                 "name":"action",
+                 "type":"string",
+                 "value":"redirect"
+                }, 
+                {
+                 "name":"value",
+                 "type":"string",
+                 "value":"\/"
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":64,
+         "x":544,
+         "y":416
+        }, 
+        {
+         "height":44,
+         "id":2,
+         "name":"home",
+         "properties":[
+                {
+                 "name":"action",
+                 "type":"string",
+                 "value":"place"
+                },
+                {
+                 "name":"view",
+                 "type":"string",
+                 "value":"office"
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":72,
+         "x":36,
+         "y":268
+        }, 
+        {
+         "height":0,
+         "id":3,
+         "name":"spawn",
+         "point":true,
+         "properties":[
+                {
+                 "name":"action",
+                 "type":"string",
+                 "value":"spawn"
+                }, 
+                {
+                 "name":"direction",
+                 "type":"string",
+                 "value":"up"
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":0,
+         "x":576,
+         "y":392
+        }, 
+        {
+         "height":28,
+         "id":17,
+         "name":"console",
+         "properties":[
+                {
+                 "name":"action",
+                 "type":"string",
+                 "value":"note"
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":32,
+         "x":298,
+         "y":292
+        }, 
+        {
+         "height":50,
+         "id":18,
+         "name":"tv",
+         "properties":[
+                {
+                 "name":"action",
+                 "type":"string",
+                 "value":"note"
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":32,
+         "x":330,
+         "y":270
+        }, 
+        {
+         "height":42,
+         "id":19,
+         "name":"helmet",
+         "properties":[
+                {
+                 "name":"action",
+                 "type":"string",
+                 "value":"note"
+                }],
+         "rotation":0,
+         "type":"",
+         "visible":true,
+         "width":28,
+         "x":606,
+         "y":316
+        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
                  "x":0,
                  "y":0
                 }],
@@ -215,8 +772,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":16,
- "nextobjectid":1,
+ "nextlayerid":18,
+ "nextobjectid":61,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -224,22 +781,10 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"assets\/InteriorObjects.tsx"
-        }, 
-        {
-         "firstgid":65,
-         "source":"assets\/InteriorTiles32x32.tsx"
-        }, 
-        {
-         "firstgid":641,
          "source":"tiles.tsx"
-        }, 
-        {
-         "firstgid":643,
-         "source":"assets\/Interiors_free_32x32.tsx"
         }],
  "tilewidth":32,
  "type":"map",
  "version":"1.9",
- "width":15
+ "width":21
 }

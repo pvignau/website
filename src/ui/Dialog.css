@@ -1,0 +1,97 @@
+/*
+ * Centred in the safe area: clear of the notch, the status bar of an installed
+ * site and the home indicator. The text can be selected and copied, unlike the
+ * game around it (.game turns selection off).
+ */
+.dialog {
+  inset: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+  width: min(42rem, calc(100vw - 1.5rem - var(--safe-left) - var(--safe-right)));
+  max-height: calc(100dvh - 1.5rem - var(--safe-top) - var(--safe-bottom));
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  overflow: visible;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.dialog::backdrop {
+  background: rgb(5 8 12 / 72%);
+}
+
+.dialog__frame {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 1.5rem - var(--safe-top) - var(--safe-bottom));
+  background: var(--panel-solid);
+}
+
+.dialog__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1rem 0.75rem 1.25rem;
+  border-bottom: 3px solid var(--wood-dark);
+}
+
+.dialog__eyebrow {
+  margin: 0 0 0.25rem;
+  color: var(--mint);
+  font-family: var(--font-pixel);
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.dialog__title {
+  margin: 0;
+  color: var(--accent);
+  font-family: var(--font-pixel);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.1;
+  text-shadow: 3px 3px 0 var(--shadow);
+}
+
+.dialog__close {
+  flex: none;
+  padding: 0;
+}
+
+.dialog__body {
+  padding: 0.75rem 1.25rem 1.25rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Focused when the dialog opens: a thin ring inside the frame, on the dark panel. */
+.dialog__body:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+  box-shadow: none;
+}
+
+.dialog__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem 1rem;
+  border-top: 3px solid var(--wood-dark);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dialog[open] {
+    animation: dialog-in 160ms steps(4) both;
+  }
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+  }
+}
