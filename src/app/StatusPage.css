@@ -15,7 +15,7 @@
   padding: 2.5rem 1rem 1.5rem;
   overflow: auto;
   /* The sea of the world map: 4 × 4 of its tiles, drawn twice their size. */
-  background: #67e6d2 url('../img/sea.webp') 0 0 / 256px 256px repeat;
+  background: #2fa8d8 url('../img/sea.webp') 0 0 / 256px 256px repeat;
   image-rendering: pixelated;
 }
 

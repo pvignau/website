@@ -36,15 +36,20 @@ function contrast(a: string, b: string): number {
  * maps (src/maps/*.webp), and the interface surfaces.
  */
 const BACKGROUNDS: Record<string, string> = {
-  sea: '#67e6d2',
-  'shallow water': '#90eddf',
-  grass: '#74c857',
-  sand: '#f8c984',
-  'house floor': '#796755',
-  'house wall': '#485d84',
-  'house rug': '#5b3138',
-  'house shadow': '#221c1a',
-  'house window': '#9097b1',
+  sea: '#2fa8d8',
+  'sea dots': '#1e5aa8',
+  grass: '#31973f',
+  sand: '#ffd53d',
+  paper: '#f6ecd2',
+  bridge: '#f1a031',
+  cliff: '#ce732a',
+  ink: '#14110f',
+  'house floor': '#d39b66',
+  'house floor light': '#f4c892',
+  'house wood': '#985d24',
+  'house wallpaper': '#1c4473',
+  'house rug': '#5b1e16',
+  'house window': '#818db3',
 };
 
 describe('focus ring', () => {

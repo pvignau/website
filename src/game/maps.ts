@@ -58,7 +58,7 @@ export const MAPS: Readonly<Record<MapId, MapDefinition>> = {
     placeRoutes: { work: PATHS.work },
     data: world,
     image: worldImage,
-    backdrop: '#67e6d2',
+    backdrop: '#2fa8d8',
     sea: true,
     place: null,
     introPlace: null,
