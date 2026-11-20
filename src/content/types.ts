@@ -44,8 +44,13 @@ export interface Place {
   title: string;
   body: ContentBlock[];
   links: Link[];
-  /** Quest log entry, phrased as an objective ("Entrer dans la maison"). */
+  /** Quest log entry, phrased as an objective ("Lire le panneau des projets"). */
   quest: string;
+  /**
+   * The view that ticks the place off in the quest log, when reaching it is the
+   * objective (the desk of the house). Without it, any opening of the dialog does.
+   */
+  questView?: PlaceViewId;
   /**
    * Meta description of the place's own page, for a place with a route (/home,
    * /work): what search results show under the title, 160 characters at most.
@@ -58,7 +63,7 @@ export interface Place {
 /**
  * A place's dialog opened from an object of its map rather than on arrival:
  * the house greets you at its door with the bio, and the desk of its office
- * reopens it. The view names the object, the zone and the dialog, and its lead
+ * reopens it, and ticks the house off in the quest log. The view names the object, the zone and the dialog, and its lead
  * takes the place of the first paragraph, the one that sets the scene; the rest
  * of the body stays the place's own. The text version keeps the place as is.
  */

@@ -3,7 +3,7 @@ import type { PlaceId } from '../content';
 import { content, PLACE_IDS, ui } from '../content';
 import './QuestLog.css';
 
-/** Collapsible quest log: one objective per place, ticked once its dialog was opened. */
+/** Collapsible quest log: one objective per place, ticked once its dialog was opened (from its `questView`, if any). */
 export function QuestLog({
   visited,
   initiallyOpen,

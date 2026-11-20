@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { content, ui } from '../content';
 import { HERO } from '../engine/hero';
 import { findSpawn } from '../engine/tiled';
+import { greeting } from '../game/greeting';
 import { HELP_SEEN_KEY, helpSeen } from '../game/helpSeen';
 import { MAPS } from '../game/maps';
 import { questStore } from '../quest/useQuest';
@@ -32,6 +33,7 @@ function renderAt(path: string, { raw = false } = {}) {
 
 beforeEach(() => {
   questStore.reset();
+  greeting.reset();
   // Returning visitor: the help screen does not get in the way.
   helpSeen.mark();
 });
@@ -87,6 +89,31 @@ describe('routes', () => {
     const [door] = content.places.home.body;
     if (door?.kind !== 'paragraph') throw new Error('The bio opens on no paragraph.');
     expect(within(dialog).getByText(text(door.text))).toBeInTheDocument();
+    // The quest step is the desk, not the door.
+    expect(questStore.getSnapshot()).toEqual([]);
+  });
+
+  it('greets once per visit, until the desk ticks the house off', async () => {
+    renderAt('/home');
+    await screen.findByRole('dialog', { name: named(content.places.home.title) });
+    cleanup();
+
+    renderAt('/home');
+    await screen.findByRole('img', { name: ui.game.mapAlt.home });
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('ticks the house off in the quest at the desk', async () => {
+    const office = content.places.home.views?.office;
+    if (!office) throw new Error('The house has no office view.');
+    greeting.mark('home');
+    renderAt('/home');
+    await screen.findByRole('img', { name: ui.game.mapAlt.home });
+    const state = { overlay: 'home', view: 'office' };
+    window.history.pushState(state, '', '/home');
+    window.dispatchEvent(new PopStateEvent('popstate', { state }));
+    await screen.findByRole('dialog', { name: named(office.title) });
+    expect(questStore.getSnapshot()).toEqual(['home']);
   });
 
   it('reopens the bio from the desk as the office tells it', async () => {

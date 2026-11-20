@@ -28,7 +28,8 @@ export const content: SiteContent = {
       label: 'Maison',
       zone: 'Maison de Pyve',
       title: 'Chez Pyve',
-      quest: 'Entrer dans la maison',
+      quest: 'Passer au bureau, dans la maison',
+      questView: 'office',
       description:
         'Chez Pyve : développeur web devenu software architect à France Télévisions, son parcours, ses outils et sa façon de travailler.',
       body: [

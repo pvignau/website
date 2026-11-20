@@ -28,6 +28,7 @@ import { QuestLog } from '../ui/QuestLog';
 import { TEXT_VERSION_ID, TextVersion } from '../ui/TextVersion';
 import { TouchPad } from '../ui/TouchPad';
 import './GameScreen.css';
+import { greeting } from './greeting';
 import { helpSeen } from './helpSeen';
 import { HERO_SPRITE_URLS } from './heroSprites';
 import { noteOf, objectLabel, objectView, placeAs, zoneName } from './labels';
@@ -97,13 +98,15 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
   // What is open follows the address and its history entry: Back closes it.
   const entryOverlay = overlayOf(location.state);
   const routePlace = placeAtPath(map, location.pathname);
-  // The house greets a first visit on arrival, without a history entry of its own.
-  const [greeting, setGreeting] = useState<PlaceId | null>(() => {
+  // The house greets on arrival, without a history entry of its own, once per visit
+  // until the quest step is done (at the desk).
+  const [greetingPlace, setGreeting] = useState<PlaceId | null>(() => {
     const intro = map.introPlace;
     const quiet = routePlace !== null || entryOverlay !== null;
-    return intro !== null && !quiet && !questStore.getSnapshot().includes(intro) ? intro : null;
+    if (intro === null || quiet || greeting.shown(intro)) return null;
+    return questStore.getSnapshot().includes(intro) ? null : intro;
   });
-  const openPlace = routePlace ?? overlayPlace(entryOverlay) ?? greeting;
+  const openPlace = routePlace ?? overlayPlace(entryOverlay) ?? greetingPlace;
   // Only an object of the map opens a view: a deep link and the greeting show the place itself.
   const openView = routePlace === null ? overlayView(location.state) : null;
   const shownPlace = useMemo(
@@ -155,10 +158,16 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
   useDocumentTitle(pageTitle(map, shownPlace));
   usePageMeta(pageOf(routeOf(location.pathname) ?? map.path));
 
-  // A place counts as visited as soon as its dialog opens.
   useEffect(() => {
-    if (openPlace !== null) questStore.markVisited(openPlace);
-  }, [openPlace]);
+    if (greetingPlace !== null) greeting.mark(greetingPlace);
+  }, [greetingPlace]);
+
+  // A place counts as visited as soon as its dialog opens, or from the view its quest names.
+  useEffect(() => {
+    if (openPlace === null) return;
+    const { questView } = content.places[openPlace];
+    if (questView === undefined || questView === openView) questStore.markVisited(openPlace);
+  }, [openPlace, openView]);
 
   useEffect(() => {
     if (message === null) return;

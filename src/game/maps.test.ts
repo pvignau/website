@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PLACE_IDS } from '../content';
+import { content, PLACE_IDS } from '../content';
 import { computeCamera, computeScale } from '../engine/camera';
 import { isSolidTile, rectHitsSolid } from '../engine/collision';
 import type { Rect } from '../engine/geometry';
@@ -415,5 +415,13 @@ describe('map content', () => {
       'place:home:office',
       'warp:exit->/',
     ]);
+  });
+
+  it('puts every view that ticks a place off in the quest on a map', () => {
+    const objects = new Set([...summary(world), ...summary(home)]);
+    for (const id of PLACE_IDS) {
+      const { questView } = content.places[id];
+      if (questView !== undefined) expect(objects.has(`place:${id}:${questView}`), id).toBe(true);
+    }
   });
 });

@@ -4,7 +4,7 @@ Le portfolio de Pyve, à explorer comme un mini-RPG en pixel art, dans une inter
 
 ![Le héros sur le chemin devant sa maison, avec le pont et le bateau](public/og-image.png)
 
-Le visiteur se promène sur deux îles reliées par un pont. Il entre dans la maison (la bio), lit le panneau de l'atelier (les projets), visite le lab dans l'annexe et rejoint le bateau au ponton (le contact). Une version texte reprend tout le contenu, pour qui préfère lire, pour les lecteurs d'écran et pour les moteurs de recherche.
+Le visiteur se promène sur deux îles reliées par un pont. Il entre dans la maison et passe au bureau (la bio), lit le panneau de l'atelier (les projets), visite le lab dans l'annexe et rejoint le bateau au ponton (le contact). Une version texte reprend tout le contenu, pour qui préfère lire, pour les lecteurs d'écran et pour les moteurs de recherche.
 
 ## Démarrer
 
@@ -67,7 +67,7 @@ Sur la carte du monde seulement. `src/engine/minimap.ts` en tire le cadre de la 
 
 ### État
 
-Pas de Redux. L'état qui change à chaque frame vit dans des refs. Ce qui est ouvert (un lieu, l'aide, la version texte) se lit dans l'adresse et l'entrée d'historique, si bien que Retour le referme ; seuls l'accueil de la maison et l'aide de première visite, qui s'ouvrent d'eux-mêmes, sont un état local. La quête est un petit store branché sur `useSyncExternalStore`.
+Pas de Redux. L'état qui change à chaque frame vit dans des refs. Ce qui est ouvert (un lieu, l'aide, la version texte) se lit dans l'adresse et l'entrée d'historique, si bien que Retour le referme ; seuls l'accueil de la maison et l'aide de première visite, qui s'ouvrent d'eux-mêmes, sont un état local. La quête est un petit store branché sur `useSyncExternalStore`, gardé dans `localStorage` (`pyve:quest:v1`, les lieux visités) : un lieu est visité dès que son dialogue s'ouvre, ou, s'il a un `questView`, quand il s'ouvre depuis cette vue. La maison accueille par sa bio à l'arrivée, une fois par visite, tant que la quête n'est pas passée par le bureau.
 
 ### Routage
 
@@ -106,7 +106,7 @@ L'interface est une bande dessinée de l'âge d'argent posée sur le pixel art :
 
 Tout texte visible passe par `src/content/index.ts`, l'unique point d'entrée. Les composants ne contiennent aucun texte en dur.
 
-- `types.ts` définit le contrat : `SiteContent`, `Place`, `Note`, `ContentBlock`, etc. Une note est la phrase d'un objet de la carte (la télé, la console, le casque), avec son étiquette. Une vue (`PlaceView`) raconte un lieu depuis un autre objet que son entrée : le bureau de la maison rouvre la bio avec sa propre étiquette, sa zone, son titre et sa première phrase.
+- `types.ts` définit le contrat : `SiteContent`, `Place`, `Note`, `ContentBlock`, etc. Une note est la phrase d'un objet de la carte (la télé, la console, le casque), avec son étiquette. Une vue (`PlaceView`) raconte un lieu depuis un autre objet que son entrée : le bureau de la maison rouvre la bio avec sa propre étiquette, sa zone, son titre et sa première phrase. `questView` désigne la vue qui coche le lieu dans la quête : la maison est cochée au bureau, pas à la porte.
 - Le contenu du portfolio vit dans `site.ts`, que `index.ts` exporte. `site.placeholder.ts` en garde une version neutre de même forme, pratique pour travailler sur le moteur : une ligne d'`index.ts` suffit pour basculer.
 - `ui.ts` contient la microcopie du moteur : aides du HUD, boutons, noms accessibles, titres de page.
 - Typographie : apostrophe droite, et espace insécable (U+00A0) avant `? ! : ;`. ESLint accepte ces espaces dans les chaînes.
