@@ -8,18 +8,23 @@
  *
  * prints them like a comic book (comic.ts) and writes src/maps/<map>.webp
  * twice as large, lossless, with cwebp. The sea around the world map
- * (src/img/sea.webp) comes from `sea.png`.
+ * (src/img/sea.webp) comes from `sea.png`. The share preview,
+ * public/og-image.png, is made from the printed world (og-image.ts).
  *
  *   npm run map-art              rebuild the images
- *   npm run map-art -- --check   only check that they are up to date (needs dwebp)
+ *   npm run map-art -- --check   only check that they are up to date
+ *
+ * Both need cwebp and dwebp (libwebp).
  */
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { HERO } from '../../src/engine/hero.ts';
 import { printComic, SHADOW } from './comic.ts';
 import type { Image } from './image.ts';
 import { createImage, drawImage, enlarge } from './image.ts';
+import { renderOgImage } from './og-image.ts';
 import { decodePng, encodePng } from './png.ts';
 import { SPRITES } from './sprites.ts';
 
@@ -172,6 +177,10 @@ const OUTPUTS: readonly Output[] = [
   { base: 'sea.png', out: 'src/img/sea.webp' },
 ];
 
+/** The share preview, and the sheet of the hero facing down, whose first frame it shows. */
+const OG_IMAGE = 'public/og-image.png';
+const HERO_SHEET = 'src/img/hero/spriteDown.webp';
+
 /** Splits sprites into what they draw and the shadows they cast (SHADOW pixels). */
 export function castShadows(sprites: Readonly<Record<string, Image>>) {
   const shadow = Number.parseInt(SHADOW.slice(1), 16);
@@ -227,6 +236,28 @@ function readPam(file: Uint8Array): Image {
   return { width, height, data };
 }
 
+/** Decodes a WebP file of the project with dwebp. */
+function readWebp(file: string): Image {
+  const pam = join(CACHE, `${file.replace(/\W+/g, '-')}.pam`);
+  execFileSync('dwebp', ['-quiet', '-pam', join(ROOT, file), '-o', pam]);
+  return readPam(readFileSync(pam));
+}
+
+function renderShareImage(): Image {
+  const map = readMap('src/maps/world.json');
+  const world = printMap(decodePng(readFileSync(join(HERE, 'world.png'))), map);
+  const { width, height } = HERO.sprite;
+  const sheet = readWebp(HERO_SHEET);
+  const hero = createImage(width, height);
+  for (let y = 0; y < height; y += 1) {
+    hero.data.set(
+      sheet.data.subarray(y * sheet.width * 4, (y * sheet.width + width) * 4),
+      y * width * 4,
+    );
+  }
+  return renderOgImage(world, backgroundRect(map), hero);
+}
+
 function sameImage(a: Image, b: Image): boolean {
   if (a.width !== b.width || a.height !== b.height) return false;
   for (let i = 0; i < a.data.length; i += 4) {
@@ -248,22 +279,29 @@ function sameImage(a: Image, b: Image): boolean {
 function main(check: boolean): void {
   mkdirSync(CACHE, { recursive: true });
   let stale = 0;
+  const verify = (file: string, image: Image, current: () => Image) => {
+    const upToDate = sameImage(image, current());
+    if (!upToDate) stale += 1;
+    console.log(`${upToDate ? 'up to date' : 'OUT OF DATE'}  ${file}`);
+  };
   for (const output of OUTPUTS) {
     const image = render(output);
-    const name = output.out.replace(/\W+/g, '-');
-    const target = join(ROOT, output.out);
     if (check) {
-      const pam = join(CACHE, `${name}.pam`);
-      execFileSync('dwebp', ['-quiet', '-pam', target, '-o', pam]);
-      const upToDate = sameImage(image, readPam(readFileSync(pam)));
-      if (!upToDate) stale += 1;
-      console.log(`${upToDate ? 'up to date' : 'OUT OF DATE'}  ${output.out}`);
+      verify(output.out, image, () => readWebp(output.out));
       continue;
     }
-    const png = join(CACHE, `${name}.png`);
+    const png = join(CACHE, `${output.out.replace(/\W+/g, '-')}.png`);
     writeFileSync(png, encodePng(image));
+    const target = join(ROOT, output.out);
     execFileSync('cwebp', ['-quiet', '-lossless', '-z', '9', '-exact', png, '-o', target]);
     console.log(`wrote ${output.out} (${image.width} × ${image.height})`);
+  }
+  const share = renderShareImage();
+  if (check) {
+    verify(OG_IMAGE, share, () => decodePng(readFileSync(join(ROOT, OG_IMAGE))));
+  } else {
+    writeFileSync(join(ROOT, OG_IMAGE), encodePng(share));
+    console.log(`wrote ${OG_IMAGE} (${share.width} × ${share.height})`);
   }
   if (stale > 0) {
     console.error('Run `npm run map-art` to rebuild the images.');
