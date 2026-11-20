@@ -132,14 +132,16 @@ Le moteur lit seulement le groupe de calques `meta` :
 
 ### Les images des cartes
 
-Les tuiles font 32 px, mais le pixel art est dessiné à 16 px la tuile : un pixel du dessin couvre 2 × 2 pixels de la carte. `npm run map-art` (`tools/map-art/build.ts`, sans dépendance, mais il faut `cwebp`, de libwebp) fabrique les images du jeu à partir de :
+Les tuiles font 32 px, mais le pixel art est dessiné à 16 px la tuile : un pixel du dessin couvre 2 × 2 pixels de la carte. `npm run map-art` (`tools/map-art/build.ts`, sans dépendance, mais il faut `cwebp` et `dwebp`, de libwebp) fabrique les images du jeu à partir de :
 
 - `tools/map-art/world.png` et `home.png` : le fond de chaque carte, à un pixel par pixel du dessin, à retoucher dans un éditeur de pixel art ;
 - `tools/map-art/sea.png` : quatre tuiles sur quatre de mer, que le moteur répète autour de la grande carte ;
-- les sprites de `tools/map-art/sprites/`, écrits en texte : un caractère par pixel, une palette par sprite ;
+- les sprites de `tools/map-art/sprites/`, écrits en texte : un caractère par pixel, une palette par sprite, faite des couleurs du nuancier (voir plus bas) ;
 - le calque d'objets `art` de chaque carte, hors du groupe `meta` : chaque rectangle porte le nom d'un sprite et sa taille, en coordonnées paires (la grille du dessin), et ils sont dessinés dans l'ordre du calque. La propriété booléenne `solid` marque ce que le héros contourne, panneaux et meubles : les tests vérifient que les tuiles dessous sont solides.
 
-Le script écrit `src/maps/world.webp`, `home.webp` et `src/img/sea.webp`, deux fois plus grands, en WebP sans perte (`cwebp -lossless -z 9 -exact`). `npm run map-art -- --check` vérifie qu'ils sont à jour (il faut aussi `dwebp`).
+Les images sont imprimées comme une bande dessinée des années 1960 (`tools/map-art/comic.ts`), aux couleurs de l'interface : encres sur papier journal, trames de points Ben-Day, traits d'encre. Chaque couleur du dessin devient une teinte du nuancier (`GUIDE`) : un aplat d'encres superposées ou une trame, des points d'une encre sur une autre. Les trames suivent la grille du dessin et se calent sur la carte : la mer de la grande carte se prolonge dans le motif qui l'entoure, et la minicarte, qui fait la moyenne de blocs de 8 × 8 pixels du dessin, y voit des aplats. Ce qui se dresse sur le sol (mer, herbe, sable, planchers) est cerné d'un trait d'encre, la côte aussi, et les ombres portées des sprites (`SHADOW`, noir translucide) sont hachurées. Les couleurs des fonds sont séparées une à une dans `SEPARATIONS`, les palettes des sprites prennent celles du nuancier (`COLOURS`) : les tests vérifient que rien n'y échappe.
+
+Le script écrit `src/maps/world.webp`, `home.webp` et `src/img/sea.webp`, deux fois plus grands, en WebP sans perte (`cwebp -lossless -z 9 -exact`), et l'aperçu de partage `public/og-image.png`, une couverture de bande dessinée tirée de la carte imprimée (`tools/map-art/og-image.ts`). `npm run map-art -- --check` vérifie qu'ils sont à jour.
 
 Les fonds sont redessinés sur la grille de 16 px à partir des exports de Tiled d'origine, dont les tuiles avaient été agrandies en lissant. Un nouvel export de Tiled n'est donc plus la source des images.
 

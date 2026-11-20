@@ -1,22 +1,23 @@
 /** Sprites of the house: the furniture of its seven rooms. */
+import { COLOURS as C, SHADOW } from '../comic.ts';
 import type { Image } from '../image.ts';
 import type { Palette } from '../sprite.ts';
 import { parseSprite } from '../sprite.ts';
 
-/** Indoor colours: furniture over the brown and blue floors of the house. */
+/** Indoor colours, from the colour guide (comic.ts): furniture over the floors of the house. */
 const INDOOR: Palette = {
-  k: '#221c1a', // outlines, like the walls
-  _: '#00000040', // shadow on the floor
-  C: '#d9a46b', // wood, lit top
-  c: '#c08552', // wood
-  b: '#9a6236', // wood, shaded
-  a: '#6e4128', // wood, dark
-  g: '#2f6b35', // leaves, dark
-  G: '#4f9a4a', // leaves
-  L: '#82c96a', // leaves, lit
-  Q: '#e08a5e', // pot rim
-  P: '#c9714a', // pot
-  p: '#a5532f', // pot, shaded
+  k: C.ink, // outlines, like the walls
+  _: SHADOW, // shadow on the floor
+  C: C.orange, // wood, lit top
+  c: C.wood, // wood
+  b: C.brown, // wood, shaded
+  a: C.umber, // wood, dark
+  g: C.forest, // leaves, dark
+  G: C.green, // leaves
+  L: C.lime, // leaves, lit
+  Q: C.orange, // pot rim
+  P: C.wood, // pot
+  p: C.brown, // pot, shaded
 };
 
 /** The TV that shows paintings, after Samsung's The Frame: an island at sea, of course. */
@@ -675,253 +676,184 @@ function rug(width: number, height: number): string {
   return rows.join('\n');
 }
 
+/** Spines of books and games, on the shelves. */
+const BOOKS: Palette = {
+  1: C.red,
+  2: C.blue,
+  3: C.yellow,
+  4: C.green,
+  5: C.paper,
+  6: C.purple,
+};
+
+/** Sheets and pillows of the beds. */
+const SHEETS: Palette = { S: C.paper, W: C.paper, w: C.shade };
+
 /** Small framed pictures of the corridor and the bedroom. */
 const FRAMES: Palette = {
   ...INDOOR,
-  F: '#c08552',
-  s: '#9fd4ee',
-  Y: '#f2cf5b',
-  S: '#4f95c9',
-  w: '#bfe6f5',
-  p: '#f4e6c8',
-  R: '#d0504a',
-  g: '#4f9a4a',
-  b: '#4a72b8',
-  W: '#f2efe3',
-  G: '#4a8a4a',
+  F: C.wood,
+  s: C.sky,
+  Y: C.yellow,
+  S: C.cyan,
+  w: C.paper,
+  p: C.paper,
+  R: C.red,
+  g: C.green,
+  b: C.blue,
+  W: C.paper,
+  G: C.forest,
 };
 
 export const HOME_SPRITES: Readonly<Record<string, Image>> = {
   'tv-frame': parseSprite(
     'tv-frame',
-    {
-      ...INDOOR,
-      F: '#d9b27c',
-      s: '#9fd4ee',
-      h: '#f2cf5b',
-      n: '#6cae5b',
-      N: '#4a8a4a',
-      S: '#4f95c9',
-      w: '#bfe6f5',
-    },
+    { ...INDOOR, F: C.tan, s: C.sky, h: C.yellow, n: C.green, N: C.forest, S: C.cyan, w: C.paper },
     TV_FRAME,
   ),
-  'tv-stand': parseSprite(
-    'tv-stand',
-    { ...INDOOR, x: '#2a2a33', X: '#4a4d5c', l: '#6ad0ff' },
-    TV_STAND,
-  ),
-  bookshelf: parseSprite(
-    'bookshelf',
-    {
-      ...INDOOR,
-      1: '#b84a4a',
-      2: '#4a72b8',
-      3: '#d9b44a',
-      4: '#5a9e5a',
-      5: '#e6e0d0',
-      6: '#8a5aa8',
-      y: '#c9a35a',
-      Y: '#e0c07a',
-    },
-    BOOKSHELF,
-  ),
+  'tv-stand': parseSprite('tv-stand', { ...INDOOR, x: C.ink, X: C.iron, l: C.cyan }, TV_STAND),
+  bookshelf: parseSprite('bookshelf', { ...INDOOR, ...BOOKS, y: C.camel, Y: C.tan }, BOOKSHELF),
   'plant-big': parseSprite('plant-big', INDOOR, PLANT_BIG),
   'plant-small': parseSprite('plant-small', INDOOR, PLANT_SMALL),
   rug: parseSprite(
     'rug',
-    {
-      ...INDOOR,
-      f: '#e6dcc6',
-      r: '#7e3434',
-      R: '#a8473f',
-      y: '#d6a85a',
-      Y: '#e8c47a',
-    },
+    { ...INDOOR, f: C.paper, r: C.maroon, R: C.red, y: C.orange, Y: C.yellow },
     rug(56, 24),
   ),
-  sofa: parseSprite(
-    'sofa',
-    { ...INDOOR, t: '#2f5f5b', u: '#3f7f7a', v: '#5aa39a', V: '#79c2b6' },
-    SOFA,
-  ),
+  sofa: parseSprite('sofa', { ...INDOOR, t: C.navy, u: C.teal, v: C.cyan, V: C.sky }, SOFA),
   'helmet-cabinet': parseSprite(
     'helmet-cabinet',
-    {
-      ...INDOOR,
-      m: '#c43c3c',
-      M: '#8f2a2a',
-      w: '#f2ede4',
-      z: '#2b3a4a',
-      Z: '#5a7a96',
-    },
+    { ...INDOOR, m: C.red, M: C.maroon, w: C.paper, z: C.navy, Z: C.sky },
     HELMET_CABINET,
   ),
   'poster-moto': parseSprite(
     'poster-moto',
-    { ...INDOOR, Y: '#efe1b8', m: '#c43c3c', M: '#8f2a2a' },
+    { ...INDOOR, Y: C.paper, m: C.red, M: C.maroon },
     POSTER_MOTO,
   ),
   desk: parseSprite(
     'desk',
     {
       ...INDOOR,
-      o: '#1d1f2b',
-      q: '#1e2a3a',
-      e: '#7fd47f',
-      i: '#6fa8ff',
-      j: '#ff8fb3',
-      Y: '#ffd479',
-      X: '#c8c8d0',
-      x: '#8a8a96',
-      W: '#e8e2d6',
-      w: '#b9b2a6',
+      o: C.ink,
+      q: C.navy,
+      e: C.lime,
+      i: C.cyan,
+      j: C.magenta,
+      Y: C.yellow,
+      X: C.stone,
+      x: C.slate,
+      W: C.paper,
+      w: C.stone,
     },
     DESK,
   ),
-  chair: parseSprite('chair', { ...INDOOR, x: '#2a2a33', X: '#4a4d5c', m: '#c43c3c' }, CHAIR),
+  chair: parseSprite('chair', { ...INDOOR, x: C.ink, X: C.iron, m: C.red }, CHAIR),
   'bed-blue': parseSprite(
     'bed-blue',
-    {
-      ...INDOOR,
-      S: '#e8e2d6',
-      W: '#f6f2ea',
-      w: '#d6cfc2',
-      E: '#6f9ad6',
-      B: '#3f6fb0',
-      D: '#2f5590',
-    },
+    { ...INDOOR, ...SHEETS, E: C.sky, B: C.blue, D: C.navy },
     BED,
   ),
   'bed-orange': parseSprite(
     'bed-orange',
-    {
-      ...INDOOR,
-      S: '#e8e2d6',
-      W: '#f6f2ea',
-      w: '#d6cfc2',
-      E: '#f2cf5b',
-      B: '#e8894a',
-      D: '#c96b33',
-    },
+    { ...INDOOR, ...SHEETS, E: C.yellow, B: C.orange, D: C.wood },
     BED,
   ),
   'bed-double': parseSprite(
     'bed-double',
-    {
-      ...INDOOR,
-      S: '#e8e2d6',
-      W: '#f6f2ea',
-      w: '#d6cfc2',
-      E: '#a7b98f',
-      B: '#8fa577',
-      D: '#75895f',
-    },
+    { ...INDOOR, ...SHEETS, E: C.sage, B: C.moss, D: C.forest },
     BED_DOUBLE,
   ),
   nightstand: parseSprite(
     'nightstand',
-    { ...INDOOR, Y: '#f4e2a8', y: '#d9c27c', m: '#8a8a96' },
+    { ...INDOOR, Y: C.yellow, y: C.orange, m: C.slate },
     NIGHTSTAND,
   ),
   wardrobe: parseSprite('wardrobe', INDOOR, WARDROBE),
   'rug-sage': parseSprite(
     'rug-sage',
-    { ...INDOOR, f: '#e6dcc6', r: '#6f8564', R: '#8fa577', y: '#e6dcc6', Y: '#f2efe3' },
+    { ...INDOOR, f: C.paper, r: C.moss, R: C.sage, y: C.paper, Y: C.paper },
     rug(48, 18),
   ),
   'toy-chest': parseSprite(
     'toy-chest',
-    { ...INDOOR, R: '#d0504a', r: '#a63c38', Y: '#f2cf5b' },
+    { ...INDOOR, R: C.red, r: C.maroon, Y: C.yellow },
     TOY_CHEST,
   ),
   'toy-blocks': parseSprite(
     'toy-blocks',
-    { ...INDOOR, R: '#d0504a', B: '#4a72b8', G: '#5a9e5a' },
+    { ...INDOOR, R: C.red, B: C.blue, G: C.green },
     TOY_BLOCKS,
   ),
-  'toy-ball': parseSprite('toy-ball', { ...INDOOR, R: '#d0504a', W: '#f2efe3' }, TOY_BALL),
-  'toy-car': parseSprite('toy-car', { ...INDOOR, B: '#4a72b8', W: '#cfe6f5' }, TOY_CAR),
-  teddy: parseSprite('teddy', { ...INDOOR, T: '#b07a4a', t: '#d9b088' }, TEDDY),
+  'toy-ball': parseSprite('toy-ball', { ...INDOOR, R: C.red, W: C.paper }, TOY_BALL),
+  'toy-car': parseSprite('toy-car', { ...INDOOR, B: C.blue, W: C.sky }, TOY_CAR),
+  teddy: parseSprite('teddy', { ...INDOOR, T: C.wood, t: C.tan }, TEDDY),
   'poster-rocket': parseSprite(
     'poster-rocket',
-    { ...INDOOR, N: '#26305a', w: '#f2efe3', R: '#d0504a', O: '#e8894a', Y: '#f2cf5b' },
+    { ...INDOOR, N: C.navy, w: C.paper, R: C.red, O: C.orange, Y: C.yellow },
     POSTER_ROCKET,
   ),
   'poster-dino': parseSprite(
     'poster-dino',
-    { ...INDOOR, L: '#f4e6b0', g: '#5a9e5a', e: '#221c1a', G: '#9bc46f' },
+    { ...INDOOR, L: C.yellow, g: C.green, e: C.ink, G: C.forest },
     POSTER_DINO,
   ),
   'drawing-table': parseSprite(
     'drawing-table',
-    { ...INDOOR, W: '#f6f2ea', R: '#d0504a', Y: '#f2cf5b', B: '#4a72b8', G: '#5a9e5a' },
+    { ...INDOOR, W: C.paper, R: C.red, Y: C.yellow, B: C.blue, G: C.green },
     DRAWING_TABLE,
   ),
   'play-mat': parseSprite(
     'play-mat',
-    { G: '#3d7a45', g: '#6aa860', r: '#5a5f6e', w: '#f2efe3', b: '#5a9ad6' },
+    { G: C.forest, g: C.green, r: C.slate, w: C.paper, b: C.cyan },
     playMat(40, 22),
   ),
   'rug-rainbow': parseSprite(
     'rug-rainbow',
-    { 1: '#f2cf5b', 2: '#e8894a', 3: '#d0504a', 4: '#8a5aa8', 5: '#4a72b8' },
+    { 1: C.yellow, 2: C.orange, 3: C.red, 4: C.purple, 5: C.blue },
     rainbowRug(30, 18),
   ),
   'gaming-desk': parseSprite(
     'gaming-desk',
     {
       ...INDOOR,
-      o: '#1d1f2b',
-      s: '#7fc4ea',
-      w: '#f2efe3',
-      Y: '#f2cf5b',
-      g: '#5a9e5a',
-      R: '#d0504a',
-      u: '#8a5a3a',
-      N: '#3a3d4a',
-      d: '#2f3242',
-      G: '#5ad06a',
-      B: '#4a8be0',
-      M: '#c35bd6',
-      h: '#c43c3c',
-      x: '#2a2a33',
-      l: '#6ad0ff',
+      o: C.ink,
+      s: C.sky,
+      w: C.paper,
+      Y: C.yellow,
+      g: C.green,
+      R: C.red,
+      u: C.brown,
+      N: C.iron,
+      d: C.ink,
+      G: C.green,
+      B: C.blue,
+      M: C.magenta,
+      h: C.red,
+      x: C.ink,
+      l: C.cyan,
     },
     GAMING_DESK,
   ),
   'office-chair': parseSprite(
     'office-chair',
-    { ...INDOOR, x: '#5a5f6e', X: '#7a8090', m: '#5a5f6e' },
+    { ...INDOOR, x: C.iron, X: C.slate, m: C.iron },
     CHAIR,
   ),
   'game-shelf': parseSprite(
     'game-shelf',
-    {
-      ...INDOOR,
-      1: '#b84a4a',
-      2: '#4a72b8',
-      3: '#d9b44a',
-      4: '#5a9e5a',
-      5: '#e6e0d0',
-      6: '#8a5aa8',
-      x: '#2a2a33',
-      R: '#d0504a',
-      G: '#5a9e5a',
-      Z: '#4a4d5c',
-      s: '#7fc4ea',
-    },
+    { ...INDOOR, ...BOOKS, x: C.ink, R: C.red, G: C.green, Z: C.iron, s: C.sky },
     GAME_SHELF,
   ),
   'coat-rack': parseSprite(
     'coat-rack',
-    { ...INDOOR, G: '#4f7a5a', g: '#3d6147', R: '#c43c3c', r: '#9a2e2e' },
+    { ...INDOOR, G: C.green, g: C.forest, R: C.red, r: C.maroon },
     COAT_RACK,
   ),
-  doormat: parseSprite('doormat', { ...INDOOR, M: '#7a5a34', m: '#9a7848' }, DOORMAT),
+  doormat: parseSprite('doormat', { ...INDOOR, M: C.brown, m: C.camel }, DOORMAT),
   runner: parseSprite(
     'runner',
-    { ...INDOOR, f: '#e6dcc6', r: '#5a3a5a', R: '#7a4a6e', y: '#d6a85a' },
+    { ...INDOOR, f: C.paper, r: C.purple, R: C.plum, y: C.yellow },
     runner(176, 10),
   ),
   'frame-sea': parseSprite('frame-sea', FRAMES, FRAME_SEA),

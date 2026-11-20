@@ -1,21 +1,22 @@
 /** Sprites of the world map: the signs and the AI lab. */
+import { COLOURS, SHADOW } from '../comic.ts';
 import type { Image } from '../image.ts';
 import type { Palette } from '../sprite.ts';
 import { parseSprite } from '../sprite.ts';
 
-/** Outdoor colours, taken from the world map. */
+/** Outdoor colours, from the colour guide (comic.ts), like the wood of the world map. */
 const OUTDOOR: Palette = {
-  o: '#915841', // dark wood, outlines
-  b: '#b56e4b', // wood
-  w: '#d38658', // wood, lit
-  f: '#e6a271', // light wood, sign faces
-  h: '#efb171', // highlight
-  s: '#4faf7b', // shadow on the grass
-  D: '#a0654d', // pictograms burnt in the wood
-  p: '#f1e6d6', // paper
-  l: '#a79796', // writing
-  q: '#5299d7', // blue poster
-  r: '#d75278', // red poster
+  o: COLOURS.ink, // outlines
+  b: COLOURS.wood, // wood
+  w: COLOURS.wood, // wood, lit
+  f: COLOURS.orange, // light wood, sign faces
+  h: COLOURS.yellow, // highlight
+  s: SHADOW, // shadow on the grass
+  D: COLOURS.brown, // pictograms burnt in the wood
+  p: COLOURS.paper, // paper
+  l: COLOURS.ink, // writing
+  q: COLOURS.cyan, // blue poster
+  r: COLOURS.red, // red poster
 };
 
 /** By the house door: a house. */
@@ -80,23 +81,23 @@ const SIGN_WORK = `
 
 /** The AI lab, in the annex of the workshop: steel and neon. */
 const LAB: Palette = {
-  k: '#3a3a50', // frames
-  d: '#2b2d42', // sign plate
-  c: '#a0f2e5', // cyan neon
-  m: '#f07fc0', // pink neon
-  g: '#8e8f8e', // metal
-  G: '#d3cdc4', // light metal
-  r: '#a33a3a', // beacon, off (blinks over it: decor "beacon")
-  w: '#f1e6d6', // wall
-  W: '#d3cdc4', // wall, shaded
-  1: '#baafa7', // wall base, top to bottom
-  2: '#99a49b',
-  3: '#d3cdc4',
-  4: '#8e8f8e',
-  5: '#7a7b64',
-  q: '#2d4f63', // glass
-  Q: '#4f8197', // glass, reflection
-  l: '#60dac7', // light from inside
+  k: COLOURS.ink, // frames
+  d: COLOURS.ink, // sign plate
+  c: COLOURS.cyan, // cyan neon
+  m: COLOURS.magenta, // pink neon
+  g: COLOURS.slate, // metal
+  G: COLOURS.stone, // light metal
+  r: COLOURS.maroon, // beacon, off (blinks over it: decor "beacon")
+  w: COLOURS.paper, // wall
+  W: COLOURS.shade, // wall, shaded
+  1: COLOURS.stone, // wall base, top to bottom, like the wall of the annex
+  2: COLOURS.stone,
+  3: COLOURS.shade,
+  4: COLOURS.slate,
+  5: COLOURS.slate,
+  q: COLOURS.navy, // glass
+  Q: COLOURS.blue, // glass, reflection
+  l: COLOURS.cyan, // light from inside
 };
 
 /** Rooftop sign: LAB IA in neon letters. */
