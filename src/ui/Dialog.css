@@ -18,14 +18,14 @@
 }
 
 /*
- * The game behind, knocked back with a screen of ink dots. Literal colours:
- * some browsers do not pass custom properties down to ::backdrop.
+ * The game behind, knocked back with a light screen of ink dots: the map stays
+ * readable, the panel in front. Literal colours: some browsers do not pass
+ * custom properties down to ::backdrop.
  */
 .dialog::backdrop {
   background:
-    radial-gradient(circle, rgb(20 17 15 / 70%) 1.9px, transparent 2.5px) 0 0 / 8px 8px,
-    radial-gradient(circle, rgb(20 17 15 / 70%) 1.9px, transparent 2.5px) 4px 4px / 8px 8px,
-    rgb(20 17 15 / 22%);
+    radial-gradient(circle, rgb(20 17 15 / 55%) 1.2px, transparent 1.8px) 0 0 / 8px 8px,
+    radial-gradient(circle, rgb(20 17 15 / 55%) 1.2px, transparent 1.8px) 4px 4px / 8px 8px;
 }
 
 .dialog__frame {
