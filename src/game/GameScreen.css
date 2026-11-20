@@ -64,7 +64,12 @@
   pointer-events: none;
 }
 
-/* The shadow at the hero's feet, in Ben-Day dots: one dot per two pixels of the map. */
+/*
+ * The shadow at the hero's feet, hatched in ink like the shadows that the map's
+ * sprites cast (tools/map-art/comic.ts): diagonal lines, one pixel in four, in
+ * an oval 14 × 5 pixels of the sprite. The colour is literal: an SVG data URI
+ * cannot read custom properties.
+ */
 .hero::before {
   content: '';
   position: absolute;
@@ -72,21 +77,8 @@
   top: calc(31px * var(--s));
   width: calc(14px * var(--s));
   height: calc(5px * var(--s));
-  border-radius: 50%;
-  background:
-    radial-gradient(
-        circle,
-        var(--ink) calc(0.5px * var(--s)),
-        transparent calc(0.5px * var(--s) + 0.5px)
-      )
-      0 0 / calc(2px * var(--s)) calc(2px * var(--s)),
-    radial-gradient(
-        circle,
-        var(--ink) calc(0.5px * var(--s)),
-        transparent calc(0.5px * var(--s) + 0.5px)
-      )
-      calc(1px * var(--s)) calc(1px * var(--s)) / calc(2px * var(--s)) calc(2px * var(--s));
-  opacity: 0.6;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 5' shape-rendering='crispEdges'%3E%3Cpath fill='%2314110f' d='M4 0h1v1H4zM8 0h1v1H8zM1 1h1v1H1zM5 1h1v1H5zM9 1h1v1H9zM2 2h1v1H2zM6 2h1v1H6zM10 2h1v1h-1zM3 3h1v1H3zM7 3h1v1H7zM11 3h1v1h-1zM4 4h1v1H4zM8 4h1v1H8z'/%3E%3C/svg%3E")
+    0 0 / 100% 100% no-repeat;
 }
 
 .hero::after {
@@ -192,9 +184,10 @@
   animation-direction: reverse;
 }
 
+/* Off, not dimmed: the glass of the art shows through, as printed. */
 @keyframes leds-blink {
   50% {
-    opacity: 0.2;
+    opacity: 0;
   }
 }
 
@@ -217,19 +210,38 @@
   }
 }
 
-/* Lab sign: the neon lights a hard cyan rim, and flickers now and then. */
-.decor--neon::before {
+/*
+ * Lab sign: the neon lights a flat cyan rim, one art pixel wide (two map
+ * pixels), in a halo of cyan Ben-Day dots on the art grid, and goes out now and
+ * then. The colour of the dots is literal: an SVG data URI cannot read custom
+ * properties. The mask keeps them off the sign.
+ */
+.decor--neon::before,
+.decor--neon::after {
   content: '';
   position: absolute;
-  inset: 0;
-  box-shadow: 0 0 0 calc(2px * var(--s)) rgb(47 168 216 / 45%);
   animation: neon-flicker 5s steps(1) infinite;
+}
+
+.decor--neon::before {
+  inset: calc(-6px * var(--s));
+  padding: calc(6px * var(--s));
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 2' shape-rendering='crispEdges'%3E%3Cpath fill='%232fa8d8' d='M0 0h1v1H0z'/%3E%3C/svg%3E")
+    0 0 / calc(4px * var(--s)) calc(4px * var(--s));
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+
+.decor--neon::after {
+  inset: 0;
+  box-shadow: 0 0 0 calc(2px * var(--s)) var(--cyan);
 }
 
 @keyframes neon-flicker {
   92%,
   96% {
-    opacity: 0.25;
+    opacity: 0;
   }
 
   94%,
@@ -255,8 +267,8 @@
   z-index: 30;
   pointer-events: none;
   padding: 0.25rem 0.5rem;
-  background: rgb(0 0 0 / 75%);
-  color: #fff;
+  background: var(--ink);
+  color: var(--paper);
   font:
     0.8rem/1.2 ui-monospace,
     monospace;
