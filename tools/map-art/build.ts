@@ -8,8 +8,10 @@
  *
  * prints them like a comic book (comic.ts) and writes src/maps/<map>.webp
  * twice as large, lossless, with cwebp. The sea around the world map
- * (src/img/sea.webp) comes from `sea.png`. The share preview,
- * public/og-image.png, is made from the printed world (og-image.ts).
+ * (src/img/sea.webp) comes from `sea.png`. The hero's sprite sheets
+ * (src/img/hero/sprite<Direction>.webp) come from `hero.png`, at 1 pixel per
+ * pixel of the sprite, inked the same way. The share preview,
+ * public/og-image.png, is made from the printed world and hero (og-image.ts).
  *
  *   npm run map-art              rebuild the images
  *   npm run map-art -- --check   only check that they are up to date
@@ -177,9 +179,56 @@ const OUTPUTS: readonly Output[] = [
   { base: 'sea.png', out: 'src/img/sea.webp' },
 ];
 
-/** The share preview, and the sheet of the hero facing down, whose first frame it shows. */
+/** The share preview. */
 const OG_IMAGE = 'public/og-image.png';
-const HERO_SHEET = 'src/img/hero/spriteDown.webp';
+
+/**
+ * The hero's sheets, stacked from top to bottom in hero.png in this order:
+ * each is a row of HERO.sprite.frames frames, the first one standing.
+ */
+export const HERO_SHEETS = ['Down', 'Left', 'Right', 'Up'] as const;
+const heroSheetFile = (direction: (typeof HERO_SHEETS)[number]) =>
+  `src/img/hero/sprite${direction}.webp`;
+
+function crop(image: Image, rect: Rect): Image {
+  const out = createImage(rect.width, rect.height);
+  for (let y = 0; y < rect.height; y += 1) {
+    const from = ((rect.y + y) * image.width + rect.x) * 4;
+    out.data.set(image.data.subarray(from, from + rect.width * 4), y * rect.width * 4);
+  }
+  return out;
+}
+
+/**
+ * Prints the hero like the sprites of the maps (comic.ts): the colours of the
+ * guide, and an ink line one pixel wide along the edge of the figure. Each
+ * frame is printed on its own, with a transparent margin: what touches the
+ * edge of a frame (the hair) is inked there too, as the game crops it.
+ */
+export function printHero(sheet: Image): Image {
+  const { width, height } = HERO.sprite;
+  const out = createImage(sheet.width, sheet.height);
+  for (let y = 0; y < sheet.height; y += height) {
+    for (let x = 0; x < sheet.width; x += width) {
+      const frame = createImage(width + 2, height + 2);
+      drawImage(frame, crop(sheet, { x, y, width, height }), 1, 1);
+      const printed = printComic(frame, { x: 0, y: 0 });
+      drawImage(out, crop(printed, { x: 1, y: 1, width, height }), x, y);
+    }
+  }
+  return out;
+}
+
+/** The printed sheets of the hero, by direction. */
+function renderHero(): Record<(typeof HERO_SHEETS)[number], Image> {
+  const printed = printHero(decodePng(readFileSync(join(HERE, 'hero.png'))));
+  const { width, height, frames } = HERO.sprite;
+  const sheets = HERO_SHEETS.map((direction, row) => [
+    direction,
+    crop(printed, { x: 0, y: row * height, width: width * frames, height }),
+  ]);
+  return Object.fromEntries(sheets) as Record<(typeof HERO_SHEETS)[number], Image>;
+}
 
 /** Splits sprites into what they draw and the shadows they cast (SHADOW pixels). */
 export function castShadows(sprites: Readonly<Record<string, Image>>) {
@@ -243,19 +292,12 @@ function readWebp(file: string): Image {
   return readPam(readFileSync(pam));
 }
 
-function renderShareImage(): Image {
+/** The share preview: the printed world, and the hero facing down, standing (frame 0). */
+function renderShareImage(down: Image): Image {
   const map = readMap('src/maps/world.json');
   const world = printMap(decodePng(readFileSync(join(HERE, 'world.png'))), map);
   const { width, height } = HERO.sprite;
-  const sheet = readWebp(HERO_SHEET);
-  const hero = createImage(width, height);
-  for (let y = 0; y < height; y += 1) {
-    hero.data.set(
-      sheet.data.subarray(y * sheet.width * 4, (y * sheet.width + width) * 4),
-      y * width * 4,
-    );
-  }
-  return renderOgImage(world, backgroundRect(map), hero);
+  return renderOgImage(world, backgroundRect(map), crop(down, { x: 0, y: 0, width, height }));
 }
 
 function sameImage(a: Image, b: Image): boolean {
@@ -284,19 +326,21 @@ function main(check: boolean): void {
     if (!upToDate) stale += 1;
     console.log(`${upToDate ? 'up to date' : 'OUT OF DATE'}  ${file}`);
   };
-  for (const output of OUTPUTS) {
-    const image = render(output);
+  const write = (out: string, image: Image) => {
     if (check) {
-      verify(output.out, image, () => readWebp(output.out));
-      continue;
+      verify(out, image, () => readWebp(out));
+      return;
     }
-    const png = join(CACHE, `${output.out.replace(/\W+/g, '-')}.png`);
+    const png = join(CACHE, `${out.replace(/\W+/g, '-')}.png`);
     writeFileSync(png, encodePng(image));
-    const target = join(ROOT, output.out);
+    const target = join(ROOT, out);
     execFileSync('cwebp', ['-quiet', '-lossless', '-z', '9', '-exact', png, '-o', target]);
-    console.log(`wrote ${output.out} (${image.width} × ${image.height})`);
-  }
-  const share = renderShareImage();
+    console.log(`wrote ${out} (${image.width} × ${image.height})`);
+  };
+  for (const output of OUTPUTS) write(output.out, render(output));
+  const hero = renderHero();
+  for (const direction of HERO_SHEETS) write(heroSheetFile(direction), hero[direction]);
+  const share = renderShareImage(hero.Down);
   if (check) {
     verify(OG_IMAGE, share, () => decodePng(readFileSync(join(ROOT, OG_IMAGE))));
   } else {

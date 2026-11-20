@@ -113,7 +113,7 @@ describe('the colour guide', () => {
   });
 
   it('separates every colour of the art, and sprites use the guide', () => {
-    for (const file of ['./world.png', './home.png', './sea.png']) {
+    for (const file of ['./world.png', './home.png', './sea.png', './hero.png']) {
       const art = decodePng(read(file));
       const unknown = new Set<string>();
       for (let i = 0; i < art.width * art.height; i += 1) {
