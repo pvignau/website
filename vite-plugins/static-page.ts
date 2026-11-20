@@ -46,10 +46,13 @@ export function renderStaticPage(
   });
   return [
     '<main class="static-page">',
+    // The cover of the comic (boot.css), then one panel per place.
+    '<header class="static-page__header">',
     `<h1>${text(content.name)}</h1>`,
     `<p class="static-page__role">${text(content.role)}</p>`,
     `<p class="static-page__intro">${text(intro)}</p>`,
     `<p>${text(content.pitch)}</p>`,
+    '</header>',
     ...places,
     '</main>',
   ].join('');
