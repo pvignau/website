@@ -18,7 +18,7 @@ export const content: SiteContent = {
       label: 'Maison',
       zone: 'La maison',
       title: 'Bio',
-      quest: 'Passer au bureau, dans la maison',
+      quest: 'Passer au bureau, chez Pyve',
       questView: 'office',
       body: [
         { kind: 'paragraph', text: 'Texte provisoire de la bio.' },
