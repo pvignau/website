@@ -1,6 +1,6 @@
 # Le monde de Pyve
 
-Le portfolio de Pyve, à explorer comme un mini-RPG en pixel art : [pyve.is-a.dev](https://pyve.is-a.dev).
+Le portfolio de Pyve, à explorer comme un mini-RPG en pixel art, dans une interface de bande dessinée : [pyve.is-a.dev](https://pyve.is-a.dev).
 
 ![Le héros sur le chemin devant sa maison, avec le pont et le bateau](public/og-image.png)
 
@@ -39,6 +39,8 @@ src/
   quest/      progression de la quête (localStorage)
   lib/        petits hooks et accès au stockage
   maps/       cartes Tiled (.json) et leurs fonds (.webp)
+  styles/     jetons de la BD et polices (global.css), chargeur et version sans JavaScript (boot.css)
+  fonts/      Bangers et Comic Neue, en woff2, avec leur licence
 tools/map-art/ fabrique les fonds des cartes : dessin à 16 px, sprites, script
 vite-plugins/ tiled-map.ts (cartes allégées) et site-pages.ts (métadonnées, pages statiques)
 ```
@@ -87,6 +89,18 @@ Le routage est en mode history, sans bibliothèque : `src/app/history.ts` tient 
 | autre        | `404.html` (copie de l'app) | 404    |
 
 Les pages ont chacune leur titre, leur description, leur URL canonique (sans barre finale) et leurs balises Open Graph ; `home/index.html` et `work/index.html` sont des copies de `home.html` et `work.html`, car GitHub Pages répond 404 à `/home/` sans elles. La page 404 sert aussi de repli SPA : l'app y affiche la bonne route (par exemple `/HOME`, Pages respectant la casse) ou la page « introuvable ».
+
+## Habillage
+
+L'interface est une bande dessinée de l'âge d'argent posée sur le pixel art : quadrichromie sur papier journal, trait d'encre, trames de points Ben-Day, ombres portées franches. Ni flou, ni dégradé autre qu'une trame. Le style seul : aucun nom, logo ni personnage d'éditeur.
+
+- Les jetons sont dans le `:root` de `src/styles/global.css` : le papier (`--paper`, `--paper-shade`), l'encre (`--ink`), les encres d'accent (`--red`, `--yellow`, `--blue`, `--cyan`, `--magenta`), l'épaisseur du trait (`--line`) et le décalage des ombres (`--drop`).
+- Une trame est un `radial-gradient` répété sur deux couches décalées d'un demi-pas, une trame à 45° : rayon `--halftone-dot`, pas `--halftone-pitch`, et une trame fine pour les commandes. Les `--screen-*` en sont les points, à l'encre, en cyan, en rouge… Le texte courant n'est jamais posé sur une trame, seulement les titres et les surfaces sans texte.
+- Quatre formes : la case (`.panel`, un trait et une ombre portée) ; le récitatif, cartouche jaune un peu de travers (le HUD, le lieu au-dessus d'un dialogue, le métier dans la version texte) ; la bulle (l'étiquette d'un objet, la première phrase de chaque lieu, `.content-paragraph--lead`, le chargeur) ; l'explosion (`--burst`, un SVG : quête terminée, titres de la page 404 et de la page d'erreur).
+- Le fond d'un dialogue estompe le jeu sous une trame d'encre. La page autour des cases (version texte, maison plus petite que l'écran, chargeur) est tramée de `--paper-shade`, et la maison, vue en coupe, est encrée le long de ses murs (`filter: drop-shadow`).
+- Lettrage : Bangers pour les titres et les onomatopées, Comic Neue gras en capitales pour l'interface, Comic Neue normal pour le texte. Bangers latin pèse 23,5 ko (latin-ext, 17,2 ko, ne se charge qu'au besoin), Comic Neue 19,6 ko en normal et 19,2 ko en gras ; `index.html` précharge Bangers et Comic Neue gras, ceux du chargeur et du HUD. Pas de police pixel : le pixel art reste à la carte et au héros.
+- Contrastes : encre sur papier 16:1, sur jaune 13:1, sur cyan 6,9:1 ; liens bleus 5,8:1 ; le nom en jaune sur bleu 4,8:1. Le rouge (4,2:1 sur le papier) ne sert qu'aux coches, aux puces et aux grandes lettres.
+- La page est claire (`color-scheme: light`, barres de défilement à l'encre sur `--paper-shade`) ; `theme-color` et le manifeste prennent la couleur du papier.
 
 ## Éditer le contenu
 
@@ -150,7 +164,7 @@ Après une modification, lancez `npm test` : les tests de `src/game/maps.test.ts
 - Clavier : flèches, ZQSD ou WASD pour marcher, Espace ou Entrée pour agir, `?` pour l'aide, + et - pour zoomer (`=` vaut +). Ctrl et + zooment toujours la page. Le premier Tab tombe sur « Aller à la version texte ».
 - Les dialogues reposent sur `<dialog>` en mode modal : `aria-labelledby` pointe vers le titre et le focus reste dans le dialogue. Il part sur le contenu, une région que les flèches font défiler ; Espace ou Entrée gardés enfoncés depuis le jeu n'y pressent rien. Échap, le bouton Fermer, le fond (un appui qui y commence et y finit) et Retour le ferment, puis le focus revient où il était, ou sur « Version texte ».
 - Le HUD visible n'est pas une région live : une ligne `role="status"`, masquée, annonce l'arrivée près d'un lieu (« Panneau des projets. Espace ou Entrée : Projets ») et les messages, sans rien dire quand le héros s'éloigne.
-- Le contour de focus est double, jaune dans un bord sombre : l'un des deux contraste à 3:1 au moins avec ce qui est derrière, la mer comme les panneaux. Liens et boutons font au moins 44 px de haut.
+- Le contour de focus est double, jaune dans un bord d'encre : l'un des deux contraste à 3:1 au moins avec ce qui est derrière, la mer comme le papier et les encres de l'interface. Liens et boutons font au moins 44 px de haut.
 - Sur écran tactile, A agit dès que le doigt se pose, même pendant qu'un autre tient la croix ; son nom accessible, « A : interagir », reprend la lettre affichée.
 - La version texte reste dans le DOM même fermée ; ses liens sortent alors de l'ordre de tabulation.
 - La minicarte est décorative (`aria-hidden`) : le HUD dit déjà où est le héros, le journal ce qui est fait, et elle n'ajoute aucune région live. Ses boutons sont nommés : « Zoom arrière », « Zoom avant » (`aria-keyshortcuts`) et « Minicarte », un bouton bascule (`aria-pressed`). Au bout de la plage, un bouton de zoom reste focalisable (`aria-disabled`) : le focus ne retombe pas sur la page.
@@ -216,6 +230,6 @@ jobs:
 
 ## Licences et crédits
 
-- Police [Pixelify Sans](https://github.com/eifetx/Pixelify-Sans), sous SIL Open Font License 1.1 (`src/fonts/pixelify-sans/OFL.txt`), auto-hébergée. Elle couvre les lettres accentuées du français.
+- Polices [Bangers](https://github.com/googlefonts/bangers) et [Comic Neue](https://github.com/crozynski/comicneue), sous SIL Open Font License 1.1 (`OFL.txt` dans `src/fonts/bangers/` et `src/fonts/comic-neue/`), auto-hébergées à partir des paquets Fontsource. Elles couvrent les lettres accentuées du français.
 - Les fonds des cartes et le héros viennent des packs cités dans les fichiers Tiled, qui gardent leurs licences d'origine. Les icônes et l'image `og-image.png` en sont dérivées.
 - Les sprites de `tools/map-art/sprites/` (panneaux, lab, mobilier de la maison) sont dessinés pour ce site.
