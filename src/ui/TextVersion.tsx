@@ -77,7 +77,7 @@ export function TextVersion({
           <p className="text-version__role">{content.role}</p>
           <p>{content.pitch}</p>
           {open && (
-            <button type="button" className="pixel-button text-version__close" onClick={onClose}>
+            <button type="button" className="comic-button text-version__close" onClick={onClose}>
               {ui.textVersion.close}
             </button>
           )}
@@ -91,7 +91,12 @@ export function TextVersion({
               aria-labelledby={`${TEXT_VERSION_ID}-${id}`}
             >
               <h2 id={`${TEXT_VERSION_ID}-${id}`}>{place.title}</h2>
-              <ContentBlocks blocks={place.body} headingLevel={3} linkTabIndex={linkTabIndex} />
+              <ContentBlocks
+                blocks={place.body}
+                headingLevel={3}
+                lead
+                linkTabIndex={linkTabIndex}
+              />
               <LinkList links={place.links} linkTabIndex={linkTabIndex} />
             </section>
           );

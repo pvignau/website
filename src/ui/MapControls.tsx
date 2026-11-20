@@ -18,7 +18,7 @@ function ZoomButton({ direction, enabled, onZoom }: ZoomButtonProps) {
   return (
     <button
       type="button"
-      className="pixel-button pixel-button--quiet map-controls__button"
+      className="comic-button comic-button--quiet map-controls__button"
       title={name}
       aria-keyshortcuts={direction === 1 ? copy.zoomInShortcut : copy.zoomOutShortcut}
       // Not `disabled`: a disabled button loses the focus, which would fall back to the page.
@@ -61,7 +61,7 @@ export function MapControls({
         {minimap && (
           <button
             type="button"
-            className="pixel-button pixel-button--quiet map-controls__button"
+            className="comic-button comic-button--quiet map-controls__button"
             title={ui.mapControls.minimap}
             aria-pressed={minimap.shown}
             onClick={minimap.onToggle}

@@ -23,7 +23,9 @@ export const content: SiteContent = {
       label: 'House',
       zone: "Pyve's house",
       title: "Pyve's place",
-      quest: 'Enter the house',
+      quest: 'Visit the office in the house',
+      questView: 'office',
+      questHint: "Pyve's desk is all the way left: go take a look!",
       description:
         "Pyve's place: a web developer turned software architect at France Télévisions, his path, his tools and how he works.",
       body: [

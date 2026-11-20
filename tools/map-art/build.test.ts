@@ -3,7 +3,17 @@ import { describe, expect, it } from 'vitest';
 import { NOTE_IDS } from '../../src/content/notes.ts';
 import { PLACE_IDS, PLACE_VIEW_IDS } from '../../src/content/places.ts';
 import { parseTiledMap } from '../../src/engine/tiled.ts';
-import { ART_SCALE, artObjects, backgroundRect, compose } from './build.ts';
+import { HERO } from '../../src/engine/hero.ts';
+import {
+  ART_SCALE,
+  artObjects,
+  backgroundRect,
+  castShadows,
+  compose,
+  HERO_SHEETS,
+  printHero,
+} from './build.ts';
+import { INK, SHADOW } from './comic.ts';
 import type { Image } from './image.ts';
 import { createImage } from './image.ts';
 import { decodePng } from './png.ts';
@@ -85,6 +95,59 @@ describe('compose', () => {
       /No sprite/,
     );
     expect(() => compose(createImage(4, 4), [], origin, sprites)).toThrow(/The base is 4 × 4/);
+  });
+});
+
+describe('the hero', () => {
+  const source = decodePng(read('./hero.png'));
+  const { width, height, frames } = HERO.sprite;
+  const printed = printHero(source);
+  const at = (image: Image, x: number, y: number) =>
+    [...image.data.subarray((y * image.width + x) * 4, (y * image.width + x) * 4 + 4)].join();
+  const ink = [...INK, 255].join();
+
+  it('stacks one sheet a direction, of the frames the engine reads', () => {
+    expect({ width: source.width, height: source.height }).toEqual({
+      width: width * frames,
+      height: height * HERO_SHEETS.length,
+    });
+    expect({ width: printed.width, height: printed.height }).toEqual({
+      width: source.width,
+      height: source.height,
+    });
+  });
+
+  it('inks the edge of the figure in every frame, the edge of the frame included', () => {
+    const transparent = (x: number, y: number) =>
+      (printed.data[(y * printed.width + x) * 4 + 3] ?? 0) === 0;
+    const stray: string[] = [];
+    for (let y = 0; y < printed.height; y += 1) {
+      for (let x = 0; x < printed.width; x += 1) {
+        if (transparent(x, y)) continue;
+        const [fx, fy] = [x % width, y % height];
+        // The edge of the frame first: no neighbour is read across it.
+        const edge =
+          fx === 0 ||
+          fy === 0 ||
+          fx === width - 1 ||
+          fy === height - 1 ||
+          transparent(x - 1, y) ||
+          transparent(x + 1, y) ||
+          transparent(x, y - 1) ||
+          transparent(x, y + 1);
+        if (edge && at(printed, x, y) !== ink) stray.push(`${x},${y}`);
+      }
+    }
+    expect(stray).toEqual([]);
+  });
+});
+
+describe('castShadows', () => {
+  it('parts what a sprite draws from the shadow it casts', () => {
+    const sprite = parseSprite('s', { a: '#ff0000', _: SHADOW }, 'a_');
+    const { bodies, shadows } = castShadows({ s: sprite });
+    expect([...(bodies.s?.data ?? [])]).toEqual([255, 0, 0, 255, 0, 0, 0, 0]);
+    expect([...(shadows.s?.data ?? [])]).toEqual([255, 0, 0, 0, 0, 0, 0, 64]);
   });
 });
 

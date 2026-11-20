@@ -1,23 +1,29 @@
+/*
+ * The hero in the water above the panel, the two centred together: the burst
+ * of the title rises 1.6em above the panel, and as much room is left under
+ * the hero, whatever the height of the screen.
+ */
 .status-page {
+  --title-size: clamp(2.25rem, 10vw, 3.5rem);
   position: fixed;
   inset: 0;
   display: grid;
-  place-items: center;
-  padding: 1rem;
-  overflow: hidden;
+  align-content: center;
+  align-content: safe center;
+  justify-items: center;
+  row-gap: calc(1.6 * var(--title-size) - 0.5rem);
+  padding: 2.5rem 1rem 1.5rem;
+  overflow: auto;
   /* The sea of the world map: 4 × 4 of its tiles, drawn twice their size. */
-  background: #67e6d2 url('../img/sea.webp') 0 0 / 256px 256px repeat;
+  background: #2fa8d8 url('../img/sea.webp') 0 0 / 256px 256px repeat;
   image-rendering: pixelated;
 }
 
 /* The hero, waist-deep in the water. */
 .status-page__splash {
-  position: absolute;
-  top: 16%;
-  left: 50%;
+  position: relative;
   width: 48px;
   height: 72px;
-  translate: -50% 0;
 }
 
 .status-page__hero {
@@ -28,19 +34,28 @@
   clip-path: inset(0 0 42% 0);
 }
 
-/* Ripples around the water line. */
+/* Inked splash marks around the water line, and three strokes of surprise above the head. */
+.status-page__splash::before,
 .status-page__splash::after {
   content: '';
   position: absolute;
-  top: 40px;
-  left: -10px;
-  width: 8px;
-  height: 4px;
-  background: rgb(255 255 255 / 85%);
-  box-shadow:
-    60px 0 rgb(255 255 255 / 85%),
-    10px 4px rgb(255 255 255 / 60%),
-    48px 4px rgb(255 255 255 / 60%);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 40' fill='none' stroke='%2314110f' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M14 30Q6 22 3 13M22 28Q20 18 22 8M74 28Q76 18 74 8M82 30Q90 22 93 13'/%3E%3Cpath d='M8 36Q48 44 88 36' stroke-width='2.5'/%3E%3C/svg%3E")
+    0 0 / 100% 100% no-repeat;
+}
+
+.status-page__splash::after {
+  top: 14px;
+  left: -24px;
+  width: 96px;
+  height: 40px;
+}
+
+.status-page__splash::before {
+  top: -30px;
+  left: 4px;
+  width: 40px;
+  height: 26px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 26' fill='none' stroke='%2314110f' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M8 22 3 13M20 20V4M32 22l5-9'/%3E%3C/svg%3E");
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -57,20 +72,42 @@
 
 .status-page__panel {
   max-width: 28rem;
-  padding: 1.5rem;
+  padding: 0 1.5rem 1.5rem;
   text-align: center;
+  /* Inherited from the page, for the sea: the line work stays smooth. */
+  image-rendering: auto;
 }
 
+/*
+ * The title is the sound of the scene: a starburst over the top of the panel.
+ * Its padding keeps one line or two clear of the spikes: a long title wraps,
+ * as a long line would cross them.
+ */
 .status-page__title {
-  margin: 0 0 0.75rem;
-  color: var(--accent);
-  font-family: var(--font-pixel);
-  font-size: clamp(2.25rem, 9vw, 3.25rem);
-  font-weight: 700;
-  line-height: 1;
-  text-shadow: 3px 3px 0 var(--shadow);
+  width: fit-content;
+  max-width: min(calc(100% + 3rem), 8em);
+  margin: -1.6em auto 0.15em;
+  padding: 1em 1.6em;
+  background: var(--burst) center / 100% 100% no-repeat;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--title-size);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: 0.05em;
+  text-wrap: balance;
+  rotate: -4deg;
 }
 
 .status-page__body {
   margin: 0 0 1.25rem;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+/* A phone on its side: a smaller burst. */
+@media (max-height: 30rem) {
+  .status-page {
+    --title-size: 2rem;
+  }
 }

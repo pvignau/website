@@ -1,25 +1,27 @@
 /*
- * Pixelify Sans (SIL Open Font License 1.1, see ../fonts/pixelify-sans/OFL.txt),
- * self-hosted. Subsets and ranges come from Fontsource: browsers only fetch
- * latin-ext when a page uses one of its characters.
+ * Bangers (titles) and Comic Neue (lettering and text), both under the SIL Open
+ * Font License 1.1 (OFL.txt in ../fonts/bangers and ../fonts/comic-neue),
+ * self-hosted. Files and ranges come from Fontsource: browsers only fetch a
+ * subset when a page uses one of its characters. Comic Neue has a latin subset
+ * only, which covers French.
  */
 @font-face {
-  font-family: 'Pixelify Sans';
+  font-family: 'Bangers';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/pixelify-sans/pixelify-sans-latin-400-normal.woff2') format('woff2');
+  src: url('../fonts/bangers/bangers-latin-400-normal.woff2') format('woff2');
   unicode-range:
     U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
     U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-  font-family: 'Pixelify Sans';
+  font-family: 'Bangers';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/pixelify-sans/pixelify-sans-latin-ext-400-normal.woff2') format('woff2');
+  src: url('../fonts/bangers/bangers-latin-ext-400-normal.woff2') format('woff2');
   unicode-range:
     U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
     U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
@@ -27,47 +29,101 @@
 }
 
 @font-face {
-  font-family: 'Pixelify Sans';
+  font-family: 'Comic Neue';
   font-style: normal;
-  font-weight: 700;
+  font-weight: 400;
   font-display: swap;
-  src: url('../fonts/pixelify-sans/pixelify-sans-latin-700-normal.woff2') format('woff2');
+  src: url('../fonts/comic-neue/comic-neue-latin-400-normal.woff2') format('woff2');
   unicode-range:
     U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
     U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-  font-family: 'Pixelify Sans';
+  font-family: 'Comic Neue';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('../fonts/pixelify-sans/pixelify-sans-latin-ext-700-normal.woff2') format('woff2');
+  src: url('../fonts/comic-neue/comic-neue-latin-700-normal.woff2') format('woff2');
   unicode-range:
-    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
-    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
-    U+A720-A7FF;
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+/*
+ * A Silver Age comic book: four-colour process on newsprint, black line ink,
+ * Ben-Day dots for tints and shading, hard offset shadows. No blur, no
+ * gradient other than a dot screen.
+ */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  --ink: #f7ecd0;
-  --ink-muted: #e2cda0;
-  --panel: rgb(16 24 32 / 94%);
-  --panel-solid: #101820;
-  --panel-raised: #1f303b;
-  --wood: #8a6237;
-  --wood-dark: #3b2a1a;
-  --accent: #ffd166;
-  --accent-ink: #1d1409;
-  --mint: #6ee7b7;
-  --shadow: #05080c;
-  --focus-ring: var(--accent);
-  --focus-edge: var(--shadow);
+  /* Newsprint and the four inks of the press. */
+  --paper: #f6ecd2;
+  --paper-shade: #e8d9b0;
+  --ink: #14110f;
+  --red: #d7262e;
+  --yellow: #ffd53d;
+  --blue: #1e5aa8;
+  --cyan: #2fa8d8;
+  --magenta: #d9417f;
 
-  --font-pixel: 'Pixelify Sans', ui-monospace, 'SFMono-Regular', Menlo, monospace;
-  --font-text: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* Line work: outlines of panels and controls, and their hard offset shadow. */
+  --line: 3px;
+  --line-thin: 2px;
+  --drop: 6px;
+  --drop-small: 3px;
+
+  /*
+   * Ben-Day dots: a dot of radius --halftone-dot every --halftone-pitch, each row
+   * shifted by half a pitch (a 45° screen). The fine screen tints controls.
+   */
+  --halftone-dot: 1.4px;
+  --halftone-pitch: 7px;
+  --halftone-dot-fine: 0.75px;
+  --halftone-pitch-fine: 4px;
+  --halftone-size: var(--halftone-pitch) var(--halftone-pitch);
+  --halftone-shift: calc(var(--halftone-pitch) / 2) calc(var(--halftone-pitch) / 2);
+  --halftone-size-fine: var(--halftone-pitch-fine) var(--halftone-pitch-fine);
+  --halftone-shift-fine: calc(var(--halftone-pitch-fine) / 2) calc(var(--halftone-pitch-fine) / 2);
+  --screen-ink: radial-gradient(
+    circle,
+    var(--ink) var(--halftone-dot),
+    transparent calc(var(--halftone-dot) + 0.6px)
+  );
+  --screen-shade: radial-gradient(
+    circle,
+    var(--paper-shade) var(--halftone-dot),
+    transparent calc(var(--halftone-dot) + 0.6px)
+  );
+  --screen-cyan: radial-gradient(
+    circle,
+    var(--cyan) var(--halftone-dot),
+    transparent calc(var(--halftone-dot) + 0.6px)
+  );
+  --screen-red-fine: radial-gradient(
+    circle,
+    var(--red) var(--halftone-dot-fine),
+    transparent calc(var(--halftone-dot-fine) + 0.5px)
+  );
+  --screen-ink-fine: radial-gradient(
+    circle,
+    var(--ink) var(--halftone-dot-fine),
+    transparent calc(var(--halftone-dot-fine) + 0.5px)
+  );
+
+  /*
+   * A starburst for sound effects and big news: a red burst around a yellow one,
+   * inked, stretched to its box. The colours are those above (an SVG data URI
+   * cannot read custom properties).
+   */
+  --burst: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100' preserveAspectRatio='none'%3E%3Cg stroke='%2314110f' stroke-linejoin='round' vector-effect='non-scaling-stroke'%3E%3Cpolygon fill='%23d7262e' stroke-width='3' vector-effect='non-scaling-stroke' points='100,3 116.1,15.9 142.9,6.8 142.7,24 178.1,19.8 163.1,35.3 187,40.4 169.6,50 191.7,60.1 161.4,64.3 177.4,79.9 143.9,76.6 142.1,92.3 116.1,84.1 100,97.9 84.7,82.4 56.7,93.6 56.4,76.5 30.2,77 37.3,64.6 8.3,60.1 31.8,50 3.5,39.3 36.6,35.2 24.2,20.7 55,22.7 57.1,6.8 84.7,17.6'/%3E%3Cpolygon fill='%23ffd53d' stroke-width='2' vector-effect='non-scaling-stroke' points='100,11 114.5,19.7 135,15.4 142.4,24.7 162.6,26.3 160.3,36.2 185.1,40.8 167.2,50 181.9,58.9 161.5,64.1 163.1,73.9 141.6,74.8 135.6,85.1 114.5,80.3 100,88.4 84.9,81.5 65.3,84.3 58.3,74.9 31.8,75.9 39.5,63.9 18.1,58.9 31.8,50 21.3,41.5 40,36.2 35.9,25.7 59.3,25.7 65,15.4 84.9,18.5'/%3E%3C/g%3E%3C/svg%3E");
+
+  --focus-ring: var(--yellow);
+  --focus-edge: var(--ink);
+
+  --font-display: 'Bangers', Impact, 'Arial Narrow', sans-serif;
+  --font-comic: 'Comic Neue', 'Comic Sans MS', 'Chalkboard SE', sans-serif;
 
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
@@ -93,17 +149,16 @@ html {
   touch-action: manipulation;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  scrollbar-color: var(--ink) var(--paper-shade);
 }
 
+/* No background of its own: the page shows the newsprint of html (boot.css). */
 body {
   overflow: hidden;
   overscroll-behavior: none;
-  background: var(--panel-solid);
   color: var(--ink);
-  font-family: var(--font-text);
+  font-family: var(--font-comic);
   line-height: 1.5;
-  /* Pixelify Sans draws its "fi" ligature as a single odd glyph. */
-  font-variant-ligatures: none;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
 }
@@ -114,14 +169,14 @@ button {
 }
 
 a {
-  color: var(--accent);
+  color: var(--blue);
 }
 
 /*
- * Focus: a light ring inside a dark edge. Over the sea or the sand the edge
- * stands out, over the panels the ring does: one of the two always contrasts
- * at least 3:1 with what lies behind (see focus-ring.test.ts). `html` raises
- * the specificity above the component rules that set their own box-shadow.
+ * Focus: a yellow ring inside an ink edge. Over the sea or the sand the edge
+ * stands out, over the ink and the panels the ring does: one of the two always
+ * contrasts at least 3:1 with what lies behind (see focus-ring.test.ts). `html`
+ * raises the specificity above the component rules that set their own box-shadow.
  */
 html :focus-visible {
   outline: 3px solid var(--focus-ring);
@@ -141,51 +196,65 @@ html :focus-visible {
   border: 0;
 }
 
-/* Shared retro panel: dark glass, wooden frame, hard shadow. */
+/* A comic panel: newsprint inside a thick ink line, with a hard offset shadow. */
 .panel {
-  background: var(--panel);
-  border: 3px solid var(--wood);
-  box-shadow:
-    inset 0 0 0 2px var(--wood-dark),
-    4px 4px 0 var(--shadow);
+  background: var(--paper);
+  border: var(--line) solid var(--ink);
+  box-shadow: var(--drop) var(--drop) 0 var(--ink);
 }
 
-.pixel-button {
+/* Lettered like a caption: bold capitals, inked outline, a hard shadow it sinks into. */
+.comic-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4em;
+  gap: 0.45em;
   min-width: 44px;
   min-height: 44px;
-  padding: 0.35em 0.8em;
-  border: 3px solid var(--wood-dark);
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-family: var(--font-pixel);
+  padding: 0.45em 0.9em 0.35em;
+  border: var(--line) solid var(--ink);
+  background: var(--yellow);
+  color: var(--ink);
+  font-family: var(--font-comic);
   font-size: 1rem;
+  font-weight: 700;
   line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   text-decoration: none;
-  box-shadow: 3px 3px 0 var(--shadow);
+  box-shadow: var(--drop-small) var(--drop-small) 0 var(--ink);
   cursor: pointer;
 }
 
-.pixel-button:hover {
-  background: #ffe08f;
+/* Hovered, the yellow gets a red screen, as a printer tints it orange. */
+.comic-button:hover {
+  background:
+    var(--screen-red-fine) 0 0 / var(--halftone-size-fine),
+    var(--screen-red-fine) var(--halftone-shift-fine) / var(--halftone-size-fine),
+    var(--yellow);
 }
 
-.pixel-button:active {
+.comic-button:active {
   translate: 2px 2px;
-  box-shadow: 1px 1px 0 var(--shadow);
+  box-shadow: 1px 1px 0 var(--ink);
 }
 
-.pixel-button--quiet {
-  background: var(--panel-raised);
-  color: var(--ink);
-  border-color: var(--wood);
+.comic-button--quiet {
+  background: var(--paper);
 }
 
-.pixel-button--quiet:hover {
-  background: #29404e;
+.comic-button--quiet:hover {
+  background: var(--yellow);
+}
+
+/* Inked icons (icons.tsx): round strokes in the colour of the text. */
+.icon {
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 @media (prefers-reduced-motion: reduce) {

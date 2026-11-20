@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.5rem;
+  gap: 0.6rem;
   pointer-events: none;
 }
 
@@ -32,13 +32,13 @@
 }
 
 /*
- * One strip, the buttons sharing their borders: narrow enough to clear the
+ * One strip, the buttons sharing their ink lines: narrow enough to clear the
  * cross on a 320 px phone. The rules go through the strip to outweigh
- * .pixel-button, whose stylesheet comes later.
+ * .comic-button and its states (global.css).
  */
 .map-controls__buttons {
   display: flex;
-  box-shadow: 3px 3px 0 var(--shadow);
+  box-shadow: var(--drop-small) var(--drop-small) 0 var(--ink);
   pointer-events: auto;
 }
 
@@ -46,13 +46,13 @@
   padding-inline: 0;
 }
 
-/* The strip casts the shadow; the focus ring keeps its dark edge (global.css). */
+/* The strip casts the shadow; the focus ring keeps its ink edge (global.css). */
 .map-controls__buttons .map-controls__button:not(:focus-visible) {
   box-shadow: none;
 }
 
 .map-controls__buttons .map-controls__button + .map-controls__button {
-  margin-left: -3px;
+  margin-left: calc(-1 * var(--line));
 }
 
 /* The focus ring of a button goes over its neighbours. */
@@ -61,23 +61,26 @@
   z-index: 1;
 }
 
-/* A strip does not sink one button: it darkens instead. */
+/* A strip does not sink one button: it shades instead. */
 .map-controls__buttons .map-controls__button:active {
   translate: none;
-  background: var(--panel-solid);
+  background: var(--paper-shade);
 }
 
+/* At the end of the range: screened grey, the icon faded. */
 .map-controls__buttons .map-controls__button[aria-disabled='true'] {
-  color: var(--ink-muted);
-  background: var(--panel-raised);
+  background:
+    var(--screen-ink-fine) 0 0 / var(--halftone-size-fine),
+    var(--screen-ink-fine) var(--halftone-shift-fine) / var(--halftone-size-fine),
+    var(--paper-shade);
   cursor: default;
 }
 
 .map-controls__buttons .map-controls__button[aria-disabled='true'] > svg {
-  opacity: 0.4;
+  opacity: 0.5;
 }
 
-/* The minimap button lights up while the minimap shows. */
+/* The minimap button is lit, in yellow, while the minimap shows. */
 .map-controls__buttons .map-controls__button[aria-pressed='true'] {
-  color: var(--accent);
+  background: var(--yellow);
 }

@@ -17,21 +17,36 @@
   }
 }
 
+/*
+ * The cross: one inked outline around four arms and a screened hub, and a hard
+ * shadow that follows its shape.
+ */
 .touch-pad__cross {
   position: relative;
   width: 9.5rem;
   height: 9.5rem;
+  filter: drop-shadow(4px 4px 0 var(--ink));
   touch-action: none;
   pointer-events: auto;
 }
 
+.touch-pad__cross::before {
+  content: '';
+  position: absolute;
+  inset: 33.3%;
+  background:
+    var(--screen-ink-fine) 0 0 / var(--halftone-size-fine),
+    var(--screen-ink-fine) var(--halftone-shift-fine) / var(--halftone-size-fine),
+    var(--paper);
+}
+
+/* Each arm is open on the hub side and reaches into it by a line, so the outline joins up. */
 .touch-pad__arm {
   position: absolute;
   width: 33.4%;
   height: 33.4%;
-  background: rgb(31 48 59 / 88%);
-  border: 3px solid var(--wood);
-  box-shadow: 3px 3px 0 var(--shadow);
+  background: var(--paper);
+  border: var(--line) solid var(--ink);
 }
 
 .touch-pad__arm::after {
@@ -41,64 +56,78 @@
   margin: auto;
   width: 0;
   height: 0;
-  border: 0.55rem solid transparent;
+  border: 0.6rem solid transparent;
 }
 
 .touch-pad__arm--up {
   top: 0;
   left: 33.3%;
+  height: calc(33.4% + var(--line));
+  border-bottom: 0;
 }
 
 .touch-pad__arm--up::after {
   border-bottom-color: var(--ink);
-  translate: 0 -0.3rem;
+  translate: 0 -0.45rem;
 }
 
 .touch-pad__arm--down {
   bottom: 0;
   left: 33.3%;
+  height: calc(33.4% + var(--line));
+  border-top: 0;
 }
 
 .touch-pad__arm--down::after {
   border-top-color: var(--ink);
-  translate: 0 0.3rem;
+  translate: 0 0.45rem;
 }
 
 .touch-pad__arm--left {
   top: 33.3%;
   left: 0;
+  width: calc(33.4% + var(--line));
+  border-right: 0;
 }
 
 .touch-pad__arm--left::after {
   border-right-color: var(--ink);
-  translate: -0.3rem 0;
+  translate: -0.45rem 0;
 }
 
 .touch-pad__arm--right {
   top: 33.3%;
   right: 0;
+  width: calc(33.4% + var(--line));
+  border-left: 0;
 }
 
 .touch-pad__arm--right::after {
   border-left-color: var(--ink);
-  translate: 0.3rem 0;
+  translate: 0.45rem 0;
 }
 
 .touch-pad__arm[data-active] {
-  background: var(--wood);
+  background: var(--yellow);
 }
 
+/* A: a yellow button, shaded at the bottom right with a screen of red dots. */
 .touch-pad__action {
   width: 4.5rem;
   height: 4.5rem;
-  border: 3px solid var(--wood-dark);
+  padding: 0.1em 0 0;
+  border: var(--line) solid var(--ink);
   border-radius: 50%;
-  background: var(--accent);
-  color: var(--accent-ink);
-  box-shadow: 3px 3px 0 var(--shadow);
-  font-family: var(--font-pixel);
-  font-size: 1.75rem;
-  font-weight: 700;
+  background:
+    radial-gradient(circle at 40% 36%, var(--yellow) 58%, transparent calc(58% + 1px)),
+    var(--screen-red-fine) 0 0 / var(--halftone-size-fine),
+    var(--screen-red-fine) var(--halftone-shift-fine) / var(--halftone-size-fine),
+    var(--yellow);
+  color: var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  line-height: 1;
   touch-action: manipulation;
   pointer-events: auto;
   -webkit-user-select: none;
@@ -106,6 +135,6 @@
 }
 
 .touch-pad__action:active {
-  translate: 2px 2px;
-  box-shadow: 1px 1px 0 var(--shadow);
+  translate: 3px 3px;
+  box-shadow: 1px 1px 0 var(--ink);
 }

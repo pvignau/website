@@ -36,22 +36,37 @@ function contrast(a: string, b: string): number {
  * maps (src/maps/*.webp), and the interface surfaces.
  */
 const BACKGROUNDS: Record<string, string> = {
-  sea: '#67e6d2',
-  'shallow water': '#90eddf',
-  grass: '#74c857',
-  sand: '#f8c984',
-  'house floor': '#796755',
-  'house wall': '#485d84',
-  'house rug': '#5b3138',
-  'house shadow': '#221c1a',
-  'house window': '#9097b1',
+  sea: '#2fa8d8',
+  'sea dots': '#1e5aa8',
+  grass: '#31973f',
+  sand: '#ffd53d',
+  paper: '#f6ecd2',
+  bridge: '#f1a031',
+  cliff: '#ce732a',
+  ink: '#14110f',
+  'house floor': '#d39b66',
+  'house floor light': '#f4c892',
+  'house wood': '#985d24',
+  'house wallpaper': '#1c4473',
+  'house rug': '#5b1e16',
+  'house window': '#818db3',
 };
 
 describe('focus ring', () => {
   const colours = rootColours();
   const ring = colours.get('--focus-ring') ?? '';
   const edge = colours.get('--focus-edge') ?? '';
-  const surfaces = ['--panel-solid', '--panel-raised', '--wood', '--wood-dark', '--accent'];
+  // Newsprint and the four inks: the panels, captions, buttons and dot screens.
+  const surfaces = [
+    '--paper',
+    '--paper-shade',
+    '--ink',
+    '--red',
+    '--yellow',
+    '--blue',
+    '--cyan',
+    '--magenta',
+  ];
 
   it('uses two colours that stand apart from each other', () => {
     expect(ring).toMatch(/^#[0-9a-f]{6}$/i);

@@ -1,24 +1,37 @@
-/* Left part of the top bar (GameScreen.css): it shrinks, the toolbar does not. */
+/*
+ * Left part of the top bar (GameScreen.css): it shrinks, the toolbar does not.
+ * A narration caption: where the hero is, then what the next key does.
+ */
 .hud {
   flex: 0 1 auto;
   min-width: 0;
   max-width: 24rem;
-  padding: 0.5rem 0.75rem;
-  font-family: var(--font-pixel);
+  padding: 0.45rem 0.8rem 0.5rem;
+  background: var(--yellow);
   line-height: 1.2;
   overflow-wrap: break-word;
+  rotate: -1deg;
   pointer-events: none;
 }
 
 .hud__zone {
   margin: 0;
-  color: var(--accent);
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: 0.04em;
 }
 
 .hud__hint {
   margin: 0.2rem 0 0;
-  color: var(--ink);
   font-size: 0.95rem;
+  font-weight: 700;
+}
+
+/* Phones in portrait: a narrower caption, a smaller title. */
+@media (max-width: 30rem) {
+  .hud__zone {
+    font-size: 1.25rem;
+  }
 }

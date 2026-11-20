@@ -55,6 +55,19 @@ describe('PlaceDialog', () => {
     expect(within(dialog).getByText('TypeScript').tagName).toBe('LI');
   });
 
+  it('sets the scene with its first paragraph only, shown as a speech balloon', () => {
+    const story: Place = {
+      ...place,
+      body: [
+        { kind: 'paragraph', text: 'Le panneau grince.' },
+        { kind: 'paragraph', text: 'Une affiche.' },
+      ],
+    };
+    render(<PlaceDialog place={story} onClose={() => undefined} />);
+    expect(screen.getByText('Le panneau grince.')).toHaveClass('content-paragraph--lead');
+    expect(screen.getByText('Une affiche.')).not.toHaveClass('content-paragraph--lead');
+  });
+
   it('opens external links in a new tab, safely, and says so', () => {
     render(<PlaceDialog place={place} onClose={() => undefined} />);
     // Accessible-name engines differ on the space before a hidden suffix.

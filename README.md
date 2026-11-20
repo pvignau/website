@@ -1,10 +1,10 @@
 # Le monde de Pyve
 
-Le portfolio de Pyve, à explorer comme un mini-RPG en pixel art : [pyve.is-a.dev](https://pyve.is-a.dev).
+Le portfolio de Pyve, à explorer comme un mini-RPG en pixel art, dans une interface de bande dessinée : [pyve.is-a.dev](https://pyve.is-a.dev).
 
 ![Le héros sur le chemin devant sa maison, avec le pont et le bateau](public/og-image.png)
 
-Le visiteur se promène sur deux îles reliées par un pont. Il entre dans la maison (la bio), lit le panneau de l'atelier (les projets), visite le lab dans l'annexe et rejoint le bateau au ponton (le contact). Une version texte reprend tout le contenu, pour qui préfère lire, pour les lecteurs d'écran et pour les moteurs de recherche.
+Le visiteur se promène sur deux îles reliées par un pont. Il entre dans la maison et passe au bureau (la bio), lit le panneau de l'atelier (les projets), visite le lab dans l'annexe et rejoint le bateau au ponton (le contact). Une version texte reprend tout le contenu, pour qui préfère lire, pour les lecteurs d'écran et pour les moteurs de recherche.
 
 ## Démarrer
 
@@ -39,6 +39,8 @@ src/
   quest/      progression de la quête (localStorage)
   lib/        petits hooks et accès au stockage
   maps/       cartes Tiled (.json) et leurs fonds (.webp)
+  styles/     jetons de la BD et polices (global.css), chargeur et version sans JavaScript (boot.css)
+  fonts/      Bangers et Comic Neue, en woff2, avec leur licence
 tools/map-art/ fabrique les fonds des cartes : dessin à 16 px, sprites, script
 vite-plugins/ tiled-map.ts (cartes allégées) et site-pages.ts (métadonnées, pages statiques)
 ```
@@ -65,7 +67,7 @@ Sur la carte du monde seulement. `src/engine/minimap.ts` en tire le cadre de la 
 
 ### État
 
-Pas de Redux. L'état qui change à chaque frame vit dans des refs. Ce qui est ouvert (un lieu, l'aide, la version texte) se lit dans l'adresse et l'entrée d'historique, si bien que Retour le referme ; seuls l'accueil de la maison et l'aide de première visite, qui s'ouvrent d'eux-mêmes, sont un état local. La quête est un petit store branché sur `useSyncExternalStore`.
+Pas de Redux. L'état qui change à chaque frame vit dans des refs. Ce qui est ouvert (un lieu, l'aide, la version texte) se lit dans l'adresse et l'entrée d'historique, si bien que Retour le referme ; seuls l'accueil de la maison et l'aide de première visite, qui s'ouvrent d'eux-mêmes, sont un état local. La quête est un petit store branché sur `useSyncExternalStore`, gardé dans `localStorage` (`pyve:quest:v1`, les lieux visités) : un lieu est visité dès que son dialogue s'ouvre, ou, s'il a un `questView`, quand il s'ouvre depuis cette vue. La maison accueille par sa bio à l'arrivée, une fois par visite, tant que la quête n'est pas passée par le bureau.
 
 ### Routage
 
@@ -97,11 +99,23 @@ Les pages ont chacune leur titre, leur description, leur URL canonique (sans bar
 
 Le site parle français sans préfixe (`/home`) et anglais sous `/en` (`/en/home`). La langue vient de l'adresse (`src/app/language.ts`) et ne change pas pendant la vie d'une page : `src/app/history.ts` retire le préfixe de ce que lit le jeu et le remet dans ce qu'il écrit, si bien que le jeu, ses cartes et leurs objets `redirect` ne connaissent que `/`, `/home` et `/work`. Les composants lisent les textes de la page par `useCopy()` (`src/app/copy.ts`). Le lien de la barre d'outils mène à la même page dans l'autre langue, en la rechargeant. Chaque page statique porte son `lang`, sa locale Open Graph, ses liens `hreflang` (le français en `x-default`) et sa version texte, qui renvoie à l'autre langue.
 
+## Habillage
+
+L'interface est une bande dessinée de l'âge d'argent posée sur le pixel art : quadrichromie sur papier journal, trait d'encre, trames de points Ben-Day, ombres portées franches. Ni flou, ni dégradé autre qu'une trame. Le style seul : aucun nom, logo ni personnage d'éditeur.
+
+- Les jetons sont dans le `:root` de `src/styles/global.css` : le papier (`--paper`, `--paper-shade`), l'encre (`--ink`), les encres d'accent (`--red`, `--yellow`, `--blue`, `--cyan`, `--magenta`), l'épaisseur du trait (`--line`) et le décalage des ombres (`--drop`).
+- Une trame est un `radial-gradient` répété sur deux couches décalées d'un demi-pas, une trame à 45° : rayon `--halftone-dot`, pas `--halftone-pitch`, et une trame fine pour les commandes. Les `--screen-*` en sont les points, à l'encre, en cyan, en rouge… Le texte courant n'est jamais posé sur une trame, seulement les titres et les surfaces sans texte.
+- Quatre formes : la case (`.panel`, un trait et une ombre portée) ; le récitatif, cartouche jaune un peu de travers (le HUD, le lieu au-dessus d'un dialogue, le métier dans la version texte) ; la bulle (l'étiquette d'un objet, la première phrase de chaque lieu, `.content-paragraph--lead`, le chargeur) ; l'explosion (`--burst`, un SVG : quête terminée, titres de la page 404 et de la page d'erreur).
+- Le fond d'un dialogue estompe le jeu sous une trame d'encre légère, des points clairsemés sans aplat : la carte reste lisible derrière la case. La page autour des cases (version texte, maison plus petite que l'écran, chargeur) est tramée de `--paper-shade`, et la maison, vue en coupe, est encrée le long de ses murs (`filter: drop-shadow`).
+- Lettrage : Bangers pour les titres et les onomatopées, Comic Neue gras en capitales pour l'interface, Comic Neue normal pour le texte. Bangers latin pèse 23,5 ko (latin-ext, 17,2 ko, ne se charge qu'au besoin), Comic Neue 19,6 ko en normal et 19,2 ko en gras ; `index.html` précharge Bangers et Comic Neue gras, ceux du chargeur et du HUD. Pas de police pixel : le pixel art reste à la carte et au héros.
+- Contrastes : encre sur papier 16:1, sur jaune 13:1, sur cyan 6,9:1 ; liens bleus 5,8:1 ; le nom en jaune sur bleu 4,8:1. Le rouge (4,2:1 sur le papier) ne sert qu'aux coches, aux puces et aux grandes lettres.
+- La page est claire (`color-scheme: light`, barres de défilement à l'encre sur `--paper-shade`) ; `theme-color` et le manifeste prennent la couleur du papier.
+
 ## Éditer le contenu
 
 Tout texte visible passe par `src/content/index.ts`, l'unique point d'entrée. Les composants ne contiennent aucun texte en dur.
 
-- `types.ts` définit le contrat : `SiteContent`, `Place`, `Note`, `ContentBlock`, etc. Une note est la phrase d'un objet de la carte (la télé, la console, le casque), avec son étiquette. Une vue (`PlaceView`) raconte un lieu depuis un autre objet que son entrée : le bureau de la maison rouvre la bio avec sa propre étiquette, sa zone, son titre et sa première phrase.
+- `types.ts` définit le contrat : `SiteContent`, `Place`, `Note`, `ContentBlock`, etc. Une note est la phrase d'un objet de la carte (la télé, la console, le casque), avec son étiquette. Une vue (`PlaceView`) raconte un lieu depuis un autre objet que son entrée : le bureau de la maison rouvre la bio avec sa propre étiquette, sa zone, son titre et sa première phrase. `questView` désigne la vue qui coche le lieu dans la quête : la maison est cochée au bureau, pas à la porte, et `questHint` y mène depuis le HUD tant que ce n'est pas fait.
 - Le contenu du portfolio vit dans `site.ts` (français) et `site.en.ts` (anglais), la microcopie dans `ui.ts` et `ui.en.ts` ; `index.ts` les réunit dans `COPIES`, et `languages.ts` décrit les langues. Les tests exigent des deux langues la même forme (lieux, blocs, listes, vues, notes) et les mêmes liens : une phrase ajoutée en français l'est aussi en anglais. L'anglais ne met pas d'espace avant `? ! : ;`. `site.placeholder.ts` en garde une version neutre de même forme, pratique pour travailler sur le moteur : une ligne d'`index.ts` suffit pour basculer.
 - `ui.ts` contient la microcopie du moteur : aides du HUD, boutons, noms accessibles, titres de page.
 - Typographie : apostrophe droite, et espace insécable (U+00A0) avant `? ! : ;`. ESLint accepte ces espaces dans les chaînes.
@@ -127,14 +141,19 @@ Le moteur lit seulement le groupe de calques `meta` :
 
 ### Les images des cartes
 
-Les tuiles font 32 px, mais le pixel art est dessiné à 16 px la tuile : un pixel du dessin couvre 2 × 2 pixels de la carte. `npm run map-art` (`tools/map-art/build.ts`, sans dépendance, mais il faut `cwebp`, de libwebp) fabrique les images du jeu à partir de :
+Les tuiles font 32 px, mais le pixel art est dessiné à 16 px la tuile : un pixel du dessin couvre 2 × 2 pixels de la carte. `npm run map-art` (`tools/map-art/build.ts`, sans dépendance, mais il faut `cwebp` et `dwebp`, de libwebp) fabrique les images du jeu à partir de :
 
 - `tools/map-art/world.png` et `home.png` : le fond de chaque carte, à un pixel par pixel du dessin, à retoucher dans un éditeur de pixel art ;
 - `tools/map-art/sea.png` : quatre tuiles sur quatre de mer, que le moteur répète autour de la grande carte ;
-- les sprites de `tools/map-art/sprites/`, écrits en texte : un caractère par pixel, une palette par sprite ;
+- `tools/map-art/hero.png` : les planches du héros, à un pixel par pixel du sprite (celui-ci n'est pas sur la grille de 16 px), empilées de haut en bas : face, gauche, droite, dos, chacune de quatre images de 24 × 36 px, la première à l'arrêt (`HERO.sprite`, `src/engine/hero.ts`). Elles sont peintes avec les couleurs du nuancier ;
+- les sprites de `tools/map-art/sprites/`, écrits en texte : un caractère par pixel, une palette par sprite, faite des couleurs du nuancier (voir plus bas) ;
 - le calque d'objets `art` de chaque carte, hors du groupe `meta` : chaque rectangle porte le nom d'un sprite et sa taille, en coordonnées paires (la grille du dessin), et ils sont dessinés dans l'ordre du calque. La propriété booléenne `solid` marque ce que le héros contourne, panneaux et meubles : les tests vérifient que les tuiles dessous sont solides.
 
-Le script écrit `src/maps/world.webp`, `home.webp` et `src/img/sea.webp`, deux fois plus grands, en WebP sans perte (`cwebp -lossless -z 9 -exact`). `npm run map-art -- --check` vérifie qu'ils sont à jour (il faut aussi `dwebp`).
+Les images sont imprimées comme une bande dessinée des années 1960 (`tools/map-art/comic.ts`), aux couleurs de l'interface : encres sur papier journal, trames de points Ben-Day, traits d'encre. Chaque couleur du dessin devient une teinte du nuancier (`GUIDE`) : un aplat d'encres superposées ou une trame, des points d'une encre sur une autre. Les trames suivent la grille du dessin et se calent sur la carte : la mer de la grande carte se prolonge dans le motif qui l'entoure, et la minicarte, qui fait la moyenne de blocs de 8 × 8 pixels du dessin, y voit des aplats. Ce qui se dresse sur le sol (mer, herbe, sable, planchers) est cerné d'un trait d'encre, la côte aussi, et les ombres portées des sprites (`SHADOW`, noir translucide) sont hachurées, comme celle du héros, que pose `src/game/GameScreen.css`. Les couleurs des fonds sont séparées une à une dans `SEPARATIONS`, les palettes des sprites prennent celles du nuancier (`COLOURS`) : les tests vérifient que rien n'y échappe.
+
+Le héros est imprimé de la même façon, image par image : un trait d'encre d'un pixel cerne la silhouette, jusqu'au bord de l'image que le jeu découpe (les cheveux qui le touchent).
+
+Le script écrit `src/maps/world.webp`, `home.webp` et `src/img/sea.webp`, deux fois plus grands, en WebP sans perte (`cwebp -lossless -z 9 -exact`), les planches du héros `src/img/hero/sprite{Down,Left,Right,Up}.webp` à leur taille, et l'aperçu de partage `public/og-image.png`, une couverture de bande dessinée tirée de la carte imprimée (`tools/map-art/og-image.ts`). `npm run map-art -- --check` vérifie qu'ils sont à jour.
 
 Les fonds sont redessinés sur la grille de 16 px à partir des exports de Tiled d'origine, dont les tuiles avaient été agrandies en lissant. Un nouvel export de Tiled n'est donc plus la source des images.
 
@@ -159,7 +178,7 @@ Après une modification, lancez `npm test` : les tests de `src/game/maps.test.ts
 - Clavier : flèches, ZQSD ou WASD pour marcher, Espace ou Entrée pour agir, `?` pour l'aide, + et - pour zoomer (`=` vaut +). Ctrl et + zooment toujours la page. Le premier Tab tombe sur « Aller à la version texte ».
 - Les dialogues reposent sur `<dialog>` en mode modal : `aria-labelledby` pointe vers le titre et le focus reste dans le dialogue. Il part sur le contenu, une région que les flèches font défiler ; Espace ou Entrée gardés enfoncés depuis le jeu n'y pressent rien. Échap, le bouton Fermer, le fond (un appui qui y commence et y finit) et Retour le ferment, puis le focus revient où il était, ou sur « Version texte ».
 - Le HUD visible n'est pas une région live : une ligne `role="status"`, masquée, annonce l'arrivée près d'un lieu (« Panneau des projets. Espace ou Entrée : Projets ») et les messages, sans rien dire quand le héros s'éloigne.
-- Le contour de focus est double, jaune dans un bord sombre : l'un des deux contraste à 3:1 au moins avec ce qui est derrière, la mer comme les panneaux. Liens et boutons font au moins 44 px de haut.
+- Le contour de focus est double, jaune dans un bord d'encre : l'un des deux contraste à 3:1 au moins avec ce qui est derrière, la mer comme le papier et les encres de l'interface. Liens et boutons font au moins 44 px de haut.
 - Sur écran tactile, A agit dès que le doigt se pose, même pendant qu'un autre tient la croix ; son nom accessible, « A : interagir », reprend la lettre affichée.
 - La version texte reste dans le DOM même fermée ; ses liens sortent alors de l'ordre de tabulation.
 - La minicarte est décorative (`aria-hidden`) : le HUD dit déjà où est le héros, le journal ce qui est fait, et elle n'ajoute aucune région live. Ses boutons sont nommés : « Zoom arrière », « Zoom avant » (`aria-keyshortcuts`) et « Minicarte », un bouton bascule (`aria-pressed`). Au bout de la plage, un bouton de zoom reste focalisable (`aria-disabled`) : le focus ne retombe pas sur la page.
@@ -225,6 +244,6 @@ jobs:
 
 ## Licences et crédits
 
-- Police [Pixelify Sans](https://github.com/eifetx/Pixelify-Sans), sous SIL Open Font License 1.1 (`src/fonts/pixelify-sans/OFL.txt`), auto-hébergée. Elle couvre les lettres accentuées du français.
+- Polices [Bangers](https://github.com/googlefonts/bangers) et [Comic Neue](https://github.com/crozynski/comicneue), sous SIL Open Font License 1.1 (`OFL.txt` dans `src/fonts/bangers/` et `src/fonts/comic-neue/`), auto-hébergées à partir des paquets Fontsource. Elles couvrent les lettres accentuées du français.
 - Les fonds des cartes et le héros viennent des packs cités dans les fichiers Tiled, qui gardent leurs licences d'origine. Les icônes et l'image `og-image.png` en sont dérivées.
 - Les sprites de `tools/map-art/sprites/` (panneaux, lab, mobilier de la maison) sont dessinés pour ce site.

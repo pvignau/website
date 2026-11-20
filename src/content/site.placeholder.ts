@@ -18,12 +18,22 @@ export const content: SiteContent = {
       label: 'Maison',
       zone: 'La maison',
       title: 'Bio',
-      quest: 'Entrer dans la maison',
+      quest: 'Passer au bureau, dans la maison',
+      questView: 'office',
+      questHint: 'Le bureau est par là.',
       body: [
         { kind: 'paragraph', text: 'Texte provisoire de la bio.' },
         { kind: 'list', items: ['Premier point.', 'Deuxième point.'] },
       ],
       links: [{ label: 'Profil', href: 'https://example.com/profil' }],
+      views: {
+        office: {
+          label: 'Bureau',
+          zone: 'Le bureau',
+          title: 'Bio, au bureau',
+          lead: 'Texte provisoire du bureau.',
+        },
+      },
     },
     work: {
       id: 'work',

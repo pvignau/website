@@ -2,7 +2,7 @@
 export function Loader({ label }: { label: string }) {
   return (
     <div id="loader" className="loader" role="status">
-      <span className="loader__squares" aria-hidden="true">
+      <span className="loader__balloon" aria-hidden="true">
         <span />
         <span />
         <span />

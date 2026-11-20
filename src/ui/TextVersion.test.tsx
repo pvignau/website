@@ -18,6 +18,13 @@ describe('TextVersion', () => {
     expect(within(article).getAllByRole('link').length).toBeGreaterThan(0);
   });
 
+  it('opens each place on its lead, in a speech balloon', () => {
+    const { container } = render(<TextVersion open onClose={() => undefined} />);
+    const leads = [...container.querySelectorAll('.content-paragraph--lead')];
+    expect(leads).toHaveLength(PLACE_IDS.length);
+    for (const lead of leads) expect(lead.previousElementSibling?.tagName).toBe('H2');
+  });
+
   it('keeps hidden links out of the Tab order until it is opened', () => {
     const { rerender } = render(<TextVersion open={false} onClose={() => undefined} />);
     const firstLink = () => screen.getAllByRole('link')[0];

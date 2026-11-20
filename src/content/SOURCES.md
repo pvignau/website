@@ -55,7 +55,7 @@ LinkedIn : l'URL a été vérifiée dans le navigateur.
 
 - Apostrophe droite partout.
 - Espace insécable (U+00A0) avant `? ! : ;`. Sur Mac, Option + Espace la tape.
-- La police est Pixelify Sans (OFL), qui couvre le Latin-1.
+- Les polices sont Bangers et Comic Neue (OFL), qui couvrent le Latin-1.
 
 ## Sources publiques
 

@@ -1,16 +1,15 @@
 /*
  * Loaded by index.html before any script: the boot loader shown until the
  * game is ready. <Loader> renders the same markup, so the hand-over from the
- * static page to React does not flash.
+ * static page to React does not flash. The tokens (--paper, --ink…) and the
+ * fonts come from global.css, bundled in the same stylesheet.
  */
-:root {
-  --loader-size: 3rem;
-  --loader-ink: #f7ecd0;
-  --loader-background: #101820;
-}
-
 html {
-  background: var(--loader-background);
+  /* Newsprint, screened with dots: the page around the panels. */
+  background:
+    var(--screen-shade) 0 0 / var(--halftone-size),
+    var(--screen-shade) var(--halftone-shift) / var(--halftone-size),
+    var(--paper);
 }
 
 #loader {
@@ -20,79 +19,91 @@ html {
   display: grid;
   place-content: center;
   justify-items: center;
-  gap: 1rem;
-  background: var(--loader-background);
-  color: var(--loader-ink);
+  gap: 1.75rem;
+  background:
+    var(--screen-shade) 0 0 / var(--halftone-size),
+    var(--screen-shade) var(--halftone-shift) / var(--halftone-size),
+    var(--paper);
+  color: var(--ink);
   font:
-    1rem/1.2 'Pixelify Sans',
-    ui-monospace,
-    monospace;
+    700 1rem/1.2 'Comic Neue',
+    'Comic Sans MS',
+    sans-serif;
 }
 
-#loader .loader__squares {
+/* A speech balloon, its three dots hopping in turn: someone is about to speak. */
+#loader .loader__balloon {
   position: relative;
-  width: var(--loader-size);
-  height: var(--loader-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 7.5rem;
+  height: 4.75rem;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
 }
 
-#loader .loader__squares span {
+#loader .loader__balloon::after {
+  content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 50%;
-  height: 50%;
-  background: #e15b64;
-  animation: loader-walk 2s infinite;
+  top: calc(100% - 1px);
+  left: 1.6rem;
+  width: 24px;
+  height: 26px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 26'%3E%3Cpath d='M4 0Q6 14 1.5 24.5Q14 16 21 0' fill='%23f6ecd2' stroke='%2314110f' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E")
+    0 0 / 100% 100% no-repeat;
 }
 
-#loader .loader__squares span:nth-child(2) {
-  background: #f8b26a;
-  animation-delay: -0.5s;
+#loader .loader__balloon span {
+  width: 0.95rem;
+  height: 0.95rem;
+  border: 2.5px solid var(--ink);
+  border-radius: 50%;
+  background: var(--red);
+  animation: loader-hop 1.2s infinite;
 }
 
-#loader .loader__squares span:nth-child(3) {
-  background: #abbd81;
-  animation-delay: -1s;
+#loader .loader__balloon span:nth-child(2) {
+  background: var(--yellow);
+  animation-delay: 0.15s;
+}
+
+#loader .loader__balloon span:nth-child(3) {
+  background: var(--blue);
+  animation-delay: 0.3s;
+}
+
+/* A narration caption: what is loading. */
+#loader .loader__label {
+  padding: 0.35rem 0.75rem 0.25rem;
+  border: 2px solid var(--ink);
+  background: var(--yellow);
+  box-shadow: 3px 3px 0 var(--ink);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  rotate: -2deg;
 }
 
 #loader .loader__label:empty {
   display: none;
 }
 
-/* The three squares walk around a 2 × 2 grid, pausing on each cell. */
-@keyframes loader-walk {
-  0% {
-    translate: 0 0;
-  }
-  8%,
-  25% {
-    translate: 100% 0;
-  }
-  33%,
-  50% {
-    translate: 100% 100%;
-  }
-  58%,
-  75% {
-    translate: 0 100%;
-  }
-  83%,
+@keyframes loader-hop {
+  0%,
+  50%,
   100% {
     translate: 0 0;
+  }
+  25% {
+    translate: 0 -0.55rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #loader .loader__squares span {
+  #loader .loader__balloon span {
     animation: none;
-  }
-
-  #loader .loader__squares span:nth-child(2) {
-    translate: 100% 0;
-  }
-
-  #loader .loader__squares span:nth-child(3) {
-    translate: 100% 100%;
   }
 }
 
@@ -100,15 +111,18 @@ html {
  * The text version written in each page (vite-plugins/static-page.ts). Hidden while
  * the game boots; shown without JavaScript (the <noscript> rules of site-pages.ts)
  * or when the game cannot start (html.no-game, set by the script in index.html).
+ * The comic as a book, like the text version of the app: a cover, one panel per
+ * place, text on plain paper only.
  */
 .static-page {
   display: none;
-  max-width: 40rem;
+  max-width: 44rem;
   margin: 0 auto;
-  padding: 2rem 1.25rem 3rem;
-  color: var(--loader-ink);
+  padding: 1.5rem 1.25rem 3rem;
+  color: var(--ink);
   font:
-    1.05rem/1.6 system-ui,
+    1.05rem/1.55 'Comic Neue',
+    'Comic Sans MS',
     sans-serif;
 }
 
@@ -124,43 +138,127 @@ html.no-game body {
   overflow: auto;
 }
 
-.static-page h1,
-.static-page h2,
-.static-page h3 {
-  color: #ffd166;
-  font-family: 'Pixelify Sans', ui-monospace, monospace;
-  font-weight: 700;
-  line-height: 1.15;
-}
-
-.static-page h1 {
-  margin: 0;
-  font-size: 2.5rem;
-}
-
-.static-page h2 {
-  margin: 0 0 0.75rem;
-  font-size: 1.6rem;
-}
-
-.static-page h3 {
-  margin: 1.25rem 0 0.25rem;
-  font-size: 1.2rem;
+.static-page__header,
+.static-page section {
+  padding: 0 1.5rem 1.25rem;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
 }
 
 .static-page section {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 3px solid #3b2a1a;
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
 }
 
+.static-page h1,
+.static-page h2,
+.static-page h3 {
+  font-family: Bangers, Impact, sans-serif;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.03em;
+}
+
+/* The cover: the name lettered in yellow on a blue band of cyan dots. */
+.static-page h1 {
+  margin: 0 -1.5rem;
+  padding: 1.5rem 1.5rem 1.25rem;
+  border-bottom: 3px solid var(--ink);
+  background:
+    var(--screen-cyan) 0 0 / var(--halftone-size),
+    var(--screen-cyan) var(--halftone-shift) / var(--halftone-size),
+    var(--blue);
+  color: var(--yellow);
+  font-size: 4rem;
+  line-height: 0.9;
+  letter-spacing: 0.05em;
+  text-shadow:
+    -2px -2px 0 var(--ink),
+    2px -2px 0 var(--ink),
+    -2px 2px 0 var(--ink),
+    2px 2px 0 var(--ink),
+    6px 6px 0 var(--ink);
+}
+
+.static-page h2 {
+  margin: 0 0 1rem;
+  font-size: 2.25rem;
+  text-shadow: 3px 3px 0 var(--yellow);
+}
+
+.static-page h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.5rem;
+}
+
+/* The role, in a yellow caption pinned across the bottom of the band. */
 .static-page__role {
-  margin-top: 0.25rem;
-  color: #6ee7b7;
+  width: fit-content;
+  margin: -1rem 0 1rem;
+  padding: 0.3rem 0.7rem 0.2rem;
+  border: 2px solid var(--ink);
+  background: var(--yellow);
+  box-shadow: 3px 3px 0 var(--ink);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  rotate: -2deg;
+}
+
+/* Why the game is not there: the narrator speaks, in a box of his own. */
+.static-page__intro {
+  padding: 0.6rem 0.85rem;
+  border: 2px solid var(--ink);
+  background: var(--paper-shade);
+  font-weight: 700;
+}
+
+/* Projects, each a panel of its own on the page (like .project). */
+.static-page ul:has(> li > h3) {
+  display: grid;
+  gap: 1.1rem;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  list-style: none;
+}
+
+.static-page li:has(> h3) {
+  padding: 0.85rem 1rem 0.25rem;
+  border: 2.5px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+/* The lead of each place, a speech balloon (like .content-paragraph--lead). */
+.static-page section > h2 + p {
+  position: relative;
+  margin: 0 0 1.75rem;
+  padding: 0.7rem 1.15rem 0.75rem;
+  border: 2.5px solid var(--ink);
+  border-radius: 1.75rem / 1.5rem;
+  font-weight: 700;
+}
+
+.static-page section > h2 + p::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 2.25rem;
+  width: 24px;
+  height: 26px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 26'%3E%3Cpath d='M4 0Q6 14 1.5 24.5Q14 16 21 0' fill='%23f6ecd2' stroke='%2314110f' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E")
+    0 0 / 100% 100% no-repeat;
+}
+
+.static-page li::marker {
+  color: var(--red);
 }
 
 .static-page a {
-  color: #ffd166;
+  color: var(--blue);
+  font-weight: 700;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
 }
 
 /* Links stand alone in lists: 44 px tall targets, easy to hit with a finger. */

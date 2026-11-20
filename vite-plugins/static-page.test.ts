@@ -7,7 +7,9 @@ describe('renderStaticPage', () => {
   const html = renderStaticPage(content, PLACE_IDS, 'Le jeu a besoin de JavaScript.');
 
   it('holds the whole portfolio: name, role, pitch, every place, every link', () => {
-    expect(html).toMatch(/^<main class="static-page"><h1>Pyve<\/h1>/);
+    expect(html).toMatch(
+      /^<main class="static-page"><header class="static-page__header"><h1>Pyve<\/h1>/,
+    );
     for (const id of PLACE_IDS) expect(html).toContain(`<h2>${content.places[id].title}</h2>`);
     const hrefs = [...html.matchAll(/<a href="([^"]+)">/g)].map(([, href = '']) => href);
     const places = PLACE_IDS.map((id) => content.places[id]);

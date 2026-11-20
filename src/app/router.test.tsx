@@ -83,13 +83,36 @@ describe('routes', () => {
     expect(heroTransform()).toBe(`translate3d(${x - HERO.anchor.x}px, ${y - HERO.anchor.y}px, 0)`);
   });
 
-  it('enters the house on /home, greeted by the bio on the first visit', async () => {
+  it('enters the house on /home, pointed to the desk', async () => {
     renderAt('/home');
-    const dialog = await screen.findByRole('dialog', { name: named(content.places.home.title) });
-    expect(screen.getByRole('img', { name: ui.game.mapAlt.home })).toBeInTheDocument();
-    const [door] = content.places.home.body;
-    if (door?.kind !== 'paragraph') throw new Error('The bio opens on no paragraph.');
-    expect(within(dialog).getByText(text(door.text))).toBeInTheDocument();
+    expect(await screen.findByRole('img', { name: ui.game.mapAlt.home })).toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).toBeNull();
+    const hint = content.places.home.questHint;
+    if (hint === undefined) throw new Error('The house has no hint to its desk.');
+    expect(screen.getByText(text(hint), { selector: '.hud__hint' })).toBeInTheDocument();
+    // The quest step is the desk, not the door.
+    expect(questStore.getSnapshot()).toEqual([]);
+  });
+
+  it('stops pointing to the desk once the house is ticked off', async () => {
+    questStore.markVisited('home');
+    renderAt('/home');
+    await screen.findByRole('img', { name: ui.game.mapAlt.home });
+    const hint = content.places.home.questHint;
+    if (hint === undefined) throw new Error('The house has no hint to its desk.');
+    expect(screen.queryByText(text(hint))).toBeNull();
+  });
+
+  it('ticks the house off in the quest at the desk', async () => {
+    const office = content.places.home.views?.office;
+    if (!office) throw new Error('The house has no office view.');
+    renderAt('/home');
+    await screen.findByRole('img', { name: ui.game.mapAlt.home });
+    const state = { overlay: 'home', view: 'office' };
+    window.history.pushState(state, '', '/home');
+    window.dispatchEvent(new PopStateEvent('popstate', { state }));
+    await screen.findByRole('dialog', { name: named(office.title) });
+    expect(questStore.getSnapshot()).toEqual(['home']);
   });
 
   it('reopens the bio from the desk as the office tells it', async () => {
@@ -173,24 +196,32 @@ describe('routes', () => {
     ).toBeInTheDocument();
   });
 
-  it.each([
-    ['/work', content.places.work.title],
-    ['/home', content.places.home.title],
-  ])(
-    'on a first visit through %s, shows the help once its dialog is closed',
-    async (path, title) => {
-      helpSeen.reset();
-      renderAt(path);
-      const dialog = await screen.findByRole('dialog', { name: named(title) });
-      expect(screen.queryByRole('dialog', { name: named(content.help.title) })).toBeNull();
+  it('on a first visit through /work, shows the help once its dialog is closed', async () => {
+    helpSeen.reset();
+    renderAt('/work');
+    const dialog = await screen.findByRole('dialog', { name: named(content.places.work.title) });
+    expect(screen.queryByRole('dialog', { name: named(content.help.title) })).toBeNull();
 
-      await userEvent.click(within(dialog).getByRole('button', { name: ui.dialog.close }));
-      const help = await screen.findByRole('dialog', { name: named(content.help.title) });
-      await userEvent.click(within(help).getByRole('button', { name: ui.help.start }));
-      expect(screen.queryByRole('dialog')).toBeNull();
-      expect(helpSeen.get()).toBe(true);
-    },
-  );
+    await userEvent.click(within(dialog).getByRole('button', { name: ui.dialog.close }));
+    const help = await screen.findByRole('dialog', { name: named(content.help.title) });
+    await userEvent.click(within(help).getByRole('button', { name: ui.help.start }));
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(helpSeen.get()).toBe(true);
+  });
+
+  it('on a first visit through /home, shows the help first, then the hint to the desk', async () => {
+    helpSeen.reset();
+    renderAt('/home');
+    const help = await screen.findByRole('dialog', { name: named(content.help.title) });
+    await userEvent.click(within(help).getByRole('button', { name: ui.help.start }));
+    expect(screen.queryByRole('dialog')).toBeNull();
+    const hint = content.places.home.questHint;
+    if (hint === undefined) throw new Error('The house has no hint to its desk.');
+    // Said once the visitor can walk, and shown in the HUD.
+    expect(
+      await screen.findByText(text(hint), { selector: '[role="status"] span' }),
+    ).toBeInTheDocument();
+  });
 
   it('keeps the whole portfolio in the DOM, in the main landmark of game screens', async () => {
     renderAt('/');
@@ -324,11 +355,13 @@ describe('addresses', () => {
 describe('the English pages', () => {
   const en = COPIES.en;
 
-  it('greet the visitor of /en/home with the English bio', async () => {
+  it('point the visitor of /en/home to the desk, in English', async () => {
     renderAt('/en/home');
-    await screen.findByRole('dialog', { name: named(en.content.places.home.title) });
-    expect(screen.getByRole('img', { name: en.ui.game.mapAlt.home })).toBeInTheDocument();
-    expect(document.title).toBe(en.ui.pageTitle(en.content.places.home.title));
+    await screen.findByRole('img', { name: en.ui.game.mapAlt.home });
+    const hint = en.content.places.home.questHint;
+    if (hint === undefined) throw new Error('The English house has no hint to its desk.');
+    expect(screen.getByText(text(hint), { selector: '.hud__hint' })).toBeInTheDocument();
+    expect(document.title).toBe(en.ui.pageTitle(en.content.places.home.zone));
   });
 
   it('open the projects on /en/work, and closing them stays in English, on /en', async () => {
@@ -367,8 +400,8 @@ describe('the English pages', () => {
 describe('the language switch', () => {
   it('leads from a French page to the same page in English', async () => {
     renderAt('/home');
-    await screen.findByRole('dialog', { name: named(content.places.home.title) });
-    const link = screen.getByRole('link', { name: 'English', hidden: true });
+    await screen.findByRole('img', { name: ui.game.mapAlt.home });
+    const link = screen.getByRole('link', { name: 'English' });
     expect(link.getAttribute('href')).toBe('/en/home');
     expect(link.getAttribute('hreflang')).toBe('en');
   });

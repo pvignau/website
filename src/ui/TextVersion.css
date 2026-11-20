@@ -1,10 +1,17 @@
+/*
+ * The comic read as a book: a cover, then one panel per place, on a page
+ * screened with dots. Text only ever sits on plain paper.
+ */
 .text-version {
   position: fixed;
   inset: 0;
   z-index: 40;
   overflow-y: auto;
   overscroll-behavior: contain;
-  background: var(--panel-solid);
+  background:
+    var(--screen-shade) 0 0 / var(--halftone-size),
+    var(--screen-shade) var(--halftone-shift) / var(--halftone-size),
+    var(--paper);
   color: var(--ink);
   -webkit-user-select: text;
   user-select: text;
@@ -34,43 +41,77 @@
   padding: calc(1.5rem + var(--safe-top)) calc(1.25rem + var(--safe-right))
     calc(3rem + var(--safe-bottom)) calc(1.25rem + var(--safe-left));
   font-size: 1.05rem;
+  line-height: 1.55;
 }
 
-.text-version h1,
-.text-version h2 {
-  margin: 0 0 0.75rem;
-  color: var(--accent);
-  font-family: var(--font-pixel);
-  font-weight: 700;
-  line-height: 1.1;
-  text-shadow: 3px 3px 0 var(--shadow);
-}
-
-.text-version h1 {
-  font-size: clamp(2.25rem, 8vw, 3.5rem);
-}
-
-.text-version h2 {
-  font-size: clamp(1.5rem, 5vw, 2rem);
+.text-version__header,
+.text-version__place {
+  background: var(--paper);
+  border: var(--line) solid var(--ink);
+  box-shadow: var(--drop) var(--drop) 0 var(--ink);
 }
 
 .text-version__header {
-  padding-bottom: 1.5rem;
-  border-bottom: 3px solid var(--wood-dark);
+  padding: 0 1.5rem 1.5rem;
 }
 
-.text-version__role {
+/* The cover: the name lettered in yellow on a blue band of cyan dots. */
+.text-version h1 {
+  margin: 0 -1.5rem;
+  padding: 1.5rem 1.5rem 1.25rem;
+  border-bottom: var(--line) solid var(--ink);
+  background:
+    var(--screen-cyan) 0 0 / var(--halftone-size),
+    var(--screen-cyan) var(--halftone-shift) / var(--halftone-size),
+    var(--blue);
+  color: var(--yellow);
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 16vw, 6rem);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: 0.05em;
+  text-shadow:
+    -2px -2px 0 var(--ink),
+    2px -2px 0 var(--ink),
+    -2px 2px 0 var(--ink),
+    2px 2px 0 var(--ink),
+    0 -2px 0 var(--ink),
+    0 2px 0 var(--ink),
+    -2px 0 0 var(--ink),
+    2px 0 0 var(--ink),
+    6px 6px 0 var(--ink);
+}
+
+.text-version h2 {
   margin: 0 0 1rem;
-  color: var(--mint);
-  font-family: var(--font-pixel);
-  font-size: 1.25rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 6vw, 2.5rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  text-shadow: 3px 3px 0 var(--yellow);
+}
+
+/* The role, in a yellow caption pinned across the bottom of the band. */
+.text-version__role {
+  width: fit-content;
+  margin: -1rem 0 1rem;
+  padding: 0.3rem 0.7rem 0.2rem;
+  border: var(--line-thin) solid var(--ink);
+  background: var(--yellow);
+  box-shadow: var(--drop-small) var(--drop-small) 0 var(--ink);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  rotate: -2deg;
 }
 
 .text-version__close {
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
 }
 
 .text-version__place {
-  padding: 1.5rem 0;
-  border-bottom: 3px solid var(--wood-dark);
+  margin-top: 1.75rem;
+  padding: 1.25rem 1.5rem 1rem;
 }

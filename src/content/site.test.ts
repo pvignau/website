@@ -86,6 +86,13 @@ describe.each([
     expect(misread).toEqual([]);
   });
 
+  it('ticks a place off from one of its own views, when it names one', () => {
+    const astray = places
+      .filter(({ questView, views: own }) => questView !== undefined && !own?.[questView])
+      .map((place) => place.id);
+    expect(astray).toEqual([]);
+  });
+
   it('opens the pitch with a first sentence of 160 characters at most', () => {
     const sentence = firstSentence(content.pitch);
     expect(sentence.length).toBeGreaterThan(0);

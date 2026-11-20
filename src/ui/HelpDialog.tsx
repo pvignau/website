@@ -21,12 +21,12 @@ export function HelpDialog({
         <>
           <button
             type="button"
-            className="pixel-button pixel-button--quiet"
+            className="comic-button comic-button--quiet"
             onClick={onTextVersion}
           >
             {help.textVersionLabel}
           </button>
-          <button type="button" className="pixel-button" onClick={onClose}>
+          <button type="button" className="comic-button" onClick={onClose}>
             {ui.help.start}
           </button>
         </>

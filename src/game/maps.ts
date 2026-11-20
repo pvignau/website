@@ -58,7 +58,7 @@ export const MAPS: Readonly<Record<MapId, MapDefinition>> = {
     placeRoutes: { work: PATHS.work },
     data: world,
     image: worldImage,
-    backdrop: '#67e6d2',
+    backdrop: '#2fa8d8',
     sea: true,
     place: null,
     introPlace: null,
@@ -70,7 +70,8 @@ export const MAPS: Readonly<Record<MapId, MapDefinition>> = {
     placeRoutes: {},
     data: parseTiledMap(homeData, options),
     image: homeImage,
-    backdrop: '#241915',
+    // Newsprint (--paper): the house is a panel on the page (GameScreen.css).
+    backdrop: '#f6ecd2',
     sea: false,
     place: 'home',
     introPlace: 'home',

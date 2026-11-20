@@ -6,18 +6,27 @@
  * - `sprites.ts`: sprites drawn over it, placed by the objects of the `art`
  *   layer of src/maps/<map>.json (named after a sprite, in drawing order);
  *
- * and writes src/maps/<map>.webp twice as large, lossless, with cwebp. The sea
- * around the world map (src/img/sea.webp) comes from `sea.png`.
+ * prints them like a comic book (comic.ts) and writes src/maps/<map>.webp
+ * twice as large, lossless, with cwebp. The sea around the world map
+ * (src/img/sea.webp) comes from `sea.png`. The hero's sprite sheets
+ * (src/img/hero/sprite<Direction>.webp) come from `hero.png`, at 1 pixel per
+ * pixel of the sprite, inked the same way. The share preview,
+ * public/og-image.png, is made from the printed world and hero (og-image.ts).
  *
  *   npm run map-art              rebuild the images
- *   npm run map-art -- --check   only check that they are up to date (needs dwebp)
+ *   npm run map-art -- --check   only check that they are up to date
+ *
+ * Both need cwebp and dwebp (libwebp).
  */
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { HERO } from '../../src/engine/hero.ts';
+import { printComic, SHADOW } from './comic.ts';
 import type { Image } from './image.ts';
-import { drawImage, enlarge } from './image.ts';
+import { createImage, drawImage, enlarge } from './image.ts';
+import { renderOgImage } from './og-image.ts';
 import { decodePng, encodePng } from './png.ts';
 import { SPRITES } from './sprites.ts';
 
@@ -64,7 +73,7 @@ interface TiledLayer {
   }[];
 }
 
-interface TiledMap {
+export interface TiledMap {
   width: number;
   height: number;
   tilewidth: number;
@@ -170,11 +179,96 @@ const OUTPUTS: readonly Output[] = [
   { base: 'sea.png', out: 'src/img/sea.webp' },
 ];
 
+/** The share preview. */
+const OG_IMAGE = 'public/og-image.png';
+
+/**
+ * The hero's sheets, stacked from top to bottom in hero.png in this order:
+ * each is a row of HERO.sprite.frames frames, the first one standing.
+ */
+export const HERO_SHEETS = ['Down', 'Left', 'Right', 'Up'] as const;
+const heroSheetFile = (direction: (typeof HERO_SHEETS)[number]) =>
+  `src/img/hero/sprite${direction}.webp`;
+
+function crop(image: Image, rect: Rect): Image {
+  const out = createImage(rect.width, rect.height);
+  for (let y = 0; y < rect.height; y += 1) {
+    const from = ((rect.y + y) * image.width + rect.x) * 4;
+    out.data.set(image.data.subarray(from, from + rect.width * 4), y * rect.width * 4);
+  }
+  return out;
+}
+
+/**
+ * Prints the hero like the sprites of the maps (comic.ts): the colours of the
+ * guide, and an ink line one pixel wide along the edge of the figure. Each
+ * frame is printed on its own, with a transparent margin: what touches the
+ * edge of a frame (the hair) is inked there too, as the game crops it.
+ */
+export function printHero(sheet: Image): Image {
+  const { width, height } = HERO.sprite;
+  const out = createImage(sheet.width, sheet.height);
+  for (let y = 0; y < sheet.height; y += height) {
+    for (let x = 0; x < sheet.width; x += width) {
+      const frame = createImage(width + 2, height + 2);
+      drawImage(frame, crop(sheet, { x, y, width, height }), 1, 1);
+      const printed = printComic(frame, { x: 0, y: 0 });
+      drawImage(out, crop(printed, { x: 1, y: 1, width, height }), x, y);
+    }
+  }
+  return out;
+}
+
+/** The printed sheets of the hero, by direction. */
+function renderHero(): Record<(typeof HERO_SHEETS)[number], Image> {
+  const printed = printHero(decodePng(readFileSync(join(HERE, 'hero.png'))));
+  const { width, height, frames } = HERO.sprite;
+  const sheets = HERO_SHEETS.map((direction, row) => [
+    direction,
+    crop(printed, { x: 0, y: row * height, width: width * frames, height }),
+  ]);
+  return Object.fromEntries(sheets) as Record<(typeof HERO_SHEETS)[number], Image>;
+}
+
+/** Splits sprites into what they draw and the shadows they cast (SHADOW pixels). */
+export function castShadows(sprites: Readonly<Record<string, Image>>) {
+  const shadow = Number.parseInt(SHADOW.slice(1), 16);
+  const bodies: Record<string, Image> = {};
+  const shadows: Record<string, Image> = {};
+  for (const [name, sprite] of Object.entries(sprites)) {
+    const body = { ...sprite, data: Uint8Array.from(sprite.data) };
+    const cast = { ...sprite, data: Uint8Array.from(sprite.data) };
+    const pixels = new DataView(sprite.data.buffer, sprite.data.byteOffset, sprite.data.byteLength);
+    for (let i = 0; i < sprite.width * sprite.height; i += 1) {
+      const target = pixels.getUint32(i * 4) === shadow ? body : cast;
+      target.data[i * 4 + 3] = 0;
+    }
+    bodies[name] = body;
+    shadows[name] = cast;
+  }
+  return { bodies, shadows };
+}
+
+const { bodies: BODIES, shadows: SHADOWS } = castShadows(SPRITES);
+
+/** The art of a map, sprites drawn, printed like a comic (comic.ts), at 1 pixel per art pixel. */
+export function printMap(base: Image, map?: TiledMap): Image {
+  if (map === undefined) return printComic(base, { x: 0, y: 0 });
+  const rect = backgroundRect(map);
+  const objects = artObjects(map);
+  const origin = { x: rect.x / ART_SCALE, y: rect.y / ART_SCALE };
+  if (!Number.isInteger(origin.x) || !Number.isInteger(origin.y)) {
+    throw new Error('The background must sit on the art grid (even map pixels).');
+  }
+  const shadows = compose(createImage(base.width, base.height), objects, rect, SHADOWS);
+  return printComic(compose(base, objects, rect, BODIES), origin, shadows);
+}
+
+const readMap = (file: string) => JSON.parse(readFileSync(join(ROOT, file), 'utf8')) as TiledMap;
+
 function render({ base, map }: Output): Image {
   const art = decodePng(readFileSync(join(HERE, base)));
-  if (map === undefined) return enlarge(art, ART_SCALE);
-  const tiled = JSON.parse(readFileSync(join(ROOT, map), 'utf8')) as TiledMap;
-  return enlarge(compose(art, artObjects(tiled), backgroundRect(tiled)), ART_SCALE);
+  return enlarge(printMap(art, map === undefined ? undefined : readMap(map)), ART_SCALE);
 }
 
 /** Reads a PAM file written by `dwebp -pam`. */
@@ -189,6 +283,21 @@ function readPam(file: Uint8Array): Image {
     data[i * 4 + 3] = depth === 4 ? (file[end + i * depth + 3] ?? 0) : 255;
   }
   return { width, height, data };
+}
+
+/** Decodes a WebP file of the project with dwebp. */
+function readWebp(file: string): Image {
+  const pam = join(CACHE, `${file.replace(/\W+/g, '-')}.pam`);
+  execFileSync('dwebp', ['-quiet', '-pam', join(ROOT, file), '-o', pam]);
+  return readPam(readFileSync(pam));
+}
+
+/** The share preview: the printed world, and the hero facing down, standing (frame 0). */
+function renderShareImage(down: Image): Image {
+  const map = readMap('src/maps/world.json');
+  const world = printMap(decodePng(readFileSync(join(HERE, 'world.png'))), map);
+  const { width, height } = HERO.sprite;
+  return renderOgImage(world, backgroundRect(map), crop(down, { x: 0, y: 0, width, height }));
 }
 
 function sameImage(a: Image, b: Image): boolean {
@@ -212,22 +321,31 @@ function sameImage(a: Image, b: Image): boolean {
 function main(check: boolean): void {
   mkdirSync(CACHE, { recursive: true });
   let stale = 0;
-  for (const output of OUTPUTS) {
-    const image = render(output);
-    const name = output.out.replace(/\W+/g, '-');
-    const target = join(ROOT, output.out);
+  const verify = (file: string, image: Image, current: () => Image) => {
+    const upToDate = sameImage(image, current());
+    if (!upToDate) stale += 1;
+    console.log(`${upToDate ? 'up to date' : 'OUT OF DATE'}  ${file}`);
+  };
+  const write = (out: string, image: Image) => {
     if (check) {
-      const pam = join(CACHE, `${name}.pam`);
-      execFileSync('dwebp', ['-quiet', '-pam', target, '-o', pam]);
-      const upToDate = sameImage(image, readPam(readFileSync(pam)));
-      if (!upToDate) stale += 1;
-      console.log(`${upToDate ? 'up to date' : 'OUT OF DATE'}  ${output.out}`);
-      continue;
+      verify(out, image, () => readWebp(out));
+      return;
     }
-    const png = join(CACHE, `${name}.png`);
+    const png = join(CACHE, `${out.replace(/\W+/g, '-')}.png`);
     writeFileSync(png, encodePng(image));
+    const target = join(ROOT, out);
     execFileSync('cwebp', ['-quiet', '-lossless', '-z', '9', '-exact', png, '-o', target]);
-    console.log(`wrote ${output.out} (${image.width} × ${image.height})`);
+    console.log(`wrote ${out} (${image.width} × ${image.height})`);
+  };
+  for (const output of OUTPUTS) write(output.out, render(output));
+  const hero = renderHero();
+  for (const direction of HERO_SHEETS) write(heroSheetFile(direction), hero[direction]);
+  const share = renderShareImage(hero.Down);
+  if (check) {
+    verify(OG_IMAGE, share, () => decodePng(readFileSync(join(ROOT, OG_IMAGE))));
+  } else {
+    writeFileSync(join(ROOT, OG_IMAGE), encodePng(share));
+    console.log(`wrote ${OG_IMAGE} (${share.width} × ${share.height})`);
   }
   if (stale > 0) {
     console.error('Run `npm run map-art` to rebuild the images.');
