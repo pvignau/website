@@ -52,6 +52,11 @@ export interface Place {
    */
   questView?: PlaceViewId;
   /**
+   * Shown in the HUD of the place's own map until its quest step is done, to
+   * lead the visitor to it ("Le bureau est tout à gauche").
+   */
+  questHint?: string;
+  /**
    * Meta description of the place's own page, for a place with a route (/home,
    * /work): what search results show under the title, 160 characters at most.
    */

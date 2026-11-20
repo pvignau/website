@@ -10,7 +10,6 @@ import { HERO } from '../engine/hero';
 import { projectToMinimap } from '../engine/minimap';
 import { findSpawn } from '../engine/tiled';
 import { questStore } from '../quest/useQuest';
-import { greeting } from './greeting';
 import { helpSeen } from './helpSeen';
 import { MAPS } from './maps';
 import { MINIMAP_KEY, ZOOM_KEY } from './preferences';
@@ -26,7 +25,6 @@ function renderAt(path: string) {
 
 beforeEach(() => {
   questStore.reset();
-  greeting.reset();
   helpSeen.mark();
   vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(
     new DOMRect(0, 0, VIEWPORT.width, VIEWPORT.height),

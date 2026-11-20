@@ -4,7 +4,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { content, ui } from '../content';
 import { HERO } from '../engine/hero';
 import { findSpawn } from '../engine/tiled';
-import { greeting } from '../game/greeting';
 import { HELP_SEEN_KEY, helpSeen } from '../game/helpSeen';
 import { MAPS } from '../game/maps';
 import { questStore } from '../quest/useQuest';
@@ -33,7 +32,6 @@ function renderAt(path: string, { raw = false } = {}) {
 
 beforeEach(() => {
   questStore.reset();
-  greeting.reset();
   // Returning visitor: the help screen does not get in the way.
   helpSeen.mark();
 });
@@ -82,31 +80,29 @@ describe('routes', () => {
     expect(heroTransform()).toBe(`translate3d(${x - HERO.anchor.x}px, ${y - HERO.anchor.y}px, 0)`);
   });
 
-  it('enters the house on /home, greeted by the bio on the first visit', async () => {
+  it('enters the house on /home, pointed to the desk', async () => {
     renderAt('/home');
-    const dialog = await screen.findByRole('dialog', { name: named(content.places.home.title) });
-    expect(screen.getByRole('img', { name: ui.game.mapAlt.home })).toBeInTheDocument();
-    const [door] = content.places.home.body;
-    if (door?.kind !== 'paragraph') throw new Error('The bio opens on no paragraph.');
-    expect(within(dialog).getByText(text(door.text))).toBeInTheDocument();
+    expect(await screen.findByRole('img', { name: ui.game.mapAlt.home })).toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).toBeNull();
+    const hint = content.places.home.questHint;
+    if (hint === undefined) throw new Error('The house has no hint to its desk.');
+    expect(screen.getByText(text(hint), { selector: '.hud__hint' })).toBeInTheDocument();
     // The quest step is the desk, not the door.
     expect(questStore.getSnapshot()).toEqual([]);
   });
 
-  it('greets once per visit, until the desk ticks the house off', async () => {
-    renderAt('/home');
-    await screen.findByRole('dialog', { name: named(content.places.home.title) });
-    cleanup();
-
+  it('stops pointing to the desk once the house is ticked off', async () => {
+    questStore.markVisited('home');
     renderAt('/home');
     await screen.findByRole('img', { name: ui.game.mapAlt.home });
-    expect(screen.queryByRole('dialog')).toBeNull();
+    const hint = content.places.home.questHint;
+    if (hint === undefined) throw new Error('The house has no hint to its desk.');
+    expect(screen.queryByText(text(hint))).toBeNull();
   });
 
   it('ticks the house off in the quest at the desk', async () => {
     const office = content.places.home.views?.office;
     if (!office) throw new Error('The house has no office view.');
-    greeting.mark('home');
     renderAt('/home');
     await screen.findByRole('img', { name: ui.game.mapAlt.home });
     const state = { overlay: 'home', view: 'office' };
@@ -197,24 +193,32 @@ describe('routes', () => {
     ).toBeInTheDocument();
   });
 
-  it.each([
-    ['/work', content.places.work.title],
-    ['/home', content.places.home.title],
-  ])(
-    'on a first visit through %s, shows the help once its dialog is closed',
-    async (path, title) => {
-      helpSeen.reset();
-      renderAt(path);
-      const dialog = await screen.findByRole('dialog', { name: named(title) });
-      expect(screen.queryByRole('dialog', { name: named(content.help.title) })).toBeNull();
+  it('on a first visit through /work, shows the help once its dialog is closed', async () => {
+    helpSeen.reset();
+    renderAt('/work');
+    const dialog = await screen.findByRole('dialog', { name: named(content.places.work.title) });
+    expect(screen.queryByRole('dialog', { name: named(content.help.title) })).toBeNull();
 
-      await userEvent.click(within(dialog).getByRole('button', { name: ui.dialog.close }));
-      const help = await screen.findByRole('dialog', { name: named(content.help.title) });
-      await userEvent.click(within(help).getByRole('button', { name: ui.help.start }));
-      expect(screen.queryByRole('dialog')).toBeNull();
-      expect(helpSeen.get()).toBe(true);
-    },
-  );
+    await userEvent.click(within(dialog).getByRole('button', { name: ui.dialog.close }));
+    const help = await screen.findByRole('dialog', { name: named(content.help.title) });
+    await userEvent.click(within(help).getByRole('button', { name: ui.help.start }));
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(helpSeen.get()).toBe(true);
+  });
+
+  it('on a first visit through /home, shows the help first, then the hint to the desk', async () => {
+    helpSeen.reset();
+    renderAt('/home');
+    const help = await screen.findByRole('dialog', { name: named(content.help.title) });
+    await userEvent.click(within(help).getByRole('button', { name: ui.help.start }));
+    expect(screen.queryByRole('dialog')).toBeNull();
+    const hint = content.places.home.questHint;
+    if (hint === undefined) throw new Error('The house has no hint to its desk.');
+    // Said once the visitor can walk, and shown in the HUD.
+    expect(
+      await screen.findByText(text(hint), { selector: '[role="status"] span' }),
+    ).toBeInTheDocument();
+  });
 
   it('keeps the whole portfolio in the DOM, in the main landmark of game screens', async () => {
     renderAt('/');

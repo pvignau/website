@@ -28,7 +28,6 @@ import { QuestLog } from '../ui/QuestLog';
 import { TEXT_VERSION_ID, TextVersion } from '../ui/TextVersion';
 import { TouchPad } from '../ui/TouchPad';
 import './GameScreen.css';
-import { greeting } from './greeting';
 import { helpSeen } from './helpSeen';
 import { HERO_SPRITE_URLS } from './heroSprites';
 import { noteOf, objectLabel, objectView, placeAs, zoneName } from './labels';
@@ -98,16 +97,12 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
   // What is open follows the address and its history entry: Back closes it.
   const entryOverlay = overlayOf(location.state);
   const routePlace = placeAtPath(map, location.pathname);
-  // The house greets on arrival, without a history entry of its own, once per visit
-  // until the quest step is done (at the desk).
-  const [greetingPlace, setGreeting] = useState<PlaceId | null>(() => {
-    const intro = map.introPlace;
-    const quiet = routePlace !== null || entryOverlay !== null;
-    if (intro === null || quiet || greeting.shown(intro)) return null;
-    return questStore.getSnapshot().includes(intro) ? null : intro;
-  });
-  const openPlace = routePlace ?? overlayPlace(entryOverlay) ?? greetingPlace;
-  // Only an object of the map opens a view: a deep link and the greeting show the place itself.
+  // In the house, the HUD points to the desk until the quest step is done there.
+  const intro = map.introPlace;
+  const introHint =
+    intro === null || visited.includes(intro) ? null : (content.places[intro].questHint ?? null);
+  const openPlace = routePlace ?? overlayPlace(entryOverlay);
+  // Only an object of the map opens a view: a deep link shows the place itself.
   const openView = routePlace === null ? overlayView(location.state) : null;
   const shownPlace = useMemo(
     () => (openPlace === null ? null : placeAs(openPlace, openView, content)),
@@ -116,7 +111,7 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
   const textOpen = entryOverlay === 'text';
   const [helpWasSeen, setHelpWasSeen] = useState(helpSeen.get);
   // First visit: the help shows as soon as nothing else is open, after a dialog opened by
-  // a deep link (/work) or the greeting of the house, too.
+  // a deep link (/work), too.
   const helpOpen = entryOverlay === 'help' || (!helpWasSeen && openPlace === null && !textOpen);
   const [message, setMessage] = useState<string | null>(null);
   const ready = useImagesReady([map.image, ...HERO_SPRITE_URLS]);
@@ -158,9 +153,13 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
   useDocumentTitle(pageTitle(map, shownPlace));
   usePageMeta(pageOf(routeOf(location.pathname) ?? map.path));
 
+  // The hint to the desk is said once, as soon as the visitor can walk.
+  const hintSaid = useRef(false);
   useEffect(() => {
-    if (greetingPlace !== null) greeting.mark(greetingPlace);
-  }, [greetingPlace]);
+    if (!playing || introHint === null || hintSaid.current) return;
+    hintSaid.current = true;
+    announce(introHint);
+  }, [playing, introHint, announce]);
 
   // A place counts as visited as soon as its dialog opens, or from the view its quest names.
   useEffect(() => {
@@ -233,8 +232,6 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
     // Opened by a deep link (/work): back to the map's address, without adding an entry.
     if (placeAtPath(map, live.pathname) === place) {
       navigate(`${map.path}${live.search}`, { replace: true });
-    } else {
-      setGreeting(null);
     }
   };
 
@@ -312,7 +309,7 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
   const hint =
     message ??
     (target === null
-      ? ui.hud.explore[touch ? 'touch' : 'keyboard']
+      ? (introHint ?? ui.hud.explore[touch ? 'touch' : 'keyboard'])
       : ui.hud.interact[touch ? 'touch' : 'keyboard'](target));
 
   return (
