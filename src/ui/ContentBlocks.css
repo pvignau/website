@@ -2,9 +2,35 @@
   margin: 0 0 0.85rem;
 }
 
+/*
+ * The lead of a place, the line that sets the scene in Pyve's words: a speech
+ * balloon, its tail pointing down to the speaker.
+ */
+.content-paragraph--lead {
+  position: relative;
+  margin: 0 0 1.75rem;
+  padding: 0.7rem 1.15rem 0.75rem;
+  border: 2.5px solid var(--ink);
+  border-radius: 1.75rem / 1.5rem;
+  background: var(--paper);
+  font-weight: 700;
+}
+
+/* The tail: paper over the balloon's outline, two inked sides (colours: global.css). */
+.content-paragraph--lead::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 2.25rem;
+  width: 24px;
+  height: 26px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 26'%3E%3Cpath d='M4 0Q6 14 1.5 24.5Q14 16 21 0' fill='%23f6ecd2' stroke='%2314110f' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E")
+    0 0 / 100% 100% no-repeat;
+}
+
 .content-list {
   margin: 0 0 1rem;
-  padding-left: 1.25rem;
+  padding-left: 1.4rem;
 }
 
 .content-list li + li {
@@ -12,51 +38,64 @@
 }
 
 .content-list li::marker {
-  color: var(--mint);
+  color: var(--red);
+  font-family: var(--font-display);
+  font-size: 1.15em;
+}
+
+/* Numbers are text: in ink, red on paper reaching 4.2:1 only. */
+ol.content-list li::marker {
+  color: var(--ink);
 }
 
 .projects {
   display: grid;
-  gap: 0.85rem;
-  margin: 0 0 1rem;
-  padding: 0;
+  gap: 1.1rem;
+  margin: 0 0 1.25rem;
+  padding: 0 var(--drop-small) var(--drop-small) 0;
   list-style: none;
 }
 
+/* Each project, a panel of its own on the page. */
 .project {
-  padding: 0.85rem 1rem;
-  background: var(--panel-raised);
-  border: 2px solid var(--wood-dark);
+  padding: 0.85rem 1rem 0.5rem;
+  background: var(--paper);
+  border: 2.5px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
 }
 
 .project__name {
-  margin: 0 0 0.35rem;
-  color: var(--accent);
-  font-family: var(--font-pixel);
-  font-size: 1.2rem;
-  font-weight: 700;
-  line-height: 1.2;
+  margin: 0 0 0.4rem;
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: 0.03em;
 }
 
 .project__summary {
-  margin: 0 0 0.6rem;
+  margin: 0 0 0.65rem;
 }
 
 .project__tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  margin: 0 0 0.6rem;
+  gap: 0.45rem;
+  margin: 0 0 0.35rem;
   padding: 0;
   list-style: none;
 }
 
+/* Stickers: cyan ink, bold capitals. */
 .project__tags li {
-  padding: 0.1rem 0.45rem;
-  border: 2px solid var(--wood);
-  color: var(--ink-muted);
-  font-family: var(--font-pixel);
-  font-size: 0.85rem;
+  padding: 0.2rem 0.5rem 0.1rem;
+  border: var(--line-thin) solid var(--ink);
+  background: var(--cyan);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .link-list {
@@ -73,12 +112,14 @@
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  color: var(--accent);
-  font-family: var(--font-pixel);
-  font-size: 1rem;
+  color: var(--blue);
+  font-weight: 700;
+  text-decoration-thickness: 2px;
   text-underline-offset: 0.2em;
 }
 
 .content-link:hover {
-  color: #ffe08f;
+  color: var(--ink);
+  text-decoration-color: var(--red);
+  text-decoration-thickness: 3px;
 }

@@ -89,7 +89,12 @@ export function TextVersion({
               aria-labelledby={`${TEXT_VERSION_ID}-${id}`}
             >
               <h2 id={`${TEXT_VERSION_ID}-${id}`}>{place.title}</h2>
-              <ContentBlocks blocks={place.body} headingLevel={3} linkTabIndex={linkTabIndex} />
+              <ContentBlocks
+                blocks={place.body}
+                headingLevel={3}
+                lead
+                linkTabIndex={linkTabIndex}
+              />
               <LinkList links={place.links} linkTabIndex={linkTabIndex} />
             </section>
           );

@@ -16,15 +16,34 @@ interface BlockOptions {
 
 export function ContentBlocks({
   blocks,
+  lead = false,
   ...options
-}: BlockOptions & { blocks: readonly ContentBlock[] }) {
-  return blocks.map((block, index) => <Block key={index} block={block} {...options} />);
+}: BlockOptions & {
+  blocks: readonly ContentBlock[];
+  /**
+   * The first paragraph is the lead of a place, the line that sets the scene in
+   * Pyve's words: it shows as a speech balloon (ContentBlocks.css).
+   */
+  lead?: boolean;
+}) {
+  return blocks.map((block, index) => (
+    <Block key={index} block={block} lead={lead && index === 0} {...options} />
+  ));
 }
 
-function Block({ block, headingLevel, linkTabIndex }: BlockOptions & { block: ContentBlock }) {
+function Block({
+  block,
+  lead,
+  headingLevel,
+  linkTabIndex,
+}: BlockOptions & { block: ContentBlock; lead: boolean }) {
   switch (block.kind) {
     case 'paragraph':
-      return <p className="content-paragraph">{block.text}</p>;
+      return (
+        <p className={lead ? 'content-paragraph content-paragraph--lead' : 'content-paragraph'}>
+          {block.text}
+        </p>
+      );
     case 'list':
       return (
         <ul className="content-list">
