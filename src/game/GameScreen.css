@@ -8,10 +8,17 @@
   -webkit-touch-callout: none;
 }
 
+/*
+ * Around a map smaller than the screen (the house), the page shows: newsprint
+ * screened with dots, the map set on it as a panel (.world below).
+ */
 .game__viewport {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  background:
+    var(--screen-shade) 0 0 / var(--halftone-size),
+    var(--screen-shade) var(--halftone-shift) / var(--halftone-size);
 }
 
 /* Sizes and positions are map pixels × --s (set inline by WorldView). */
@@ -20,6 +27,16 @@
   top: 0;
   left: 0;
   will-change: transform;
+}
+
+/*
+ * A map without sea (the house, cut away) is inked along its outer walls, the
+ * shapes of its picture, and casts a hard shadow on the page.
+ */
+.world:not(.world--sea) .world__background {
+  filter: drop-shadow(3px 0 0 var(--ink)) drop-shadow(-3px 0 0 var(--ink))
+    drop-shadow(0 3px 0 var(--ink)) drop-shadow(0 -3px 0 var(--ink))
+    drop-shadow(10px 10px 0 var(--ink));
 }
 
 /* Around the cropped background image, the sea goes on, on the tile grid of the map. */
@@ -47,6 +64,7 @@
   pointer-events: none;
 }
 
+/* The shadow at the hero's feet, in Ben-Day dots: one dot per two pixels of the map. */
 .hero::before {
   content: '';
   position: absolute;
@@ -55,7 +73,20 @@
   width: calc(14px * var(--s));
   height: calc(5px * var(--s));
   border-radius: 50%;
-  background: rgb(0 0 0 / 22%);
+  background:
+    radial-gradient(
+        circle,
+        var(--ink) calc(0.5px * var(--s)),
+        transparent calc(0.5px * var(--s) + 0.5px)
+      )
+      0 0 / calc(2px * var(--s)) calc(2px * var(--s)),
+    radial-gradient(
+        circle,
+        var(--ink) calc(0.5px * var(--s)),
+        transparent calc(0.5px * var(--s) + 0.5px)
+      )
+      calc(1px * var(--s)) calc(1px * var(--s)) / calc(2px * var(--s)) calc(2px * var(--s));
+  opacity: 0.6;
 }
 
 .hero::after {
@@ -81,41 +112,50 @@
   background-image: url('../img/hero/spriteRight.webp');
 }
 
-/* Shown only next to the object: the HUD says the same for screen readers. */
+/*
+ * Shown only next to the object, as a speech balloon whose tail points at it:
+ * the HUD says the same for screen readers.
+ */
 .object-label {
   position: absolute;
   z-index: 3;
-  translate: -50% calc(-100% - 8px);
-  padding: 0.25rem 0.5rem;
-  border: 2px solid var(--wood-dark);
-  background: var(--accent);
-  color: var(--accent-ink);
-  box-shadow: 2px 2px 0 var(--shadow);
-  font-family: var(--font-pixel);
-  font-size: 1rem;
+  translate: -50% calc(-100% - 18px);
+  padding: 0.4rem 1rem 0.35rem;
+  border: 2.5px solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 0.95rem;
   font-weight: 700;
   line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   white-space: nowrap;
   opacity: 0;
+  scale: 0.8;
   visibility: hidden;
   transition:
     opacity 120ms steps(3),
+    scale 120ms steps(3),
     visibility 120ms;
   pointer-events: none;
 }
 
+/* The tail: paper over the balloon's outline, two inked sides (colours: global.css). */
 .object-label::after {
   content: '';
   position: absolute;
-  left: 50%;
-  top: 100%;
-  translate: -50% 0;
-  border: 6px solid transparent;
-  border-top-color: var(--wood-dark);
+  top: calc(100% - 1px);
+  left: calc(50% - 10px);
+  width: 20px;
+  height: 18px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 18'%3E%3Cpath d='M3 0Q6 10 9 17Q12 8 17 0' fill='%23f6ecd2' stroke='%2314110f' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E")
+    0 0 / 100% 100% no-repeat;
 }
 
 .object-label[data-near] {
   opacity: 1;
+  scale: 1;
   visibility: visible;
 }
 
@@ -139,15 +179,15 @@
 .decor--leds::before {
   left: calc(2px * var(--s));
   top: calc(6px * var(--s));
-  background: #6ee7b7;
-  box-shadow: calc(2px * var(--s)) calc(6px * var(--s)) 0 #ef8354;
+  background: var(--cyan);
+  box-shadow: calc(2px * var(--s)) calc(6px * var(--s)) 0 var(--red);
 }
 
 .decor--leds::after {
   left: calc(12px * var(--s));
   top: calc(4px * var(--s));
-  background: #ffd166;
-  box-shadow: calc(2px * var(--s)) calc(10px * var(--s)) 0 #6ee7b7;
+  background: var(--yellow);
+  box-shadow: calc(2px * var(--s)) calc(10px * var(--s)) 0 var(--cyan);
   animation-duration: 0.7s;
   animation-direction: reverse;
 }
@@ -158,7 +198,7 @@
   }
 }
 
-/* Lab antenna: a red light, seen from afar, with a one-pixel halo. */
+/* Lab antenna: a red light, seen from afar, ringed in ink. */
 .decor--beacon::before {
   content: '';
   position: absolute;
@@ -166,8 +206,8 @@
   top: calc(2px * var(--s));
   width: calc(2px * var(--s));
   height: calc(4px * var(--s));
-  background: #ff5a4f;
-  box-shadow: 0 0 0 calc(2px * var(--s)) rgb(255 90 79 / 35%);
+  background: var(--red);
+  box-shadow: 0 0 0 calc(1px * var(--s)) var(--ink);
   animation: beacon-blink 1.6s steps(1) infinite;
 }
 
@@ -177,12 +217,12 @@
   }
 }
 
-/* Lab sign: the neon glows, and flickers now and then. */
+/* Lab sign: the neon lights a hard cyan rim, and flickers now and then. */
 .decor--neon::before {
   content: '';
   position: absolute;
   inset: 0;
-  box-shadow: 0 0 0 calc(2px * var(--s)) rgb(160 242 229 / 40%);
+  box-shadow: 0 0 0 calc(2px * var(--s)) rgb(47 168 216 / 45%);
   animation: neon-flicker 5s steps(1) infinite;
 }
 
@@ -241,7 +281,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: 0.75rem;
   pointer-events: none;
 }
 
@@ -250,13 +290,21 @@
   flex: none;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.5rem;
+  gap: 0.75rem;
   pointer-events: auto;
 }
 
 .toolbar__buttons {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.6rem;
+}
+
+/* The help key, lettered big. */
+.toolbar__help {
+  padding: 0.15em 0 0;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 400;
 }
 
 .toolbar__text {

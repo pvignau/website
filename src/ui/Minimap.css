@@ -1,7 +1,8 @@
-/* A panel like the HUD's, the world drawn in big square pixels (Minimap.tsx). */
+/* A small panel, the world drawn in big square pixels (Minimap.tsx). */
 .minimap {
   padding: 2px;
   line-height: 0;
+  box-shadow: var(--drop-small) var(--drop-small) 0 var(--ink);
   pointer-events: none;
 }
 
@@ -19,20 +20,18 @@
   image-rendering: pixelated;
 }
 
-/* A place of the quest, like in the quest log: an empty square to visit, a filled one once visited. */
+/* A place of the quest, like in the quest log: an empty box to visit, filled in blue once visited. */
 .minimap__place {
   position: absolute;
   width: 10px;
   height: 10px;
   translate: -50% -50%;
-  border: 2px solid var(--accent);
-  background: var(--panel-solid);
-  box-shadow: 0 0 0 1px var(--shadow);
+  border: 2px solid var(--ink);
+  background: var(--paper);
 }
 
 .minimap__place[data-visited] {
-  border-color: var(--mint);
-  background: var(--mint);
+  background: var(--blue);
 }
 
 /*
@@ -44,7 +43,7 @@
   inset: 0;
 }
 
-/* Red in a white ring: the one marker that is neither a square of the quest nor of the map. */
+/* Red in a paper ring, inked: the one marker that is neither a box of the quest nor of the map. */
 .minimap__hero {
   position: absolute;
   top: 0;
@@ -52,8 +51,8 @@
   width: 4px;
   height: 4px;
   translate: -50% -50%;
-  background: #e8433f;
+  background: var(--red);
   box-shadow:
-    0 0 0 2px #fff,
-    0 0 0 3px var(--shadow);
+    0 0 0 2px var(--paper),
+    0 0 0 3.5px var(--ink);
 }

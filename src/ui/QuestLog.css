@@ -1,7 +1,3 @@
-.quest {
-  font-family: var(--font-pixel);
-}
-
 .quest[open] {
   width: min(17rem, calc(100vw - 1.5rem - var(--safe-left) - var(--safe-right)));
 }
@@ -10,11 +6,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: 0.6rem;
   min-height: 44px;
-  padding: 0.35rem 0.75rem;
-  color: var(--accent);
-  font-weight: 700;
+  padding: 0.3rem 0.75rem;
   cursor: pointer;
   list-style: none;
 }
@@ -25,8 +19,8 @@
 
 .quest__summary::after {
   content: '';
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 0.55rem;
+  height: 0.55rem;
   border-right: 3px solid currentColor;
   border-bottom: 3px solid currentColor;
   rotate: 45deg;
@@ -40,51 +34,90 @@
 
 .quest__title {
   flex: 1;
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  line-height: 1;
+  letter-spacing: 0.05em;
 }
 
+/* The score, on a yellow tag. */
 .quest__progress {
-  color: var(--mint);
+  padding: 0.2rem 0.45rem 0.1rem;
+  border: var(--line-thin) solid var(--ink);
+  background: var(--yellow);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.quest__body {
+  border-top: var(--line-thin) solid var(--ink);
 }
 
 .quest__list {
   display: grid;
-  gap: 0.35rem;
+  gap: 0.5rem;
   margin: 0;
-  padding: 0 0.75rem 0.75rem;
+  padding: 0.7rem 0.75rem 0.8rem;
   list-style: none;
 }
 
 .quest__item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  color: var(--ink-muted);
+  gap: 0.6rem;
   font-size: 0.95rem;
+  font-weight: 700;
   line-height: 1.2;
 }
 
-.quest__item[data-done] {
-  color: var(--mint);
-}
-
+/* An empty box to tick; done, a red tick drawn over it by hand. */
 .quest__check {
+  position: relative;
   flex: none;
-  width: 0.9rem;
-  height: 0.9rem;
-  border: 2px solid currentColor;
+  width: 1rem;
+  height: 1rem;
+  border: 2.5px solid var(--ink);
+  background: var(--paper);
 }
 
-.quest__item[data-done] .quest__check {
-  background: linear-gradient(currentColor, currentColor) 2px 2px / calc(100% - 4px)
-    calc(100% - 4px) no-repeat;
+.quest__item[data-done] .quest__check::after {
+  content: '';
+  position: absolute;
+  left: 0.2rem;
+  bottom: 0.1rem;
+  width: 0.4rem;
+  height: 0.95rem;
+  border-right: 3.5px solid var(--red);
+  border-bottom: 3.5px solid var(--red);
+  border-radius: 0 0 2px;
+  rotate: 40deg;
 }
 
+/* The whole quest done: big news, in a starburst, the text clear of its spikes. */
 .quest__complete {
-  margin: 0;
-  padding: 0 0.75rem 0.75rem;
-  color: var(--accent);
-  font-size: 0.95rem;
-  line-height: 1.2;
+  margin: 0 0.25rem 0.5rem;
+  padding: 1.9rem 3.2rem;
+  background: var(--burst) center / 100% 100% no-repeat;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-align: center;
+  rotate: -3deg;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .quest__complete {
+    animation: quest-burst 260ms cubic-bezier(0.3, 1.6, 0.6, 1) both;
+  }
+}
+
+@keyframes quest-burst {
+  from {
+    scale: 0.4;
+    rotate: -12deg;
+  }
 }
 
 /*
@@ -102,14 +135,11 @@
 
   .quest[open] .quest__body {
     position: absolute;
-    top: calc(100% + 0.5rem);
-    right: -3px;
+    top: calc(100% + 0.6rem);
+    right: calc(-1 * var(--line));
     width: min(17rem, calc(100vw - 1.5rem - var(--safe-left) - var(--safe-right)));
-    padding-top: 0.75rem;
-    background: var(--panel);
-    border: 3px solid var(--wood);
-    box-shadow:
-      inset 0 0 0 2px var(--wood-dark),
-      4px 4px 0 var(--shadow);
+    background: var(--paper);
+    border: var(--line) solid var(--ink);
+    box-shadow: var(--drop) var(--drop) 0 var(--ink);
   }
 }

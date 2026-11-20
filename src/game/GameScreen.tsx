@@ -368,7 +368,7 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
               <div className="toolbar__buttons">
                 <button
                   type="button"
-                  className="comic-button comic-button--quiet"
+                  className="comic-button comic-button--quiet toolbar__help"
                   title={ui.toolbar.help}
                   aria-keyshortcuts={ui.toolbar.helpShortcut}
                   onClick={() => {
