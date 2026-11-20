@@ -1,3 +1,4 @@
+import { GITHUB, LINKEDIN } from './profiles.ts';
 import type { SiteContent } from './types.ts';
 
 /*
@@ -10,9 +11,6 @@ import type { SiteContent } from './types.ts';
  * no-break spaces (U+00A0) before ? ! : ; so that a dialog line never starts
  * with a lone punctuation mark.
  */
-
-const GITHUB = 'https://github.com/pvignau';
-const LINKEDIN = 'https://www.linkedin.com/in/pierre-yves-vignau-a99a9424/';
 
 export const content: SiteContent = {
   name: 'Pyve',

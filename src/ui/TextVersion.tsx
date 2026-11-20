@@ -1,6 +1,7 @@
 import type { RefObject } from 'react';
 import { useEffect, useRef } from 'react';
-import { content, PLACE_IDS, ui } from '../content';
+import { PLACE_IDS } from '../content';
+import { useCopy } from '../app/copy';
 import { ContentBlocks, LinkList } from './ContentBlocks';
 import './TextVersion.css';
 
@@ -34,6 +35,7 @@ export function TextVersion({
   onClose: () => void;
   returnFocus?: RefObject<HTMLElement | null>;
 }) {
+  const { content, ui } = useCopy();
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {

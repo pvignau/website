@@ -59,6 +59,15 @@ describe('normalizeLocation', () => {
     expect(window.history.state).toEqual({ kept: true });
   });
 
+  it('keeps the language of an English address', () => {
+    expect(at('/en/')).toBe('/en');
+    expect(at('/en.html?debug')).toBe('/en?debug');
+    expect(at('/en/index.html')).toBe('/en');
+    expect(at('/en/home/')).toBe('/en/home');
+    expect(at('/EN/Work.html#portfolio')).toBe('/en/work#portfolio');
+    expect(at('/en/nowhere')).toBe('/en/nowhere');
+  });
+
   it('follows old hash links', () => {
     expect(at('/#/work')).toBe('/work');
     expect(at('/?debug#/home')).toBe('/home?debug');

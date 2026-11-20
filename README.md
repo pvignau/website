@@ -73,7 +73,7 @@ Le routage est en mode history, sans bibliothèque : `src/app/history.ts` tient 
 
 ### Build
 
-`vite-plugins/tiled-map.ts` sert les imports `*.json?tiled` sans les tilesets ni les tuiles visuelles, déjà dessinées dans le `.webp` (world.json passe de ~850 kB à ~90 kB). `vite-plugins/site-pages.ts` écrit dans `index.html`, à partir de `src/content`, le titre, la description, l'URL canonique, les balises Open Graph, le préchargement de la carte et la version texte du portfolio (`vite-plugins/static-page.ts`). Celle-ci est remplacée par le jeu quand il démarre ; elle s'affiche sans JavaScript, ou quand le jeu ne peut pas démarrer (script bloqué ou en erreur). Il produit aussi `home.html`, `work.html` et `404.html`, ainsi que `sitemap.xml` et `robots.txt`, écrits pour le domaine de `public/CNAME`. `public/.nojekyll` évite à GitHub Pages de passer le site dans Jekyll.
+`vite-plugins/tiled-map.ts` sert les imports `*.json?tiled` sans les tilesets ni les tuiles visuelles, déjà dessinées dans le `.webp` (world.json passe de ~850 kB à ~90 kB). `vite-plugins/site-pages.ts` écrit dans `index.html`, à partir de `src/content`, le titre, la description, l'URL canonique, les balises Open Graph, le préchargement de la carte et la version texte du portfolio (`vite-plugins/static-page.ts`). Celle-ci est remplacée par le jeu quand il démarre ; elle s'affiche sans JavaScript, ou quand le jeu ne peut pas démarrer (script bloqué ou en erreur). Il produit aussi `home.html`, `work.html`, leurs versions anglaises (`en.html`, `en/home.html`, `en/work.html`) et `404.html`, ainsi que `sitemap.xml` et `robots.txt`, écrits pour le domaine de `public/CNAME`. `public/.nojekyll` évite à GitHub Pages de passer le site dans Jekyll.
 
 ### GitHub Pages
 
@@ -84,16 +84,25 @@ Le routage est en mode history, sans bibliothèque : `src/app/history.ts` tient 
 | `/home/`     | `home/index.html`           | 200    |
 | `/work`      | `work.html`                 | 200    |
 | `/work/`     | `work/index.html`           | 200    |
+| `/en`        | `en.html`                   | 200    |
+| `/en/home`   | `en/home.html`              | 200    |
+| `/en/work`   | `en/work.html`              | 200    |
 | autre        | `404.html` (copie de l'app) | 404    |
 
-Les pages ont chacune leur titre, leur description, leur URL canonique (sans barre finale) et leurs balises Open Graph ; `home/index.html` et `work/index.html` sont des copies de `home.html` et `work.html`, car GitHub Pages répond 404 à `/home/` sans elles. La page 404 sert aussi de repli SPA : l'app y affiche la bonne route (par exemple `/HOME`, Pages respectant la casse) ou la page « introuvable ».
+Les pages anglaises ont aussi leur copie avec barre finale (`en/index.html`, `en/home/index.html`, `en/work/index.html`).
+
+Les pages ont chacune leur titre, leur description, leur URL canonique (sans barre finale) et leurs balises Open Graph ; `home/index.html` et `work/index.html` sont des copies de `home.html` et `work.html`, car GitHub Pages répond 404 à `/home/` sans elles. La page 404 sert aussi de repli SPA : l'app y affiche la bonne route (par exemple `/HOME`, Pages respectant la casse) ou la page « introuvable », dans la langue de l'adresse.
+
+### Langues
+
+Le site parle français sans préfixe (`/home`) et anglais sous `/en` (`/en/home`). La langue vient de l'adresse (`src/app/language.ts`) et ne change pas pendant la vie d'une page : `src/app/history.ts` retire le préfixe de ce que lit le jeu et le remet dans ce qu'il écrit, si bien que le jeu, ses cartes et leurs objets `redirect` ne connaissent que `/`, `/home` et `/work`. Les composants lisent les textes de la page par `useCopy()` (`src/app/copy.ts`). Le lien de la barre d'outils mène à la même page dans l'autre langue, en la rechargeant. Chaque page statique porte son `lang`, sa locale Open Graph, ses liens `hreflang` (le français en `x-default`) et sa version texte, qui renvoie à l'autre langue.
 
 ## Éditer le contenu
 
 Tout texte visible passe par `src/content/index.ts`, l'unique point d'entrée. Les composants ne contiennent aucun texte en dur.
 
 - `types.ts` définit le contrat : `SiteContent`, `Place`, `Note`, `ContentBlock`, etc. Une note est la phrase d'un objet de la carte (la télé, la console, le casque), avec son étiquette. Une vue (`PlaceView`) raconte un lieu depuis un autre objet que son entrée : le bureau de la maison rouvre la bio avec sa propre étiquette, sa zone, son titre et sa première phrase.
-- Le contenu du portfolio vit dans `site.ts`, que `index.ts` exporte. `site.placeholder.ts` en garde une version neutre de même forme, pratique pour travailler sur le moteur : une ligne d'`index.ts` suffit pour basculer.
+- Le contenu du portfolio vit dans `site.ts` (français) et `site.en.ts` (anglais), la microcopie dans `ui.ts` et `ui.en.ts` ; `index.ts` les réunit dans `COPIES`, et `languages.ts` décrit les langues. Les tests exigent des deux langues la même forme (lieux, blocs, listes, vues, notes) et les mêmes liens : une phrase ajoutée en français l'est aussi en anglais. L'anglais ne met pas d'espace avant `? ! : ;`. `site.placeholder.ts` en garde une version neutre de même forme, pratique pour travailler sur le moteur : une ligne d'`index.ts` suffit pour basculer.
 - `ui.ts` contient la microcopie du moteur : aides du HUD, boutons, noms accessibles, titres de page.
 - Typographie : apostrophe droite, et espace insécable (U+00A0) avant `? ! : ;`. ESLint accepte ces espaces dans les chaînes.
 
@@ -140,7 +149,7 @@ Après une modification, lancez `npm test` : les tests de `src/game/maps.test.ts
 ## Ajouter un lieu
 
 1. Ajoutez l'identifiant à `PlaceId` dans `src/content/types.ts` et à `PLACE_ORDER` dans `src/content/places.ts` (le compilateur signale ce qui manque).
-2. Écrivez son contenu dans `site.ts` et dans `site.placeholder.ts` : étiquette (12 caractères au plus), zone, titre, blocs, liens, objectif de quête.
+2. Écrivez son contenu dans `site.ts`, `site.en.ts` et `site.placeholder.ts` : étiquette (12 caractères au plus), zone, titre, blocs, liens, objectif de quête.
 3. Dans Tiled, ajoutez au calque `meta/objects` un rectangle nommé par l'identifiant, avec `action` = `place`. Pour un nouveau bâtiment, dessinez-le dans `tools/map-art` et ajoutez les tuiles solides et, si besoin, un `decor`.
 4. Pour lui donner sa propre URL, comme `/work`, déclarez-la dans `PATHS` et `STATIC_PAGES` (`src/app/pages.ts`) et dans `placeRoutes` (`src/game/maps.ts`), puis ajoutez son écran dans `src/app/router.tsx`.
 5. Lancez `npm test` : le journal de quête et la version texte prennent le lieu en compte d'eux-mêmes.
@@ -167,9 +176,9 @@ Le site est servi par GitHub Pages depuis la branche `main` du dépôt [`pvignau
 - [ ] Remplacer l'ancien build par `dist/` en gardant `CNAME` et l'historique git :
       `rsync -av --delete --exclude .git --exclude CNAME dist/ ../pvignau.github.io/`
       (`dist/` contient aussi `CNAME`, copié depuis `public/`).
-- [ ] `git status` dans `pvignau.github.io` : `CNAME` inchangé ; présence d'`index.html`, `home.html`, `work.html`, `404.html`, `sitemap.xml`, `robots.txt`, `.nojekyll`, `manifest.json`, des icônes, d'`og-image.png` et d'`assets/` ; plus de `css/` ni d'`img/` de l'ancien build.
+- [ ] `git status` dans `pvignau.github.io` : `CNAME` inchangé ; présence d'`index.html`, `home.html`, `work.html`, `en.html`, `en/`, `404.html`, `sitemap.xml`, `robots.txt`, `.nojekyll`, `manifest.json`, des icônes, d'`og-image.png` et d'`assets/` ; plus de `css/` ni d'`img/` de l'ancien build.
 - [ ] Commit (par exemple `deploy: website@<sha court>`), puis `git push origin main`.
-- [ ] Une fois Pages déployé (quelques minutes, voir l'onglet _Actions_), vérifier `https://pyve.is-a.dev/`, `/home`, `/work`, une URL inconnue et un ancien lien `/#/work`, puis l'aperçu d'un lien partagé (par exemple sur opengraph.xyz).
+- [ ] Une fois Pages déployé (quelques minutes, voir l'onglet _Actions_), vérifier `https://pyve.is-a.dev/`, `/home`, `/work`, `/en`, `/en/home`, `/en/work`, une URL inconnue et un ancien lien `/#/work`, puis l'aperçu d'un lien partagé (par exemple sur opengraph.xyz).
 
 ### Proposition : déploiement automatique (non activé)
 

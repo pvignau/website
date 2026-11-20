@@ -1,5 +1,5 @@
 import type { AnchorHTMLAttributes } from 'react';
-import { useNavigate } from './navigation';
+import { useHistory } from './navigation';
 
 /**
  * A link to a path of the site, followed without reloading the page. A click
@@ -11,11 +11,11 @@ export function Link({
   children,
   ...props
 }: AnchorHTMLAttributes<HTMLAnchorElement> & { to: string }) {
-  const navigate = useNavigate();
+  const history = useHistory();
   return (
     <a
       {...props}
-      href={to}
+      href={history.href(to)}
       onClick={(event) => {
         props.onClick?.(event);
         const plainClick =
@@ -27,7 +27,7 @@ export function Link({
           props.target === undefined;
         if (event.defaultPrevented || !plainClick) return;
         event.preventDefault();
-        navigate(to);
+        history.navigate(to);
       }}
     >
       {children}

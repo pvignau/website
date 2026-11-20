@@ -1,6 +1,6 @@
 import type { KeyboardEvent, ReactNode } from 'react';
 import { useEffect, useId, useRef } from 'react';
-import { ui } from '../content';
+import { useCopy } from '../app/copy';
 import './Dialog.css';
 
 const FOCUSABLE =
@@ -61,6 +61,7 @@ interface DialogProps {
  * text (to select it, or to grab the scrollbar) that ends outside does not.
  */
 export function Dialog({ open, onClose, title, eyebrow, children, footer }: DialogProps) {
+  const { ui } = useCopy();
   const ref = useRef<HTMLDialogElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const titleId = useId();

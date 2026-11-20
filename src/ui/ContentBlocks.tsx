@@ -1,5 +1,5 @@
 import type { ContentBlock, Link, Project } from '../content';
-import { ui } from '../content';
+import { useCopy } from '../app/copy';
 import './ContentBlocks.css';
 
 type HeadingLevel = 2 | 3 | 4;
@@ -88,6 +88,7 @@ export function LinkList({
 
 /** External links open in a new tab, which screen readers announce. */
 export function ContentLink({ link, tabIndex }: { link: Link; tabIndex?: number | undefined }) {
+  const { ui } = useCopy();
   const external = EXTERNAL.test(link.href);
   return (
     <a

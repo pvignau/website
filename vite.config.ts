@@ -1,14 +1,35 @@
 import react from '@vitejs/plugin-react';
 import { readFileSync } from 'node:fs';
 import { defineConfig } from 'vitest/config';
-import { STATIC_PAGES } from './src/app/pages.ts';
-import { content, PLACE_IDS, ui } from './src/content/index.ts';
+import { localizedPath } from './src/app/language.ts';
+import { PATHS, STATIC_PAGES, translationsOf } from './src/app/pages.ts';
+import type { Lang } from './src/content/index.ts';
+import { COPIES, DEFAULT_LANG, LANGS, LANGUAGES, PLACE_IDS } from './src/content/index.ts';
+import type { SiteLanguage } from './vite-plugins/site-pages.ts';
 import { sitePages } from './vite-plugins/site-pages.ts';
 import { renderStaticPage } from './vite-plugins/static-page.ts';
 import { tiledMap } from './vite-plugins/tiled-map.ts';
 
 /** GitHub Pages serves the site on the domain written in public/CNAME. */
 const origin = `https://${readFileSync(new URL('public/CNAME', import.meta.url), 'utf8').trim()}`;
+
+/** What the pages of a language say around their own title: see SiteLanguage. */
+function siteLanguage(lang: Lang): SiteLanguage {
+  const { content, ui } = COPIES[lang];
+  const others = LANGS.filter((other) => other !== lang).map((other) => ({
+    lang: other,
+    name: LANGUAGES[other].name,
+    href: localizedPath(other, PATHS.world),
+  }));
+  return {
+    lang,
+    locale: LANGUAGES[lang].locale,
+    siteName: ui.siteName,
+    imageAlt: ui.ogImageAlt,
+    loading: ui.loading,
+    staticPage: renderStaticPage(content, PLACE_IDS, ui.noscript, others),
+  };
+}
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -24,13 +45,19 @@ export default defineConfig({
     tiledMap(),
     sitePages({
       origin,
-      locale: 'fr_FR',
-      siteName: ui.siteName,
-      image: { path: '/og-image.png', width: 1200, height: 630, alt: ui.ogImageAlt },
-      loading: ui.loading,
-      staticPage: renderStaticPage(content, PLACE_IDS, ui.noscript),
-      pages: STATIC_PAGES,
-      fallback: { file: '404.html', title: ui.pageTitle(content.notFound.title) },
+      image: { path: '/og-image.png', width: 1200, height: 630 },
+      languages: Object.fromEntries(LANGS.map((lang) => [lang, siteLanguage(lang)])),
+      pages: STATIC_PAGES.map((page) => ({
+        ...page,
+        language: page.lang,
+        alternates: translationsOf(page).map(({ lang, path }) => ({ language: lang, path })),
+      })),
+      // Shared by every language: the app writes the title of its own 404 page.
+      fallback: {
+        file: '404.html',
+        title: COPIES[DEFAULT_LANG].ui.pageTitle(COPIES[DEFAULT_LANG].content.notFound.title),
+        language: DEFAULT_LANG,
+      },
     }),
   ],
   test: {

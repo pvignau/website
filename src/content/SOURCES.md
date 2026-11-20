@@ -1,6 +1,6 @@
 # Contenu du portfolio : sources et choix éditoriaux
 
-Ce fichier documente `src/content/site.ts` au 9 novembre 2026. Chaque fait vient d'une source publique, du profil LinkedIn de Pierre-Yves (lu avec son accord) ou de Pierre-Yves lui-même. Le test `ships no draft marker` refuse tout texte qui porte encore `[À VALIDER]`, `TODO` ou `FIXME`.
+Ce fichier documente `src/content/site.ts` au 9 novembre 2026. `site.en.ts` en est la traduction anglaise, fait pour fait : il n'ajoute ni ne retire rien, et ces sources valent pour lui. Chaque fait vient d'une source publique, du profil LinkedIn de Pierre-Yves (lu avec son accord) ou de Pierre-Yves lui-même. Le test `ships no draft marker` refuse tout texte qui porte encore `[À VALIDER]`, `TODO` ou `FIXME`.
 
 ## Formulations sans source publique
 

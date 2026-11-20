@@ -1,13 +1,17 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserHistory } from './app/history';
+import { languageOf } from './app/language';
 import { legacyHashRoute, normalizeLocation } from './app/location';
 import { App } from './app/router';
 import './styles/global.css';
 
 // Old links (/#/home, /#/work) become /home and /work before the app reads the address...
 normalizeLocation(window.location, window.history);
-const history = createBrowserHistory(window);
+// The page keeps the language of its address; 404.html, shared by all, learns it here.
+const lang = languageOf(window.location.pathname);
+document.documentElement.lang = lang;
+const history = createBrowserHistory(window, lang);
 // ...and when such a hash is typed into the address bar of an open page.
 window.addEventListener('hashchange', () => {
   const route = legacyHashRoute(window.location.hash);
@@ -24,6 +28,6 @@ document.documentElement.classList.remove('no-game');
 
 createRoot(container).render(
   <StrictMode>
-    <App history={history} />
+    <App history={history} lang={lang} />
   </StrictMode>,
 );

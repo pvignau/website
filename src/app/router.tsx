@@ -1,4 +1,7 @@
+import type { Lang } from '../content';
+import { COPIES, DEFAULT_LANG } from '../content';
 import { GameScreen } from '../game/GameScreen';
+import { CopyContext } from './copy';
 import type { AppHistory } from './history';
 import { routeOf } from './location';
 import { HistoryContext, useLocation } from './navigation';
@@ -30,14 +33,17 @@ function Routes() {
 }
 
 /**
- * History routing over three static routes. GitHub Pages serves 404.html (a
+ * History routing over three static routes, in the language of the page (its
+ * address: /en/home is English). GitHub Pages serves 404.html (a
  * copy of the app) for unknown paths, where the app shows its own 404 page. A
  * crash shows the game's error page instead of a blank screen.
  */
-export function App({ history }: { history: AppHistory }) {
+export function App({ history, lang = DEFAULT_LANG }: { history: AppHistory; lang?: Lang }) {
   return (
-    <HistoryContext value={history}>
-      <Routes />
-    </HistoryContext>
+    <CopyContext value={COPIES[lang]}>
+      <HistoryContext value={history}>
+        <Routes />
+      </HistoryContext>
+    </CopyContext>
   );
 }

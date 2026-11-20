@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { ui } from '../content';
+import { useCopy } from '../app/copy';
 import type { ZoomDirection } from '../engine/zoom';
 import { MinimapIcon, ZoomIcon } from './icons';
 import './MapControls.css';
@@ -12,6 +12,7 @@ interface ZoomButtonProps {
 }
 
 function ZoomButton({ direction, enabled, onZoom }: ZoomButtonProps) {
+  const { ui } = useCopy();
   const copy = ui.mapControls;
   const name = direction === 1 ? copy.zoomIn : copy.zoomOut;
   return (
@@ -50,6 +51,7 @@ export function MapControls({
   minimap?: { shown: boolean; onToggle: () => void };
   children?: ReactNode;
 }) {
+  const { ui } = useCopy();
   return (
     <div className="map-controls" role="group" aria-label={ui.mapControls.label}>
       {children}

@@ -2,7 +2,8 @@ import { JSDOM } from 'jsdom';
 import { build } from 'vite';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { STATIC_PAGES } from '../src/app/pages.ts';
-import { content, PLACE_IDS, ui } from '../src/content/index.ts';
+import type { Lang } from '../src/content/index.ts';
+import { COPIES, content, PLACE_IDS, ui } from '../src/content/index.ts';
 
 /** Files of an in-memory production build (nothing is written to disk), by name. */
 async function buildSite(): Promise<Map<string, string>> {
@@ -51,7 +52,16 @@ function render(name: string, { javaScript = false } = {}): Window {
   return new JSDOM(html).window;
 }
 
-const PAGES = ['index.html', 'home.html', 'work.html', '404.html'];
+/** Every page of the build and its language; 404.html, shared, is written in French. */
+const PAGES: readonly (readonly [string, Lang])[] = [
+  ['index.html', 'fr'],
+  ['home.html', 'fr'],
+  ['work.html', 'fr'],
+  ['en.html', 'en'],
+  ['en/home.html', 'en'],
+  ['en/work.html', 'en'],
+  ['404.html', 'fr'],
+];
 
 /** The loader, the text version and the computed values that matter. */
 function boot(window: Window, page: string) {
@@ -69,14 +79,24 @@ function boot(window: Window, page: string) {
   };
 }
 
-describe.each(PAGES)('%s', (page) => {
+describe.each(PAGES)('%s', (page, lang) => {
   it('without JavaScript, shows the text version instead of the loader, in a page that scrolls', () => {
+    const { content: copy } = COPIES[lang];
     const { text, styles } = boot(render(page), page);
     expect(styles).toEqual({ loader: 'none', textVersion: 'block', scroll: 'auto' });
-    expect(text.querySelector('h1')?.textContent).toBe(content.name);
+    expect(text.querySelector('h1')?.textContent).toBe(copy.name);
     expect(Array.from(text.querySelectorAll('h2')).map((h2) => h2.textContent)).toEqual(
-      PLACE_IDS.map((id) => content.places[id].title),
+      PLACE_IDS.map((id) => copy.places[id].title),
     );
+  });
+
+  it('speaks its language: lang, loader and a link to the other language', () => {
+    const { document } = render(page);
+    expect(document.documentElement.lang).toBe(lang);
+    expect(document.querySelector('.loader__label')?.textContent).toBe(COPIES[lang].ui.loading);
+    const other = lang === 'fr' ? 'en' : 'fr';
+    const link = document.querySelector(`.static-page a[hreflang="${other}"]`);
+    expect(link?.getAttribute('href')).toBe(other === 'en' ? '/en' : '/');
   });
 
   it('with JavaScript, shows the loader until the game starts, the text version stays hidden', () => {
@@ -116,12 +136,15 @@ describe('image preloads', () => {
     return `/${asset}`;
   };
 
-  it.each(['index.html', 'work.html'])('fetches the world map early on %s', (page) => {
-    expect(preloads(page)).toEqual([map('world')]);
-  });
+  it.each(['index.html', 'work.html', 'en.html', 'en/work.html'])(
+    'fetches the world map early on %s',
+    (page) => {
+      expect(preloads(page)).toEqual([map('world')]);
+    },
+  );
 
-  it('fetches the house early on home.html', () => {
-    expect(preloads('home.html')).toEqual([map('home')]);
+  it.each(['home.html', 'en/home.html'])('fetches the house early on %s', (page) => {
+    expect(preloads(page)).toEqual([map('home')]);
   });
 
   it('preloads no image on 404.html', () => {
@@ -154,6 +177,21 @@ describe('page metadata', () => {
   it.each(STATIC_PAGES.map((page) => page.file))('lets %s be indexed', (name) => {
     expect(head(name).querySelector('meta[name="robots"]')).toBeNull();
   });
+
+  it.each(STATIC_PAGES.map((page) => [page.file, page] as const))(
+    '%s links to itself in every language',
+    (name, page) => {
+      const links = Array.from(head(name).querySelectorAll('link[rel="alternate"][hreflang]')).map(
+        (link) => [link.getAttribute('hreflang'), link.getAttribute('href')],
+      );
+      const route = page.route === '/' ? '' : page.route;
+      expect(links).toEqual([
+        ['fr', `https://pyve.is-a.dev${route || '/'}`],
+        ['en', `https://pyve.is-a.dev/en${route}`],
+        ['x-default', `https://pyve.is-a.dev${route || '/'}`],
+      ]);
+    },
+  );
 });
 
 describe('crawler files', () => {
@@ -164,14 +202,21 @@ describe('crawler files', () => {
     expect(file('robots.txt')).toContain(`Sitemap: ${origin}/sitemap.xml`);
   });
 
-  it('lists the three pages in the sitemap', () => {
+  it('lists the three pages of each language in the sitemap', () => {
     const urls = [...file('sitemap.xml').matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, url]) => url);
-    expect(urls).toEqual([`${origin}/`, `${origin}/home`, `${origin}/work`]);
+    expect(urls).toEqual([
+      `${origin}/`,
+      `${origin}/home`,
+      `${origin}/work`,
+      `${origin}/en`,
+      `${origin}/en/home`,
+      `${origin}/en/work`,
+    ]);
   });
 });
 
 describe('trailing slashes', () => {
-  it.each(['home', 'work'])(
+  it.each(['home', 'work', 'en', 'en/home', 'en/work'])(
     'answers /%s/ with the page itself, canonical without the slash',
     (name) => {
       const copy = file(`${name}/index.html`);

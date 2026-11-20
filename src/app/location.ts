@@ -1,3 +1,4 @@
+import { localizedPath, splitLanguage } from './language';
 import { PATHS } from './pages';
 
 const ROUTES: readonly string[] = Object.values(PATHS);
@@ -27,14 +28,16 @@ export function legacyHashRoute(hash: string): string | null {
 
 /**
  * Rewrites the address in place, before the router reads it: an old `/#/home`
- * link becomes `/home`, `/home.html` or `/work/` become `/home` or `/work`.
+ * link becomes `/home`, `/home.html` or `/work/` become `/home` or `/work`,
+ * `/en/` or `/en.html` become `/en`; the language stays.
  * Unknown paths are left alone, for the 404 page.
  */
 export function normalizeLocation(location: Location, history: History): void {
+  const { lang, path } = splitLanguage(location.pathname);
   const legacy = legacyHashRoute(location.hash);
-  const route = legacy ?? routeOf(location.pathname);
+  const route = legacy ?? routeOf(path);
   if (route === null) return;
-  const target = `${route}${location.search}${legacy === null ? location.hash : ''}`;
+  const target = `${localizedPath(lang, route)}${location.search}${legacy === null ? location.hash : ''}`;
   if (target === `${location.pathname}${location.search}${location.hash}`) return;
   try {
     history.replaceState(history.state, '', target);

@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react';
 import { Component } from 'react';
-import { ui } from '../content';
+import { useCopy } from './copy';
 import { PATHS } from './pages';
 import { StatusPage } from './StatusPage';
 
 function CrashPage() {
+  const { ui } = useCopy();
   return (
     <StatusPage
       documentTitle={ui.pageTitle(ui.error.title)}

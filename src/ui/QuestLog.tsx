@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { PlaceId } from '../content';
-import { content, PLACE_IDS, ui } from '../content';
+import { PLACE_IDS } from '../content';
+import { useCopy } from '../app/copy';
 import './QuestLog.css';
 
 /** Collapsible quest log: one objective per place, ticked once its dialog was opened. */
@@ -11,6 +12,7 @@ export function QuestLog({
   visited: readonly PlaceId[];
   initiallyOpen: boolean;
 }) {
+  const { content, ui } = useCopy();
   const [open, setOpen] = useState(initiallyOpen);
   const done = PLACE_IDS.filter((id) => visited.includes(id)).length;
   const complete = done === PLACE_IDS.length;

@@ -6,6 +6,26 @@ afterEach(() => {
 });
 
 describe('createBrowserHistory', () => {
+  it('in English, reads and writes paths without the /en of the address', () => {
+    window.history.replaceState(null, '', '/en/home');
+    const history = createBrowserHistory(window, 'en');
+    expect(history.location().pathname).toBe('/home');
+
+    history.navigate('/work?debug');
+    expect(window.location.pathname).toBe('/en/work');
+    expect(history.location()).toMatchObject({ pathname: '/work', search: '?debug' });
+
+    history.navigate('/', { replace: true });
+    expect(window.location.pathname).toBe('/en');
+    expect(history.location().pathname).toBe('/');
+    expect(history.href('/home')).toBe('/en/home');
+  });
+
+  it('in French, writes the paths as they are', () => {
+    const history = createBrowserHistory(window);
+    expect(history.href('/home')).toBe('/home');
+  });
+
   it('adds or replaces entries, and tells its subscribers', () => {
     window.history.replaceState(null, '', '/');
     const history = createBrowserHistory(window);

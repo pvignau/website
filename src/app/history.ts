@@ -1,5 +1,10 @@
+import type { Lang } from '../content';
+import { DEFAULT_LANG } from '../content';
+import { localizedPath, splitLanguage } from './language';
+
 /** The part of the address the app reads, plus what it stored with the history entry. */
 export interface AppLocation {
+  /** The path the app routes on, without the language prefix: `/home` for /en/home. */
   readonly pathname: string;
   readonly search: string;
   readonly hash: string;
@@ -23,14 +28,22 @@ export interface AppHistory {
   subscribe: (listener: () => void) => () => void;
   /** Goes to a path of the site (`/work?debug`), adding an entry unless `replace`. */
   navigate: (to: string, options?: NavigateOptions) => void;
+  /** The address of a path of the site, in the language of the page: `/en/work`. */
+  href: (to: string) => string;
   back: () => void;
 }
 
-export function createBrowserHistory(window: Window): AppHistory {
+/**
+ * The history of a page in one language: the app reads and writes paths without
+ * the prefix of its language (/en), which this history takes off and puts back.
+ */
+export function createBrowserHistory(window: Window, lang: Lang = DEFAULT_LANG): AppHistory {
   const read = (): AppLocation => {
-    const { pathname, search, hash } = window.location;
-    return { pathname, search, hash, state: window.history.state as unknown };
+    const { search, hash } = window.location;
+    const { path } = splitLanguage(window.location.pathname);
+    return { pathname: path, search, hash, state: window.history.state as unknown };
   };
+  const href = (to: string) => localizedPath(lang, to);
   let current = read();
   const listeners = new Set<() => void>();
   /** Reads the address again; the snapshot only changes (and re-renders) when it moved. */
@@ -63,10 +76,11 @@ export function createBrowserHistory(window: Window): AppHistory {
       };
     },
     navigate(to, { replace = false, state = null } = {}) {
-      if (replace) window.history.replaceState(state, '', to);
-      else window.history.pushState(state, '', to);
+      if (replace) window.history.replaceState(state, '', href(to));
+      else window.history.pushState(state, '', href(to));
       update();
     },
+    href,
     back() {
       window.history.back();
     },

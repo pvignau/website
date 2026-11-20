@@ -1,6 +1,6 @@
 import type { RefObject } from 'react';
 import type { PlaceId } from '../content';
-import { content, ui } from '../content';
+import { useCopy } from '../app/copy';
 import type { Interactable } from '../engine/tiled';
 import { DebugOverlay } from './DebugOverlay';
 import { objectLabel } from './labels';
@@ -30,6 +30,7 @@ export function WorldView({
   heroRef,
   hitboxRef,
 }: WorldViewProps) {
+  const { content, ui } = useCopy();
   const { data } = map;
   const { background } = data;
   return (

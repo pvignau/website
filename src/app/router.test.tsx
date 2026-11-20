@@ -1,7 +1,7 @@
 import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { content, ui } from '../content';
+import { COPIES, content, ui } from '../content';
 import { HERO } from '../engine/hero';
 import { findSpawn } from '../engine/tiled';
 import { HELP_SEEN_KEY, helpSeen } from '../game/helpSeen';
@@ -9,6 +9,7 @@ import { MAPS } from '../game/maps';
 import { questStore } from '../quest/useQuest';
 import { pageOf, PATHS } from './pages';
 import { createBrowserHistory } from './history';
+import { languageOf } from './language';
 import { normalizeLocation } from './location';
 import { App } from './router';
 import { RouteError } from './RouteError';
@@ -27,7 +28,9 @@ const named = (copy: string) => (name: string) => text(name) === text(copy);
 function renderAt(path: string, { raw = false } = {}) {
   window.history.replaceState(null, '', path);
   if (!raw) normalizeLocation(window.location, window.history);
-  render(<App history={createBrowserHistory(window)} />);
+  // As main.tsx does: the page takes the language of its address.
+  const lang = languageOf(window.location.pathname);
+  render(<App history={createBrowserHistory(window, lang)} lang={lang} />);
 }
 
 beforeEach(() => {
@@ -117,8 +120,8 @@ describe('routes', () => {
       document.head.querySelector('link[rel="canonical"]')?.getAttribute('href');
     const description = () =>
       document.head.querySelector('meta[name="description"]')?.getAttribute('content');
-    const work = pageOf(PATHS.work);
-    const world = pageOf(PATHS.world);
+    const work = pageOf(PATHS.work, 'fr');
+    const world = pageOf(PATHS.world, 'fr');
 
     renderAt('/work');
     const dialog = await screen.findByRole('dialog', { name: named(content.places.work.title) });
@@ -315,5 +318,64 @@ describe('addresses', () => {
     renderAt('/#//evil.example/x');
     expect(await screen.findByRole('img', { name: ui.game.mapAlt.world })).toBeInTheDocument();
     expect(window.location.host).toBe('localhost:3000');
+  });
+});
+
+describe('the English pages', () => {
+  const en = COPIES.en;
+
+  it('greet the visitor of /en/home with the English bio', async () => {
+    renderAt('/en/home');
+    await screen.findByRole('dialog', { name: named(en.content.places.home.title) });
+    expect(screen.getByRole('img', { name: en.ui.game.mapAlt.home })).toBeInTheDocument();
+    expect(document.title).toBe(en.ui.pageTitle(en.content.places.home.title));
+  });
+
+  it('open the projects on /en/work, and closing them stays in English, on /en', async () => {
+    renderAt('/en/work');
+    const dialog = await screen.findByRole('dialog', { name: named(en.content.places.work.title) });
+    await userEvent.click(within(dialog).getByRole('button', { name: en.ui.dialog.close }));
+    expect(window.location.pathname).toBe('/en');
+    expect(screen.getByRole('img', { name: en.ui.game.mapAlt.world })).toBeInTheDocument();
+  });
+
+  it('keep the canonical URL and the links to each language in step', async () => {
+    renderAt('/en/work');
+    await screen.findByRole('dialog', { name: named(en.content.places.work.title) });
+    const head = document.head;
+    expect(head.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(
+      'https://pyve.is-a.dev/en/work',
+    );
+    const alternates = Array.from(head.querySelectorAll('link[rel="alternate"][hreflang]')).map(
+      (link) => `${link.getAttribute('hreflang') ?? ''} ${link.getAttribute('href') ?? ''}`,
+    );
+    expect(alternates).toEqual([
+      'fr https://pyve.is-a.dev/work',
+      'en https://pyve.is-a.dev/en/work',
+      'x-default https://pyve.is-a.dev/work',
+    ]);
+  });
+
+  it('show their own 404 page, with a way back to the English island', async () => {
+    renderAt('/en/nowhere');
+    await screen.findByRole('heading', { level: 1, name: named(en.content.notFound.title) });
+    const back = screen.getByRole('link', { name: named(en.content.notFound.backLabel) });
+    expect(back.getAttribute('href')).toBe('/en');
+  });
+});
+
+describe('the language switch', () => {
+  it('leads from a French page to the same page in English', async () => {
+    renderAt('/home');
+    await screen.findByRole('dialog', { name: named(content.places.home.title) });
+    const link = screen.getByRole('link', { name: 'English', hidden: true });
+    expect(link.getAttribute('href')).toBe('/en/home');
+    expect(link.getAttribute('hreflang')).toBe('en');
+  });
+
+  it('leads from an English page back to French', async () => {
+    renderAt('/en?debug');
+    await screen.findByRole('img', { name: COPIES.en.ui.game.mapAlt.world });
+    expect(screen.getByRole('link', { name: 'Français' }).getAttribute('href')).toBe('/?debug');
   });
 });

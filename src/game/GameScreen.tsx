@@ -4,8 +4,10 @@ import { routeOf } from '../app/location';
 import { useHistory, useLocation, useNavigate } from '../app/navigation';
 import { pageOf } from '../app/pages';
 import { usePageMeta } from '../app/usePageMeta';
-import type { Place, PlaceId, PlaceViewId } from '../content';
-import { content, ui } from '../content';
+import { useCopy } from '../app/copy';
+import { localizedPath } from '../app/language';
+import type { Copy, Place, PlaceId, PlaceViewId } from '../content';
+import { LANGS, LANGUAGES } from '../content';
 import { computeScale } from '../engine/camera';
 import type { Direction } from '../engine/input';
 import type { Interactable } from '../engine/tiled';
@@ -72,12 +74,14 @@ function placeAtPath(map: MapDefinition, pathname: string): PlaceId | null {
   return (entry?.[0] as PlaceId | undefined) ?? null;
 }
 
-function pageTitle(map: MapDefinition, shown: Place | null): string {
+function pageTitle(map: MapDefinition, shown: Place | null, { content, ui }: Copy): string {
   if (shown !== null) return ui.pageTitle(shown.title);
   return ui.pageTitle(map.place === null ? null : content.places[map.place].zone);
 }
 
 export function GameScreen({ mapId }: { mapId: MapId }) {
+  const copy = useCopy();
+  const { lang, content, ui } = copy;
   const map = MAPS[mapId];
   const location = useLocation();
   const navigate = useNavigate();
@@ -108,7 +112,7 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
   const openView = routePlace === null ? overlayView(location.state) : null;
   const shownPlace = useMemo(
     () => (openPlace === null ? null : placeAs(openPlace, openView, content)),
-    [openPlace, openView],
+    [openPlace, openView, content],
   );
   const textOpen = entryOverlay === 'text';
   const [helpWasSeen, setHelpWasSeen] = useState(helpSeen.get);
@@ -152,8 +156,9 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
   };
 
   const playing = ready && openPlace === null && !helpOpen && !textOpen;
-  useDocumentTitle(pageTitle(map, shownPlace));
-  usePageMeta(pageOf(routeOf(location.pathname) ?? map.path));
+  useDocumentTitle(pageTitle(map, shownPlace, copy));
+  const route = routeOf(location.pathname) ?? map.path;
+  usePageMeta(pageOf(route, lang), lang);
 
   // A place counts as visited as soon as its dialog opens.
   useEffect(() => {
@@ -265,7 +270,7 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
       if (text !== saidNearby.current) announce(text);
       saidNearby.current = text;
     },
-    [announce, map, touch],
+    [announce, map, touch, content, ui],
   );
 
   const keys = useKeyboardControls({
@@ -388,6 +393,20 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
                   {/* On phones only the icon shows; the name stays for screen readers. */}
                   <span className="toolbar__label">{content.help.textVersionLabel}</span>
                 </button>
+                {LANGS.filter((other) => other !== lang).map((other) => (
+                  // A page of its own, in its language: the whole page loads again.
+                  <a
+                    key={other}
+                    className="pixel-button pixel-button--quiet"
+                    href={`${localizedPath(other, route)}${location.search}`}
+                    hrefLang={other}
+                    lang={other}
+                    title={LANGUAGES[other].name}
+                  >
+                    <span aria-hidden="true">{LANGUAGES[other].short}</span>
+                    <span className="visually-hidden">{LANGUAGES[other].name}</span>
+                  </a>
+                ))}
               </div>
               <QuestLog visited={visited} initiallyOpen={wide} />
             </div>

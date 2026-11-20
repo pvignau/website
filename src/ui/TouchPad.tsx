@@ -1,6 +1,6 @@
 import type { PointerEvent, RefObject } from 'react';
 import { useEffect, useState } from 'react';
-import { ui } from '../content';
+import { useCopy } from '../app/copy';
 import type { Direction } from '../engine/input';
 import { DIRECTIONS, padDirections } from '../engine/input';
 import './TouchPad.css';
@@ -26,6 +26,7 @@ export function TouchPad({
   /** False while the game is paused (a dialog is open): held directions are dropped. */
   enabled: boolean;
 }) {
+  const { ui } = useCopy();
   const [active, setActive] = useState<ReadonlySet<Direction>>(NONE);
   const [wasEnabled, setWasEnabled] = useState(enabled);
   if (enabled !== wasEnabled) {

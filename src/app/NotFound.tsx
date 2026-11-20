@@ -1,13 +1,14 @@
-import { content, ui } from '../content';
+import { useCopy } from './copy';
 import { Link } from './Link';
 import { PATHS } from './pages';
 import { StatusPage } from './StatusPage';
 import { usePageMeta } from './usePageMeta';
 
 export function NotFound() {
+  const { lang, content, ui } = useCopy();
   const { notFound } = content;
   // Not a page to index: no canonical URL.
-  usePageMeta(null);
+  usePageMeta(null, lang);
   return (
     <StatusPage
       documentTitle={ui.pageTitle(notFound.title)}

@@ -1,4 +1,4 @@
-import { content, ui } from '../content';
+import { useCopy } from '../app/copy';
 import { Dialog } from './Dialog';
 
 /** "How to play": shown on the first visit, reopened with the "?" button or key. */
@@ -9,6 +9,7 @@ export function HelpDialog({
   onClose: () => void;
   onTextVersion: () => void;
 }) {
+  const { content, ui } = useCopy();
   const { help } = content;
   return (
     <Dialog

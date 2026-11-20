@@ -1,23 +1,23 @@
 import { describe, expect, it } from 'vitest';
-import { content } from './site';
-import type { Link, Place, PlaceId, PlaceView, Project } from './types';
+import type { Lang } from './languages';
+import { content as french } from './site';
+import { content as english } from './site.en';
+import type { Link, Place, PlaceId, PlaceView, Project, SiteContent } from './types';
 
 const PLACE_IDS: PlaceId[] = ['home', 'work', 'lab', 'contact'];
-const places: Place[] = PLACE_IDS.map((id) => content.places[id]);
 
-const views: PlaceView[] = places.flatMap((place) => Object.values(place.views ?? {}));
+/** Every link of a copy: place links plus the links of each project. */
+function linksOf(content: SiteContent): Link[] {
+  return PLACE_IDS.map((id) => content.places[id]).flatMap((place) => [
+    ...place.links,
+    ...place.body.flatMap((block) =>
+      block.kind === 'projects' ? block.items.flatMap((project) => project.links) : [],
+    ),
+  ]);
+}
 
-const projects: Project[] = content.places.work.body.flatMap((block) =>
-  block.kind === 'projects' ? block.items : [],
-);
-
-/** Every link of the site: place links plus the links of each project. */
-const links: Link[] = places.flatMap((place) => [
-  ...place.links,
-  ...place.body.flatMap((block) =>
-    block.kind === 'projects' ? block.items.flatMap((project) => project.links) : [],
-  ),
-]);
+/** A sentence's punctuation, as each language spaces it: no-break space in French, none in English. */
+const MISSPACED: Readonly<Record<Lang, RegExp>> = { fr: / [?!:;]/, en: /\s[?!:;]/ };
 
 /** A sentence ends on . ! or ? followed by whitespace (no-break space included) or the end. */
 const SENTENCE_END = /[.!?](\s|$)/;
@@ -36,7 +36,17 @@ function allStrings(value: unknown): string[] {
   return [];
 }
 
-describe('site content', () => {
+describe.each([
+  ['fr', french],
+  ['en', english],
+] as const)('site content (%s)', (lang, content) => {
+  const places: Place[] = PLACE_IDS.map((id) => content.places[id]);
+  const views: PlaceView[] = places.flatMap((place) => Object.values(place.views ?? {}));
+  const projects: Project[] = content.places.work.body.flatMap((block) =>
+    block.kind === 'projects' ? block.items : [],
+  );
+  const links = linksOf(content);
+
   it('defines the four places, each under its own id', () => {
     expect(Object.keys(content.places).sort()).toEqual([...PLACE_IDS].sort());
     const misfiled = PLACE_IDS.filter((id) => content.places[id].id !== id);
@@ -56,8 +66,8 @@ describe('site content', () => {
     expect(notes.filter((note) => !note.label || !note.text.endsWith('.'))).toEqual([]);
   });
 
-  it('puts a no-break space, never a plain one, before ? ! : ;', () => {
-    expect(allStrings(content).filter((text) => / [?!:;]/.test(text))).toEqual([]);
+  it('spaces ? ! : ; as the language does', () => {
+    expect(allStrings(content).filter((text) => MISSPACED[lang].test(text))).toEqual([]);
   });
 
   it('gives every place a zone, a title, a quest and a body', () => {
@@ -117,5 +127,45 @@ describe('site content', () => {
   it('avoids hollow marketing words', () => {
     const hollow = /passionn|innovant|sur[  ]mesure/i;
     expect(allStrings(content).filter((text) => hollow.test(text))).toEqual([]);
+  });
+});
+
+/** The shape of a copy: what each language must have alike, whatever its words. */
+function shapeOf(content: SiteContent) {
+  return {
+    places: PLACE_IDS.map((id) => {
+      const place = content.places[id];
+      return {
+        id: place.id,
+        views: Object.keys(place.views ?? {}),
+        description: place.description !== undefined,
+        body: place.body.map((block) =>
+          block.kind === 'paragraph'
+            ? 'paragraph'
+            : block.kind === 'list'
+              ? `list of ${String(block.items.length)}`
+              : block.items.map((project) => project.tags.length),
+        ),
+      };
+    }),
+    notes: Object.keys(content.notes),
+    help: content.help.steps.length,
+  };
+}
+
+describe('the English copy', () => {
+  it('has the shape of the French one: places, blocks, list items, views and notes', () => {
+    expect(shapeOf(english)).toEqual(shapeOf(french));
+  });
+
+  it('links to the same addresses, in the same order', () => {
+    expect(linksOf(english).map((link) => link.href)).toEqual(
+      linksOf(french).map((link) => link.href),
+    );
+  });
+
+  it('keeps the names that are not translated', () => {
+    expect(english.name).toBe(french.name);
+    expect(english.role).toBe(french.role);
   });
 });

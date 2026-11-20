@@ -52,4 +52,12 @@ describe('renderStaticPage', () => {
     );
     expect(out).not.toContain('<script>');
   });
+
+  it('links to the other languages, each named in itself', () => {
+    const page = renderStaticPage(content, PLACE_IDS, 'Intro.', [
+      { lang: 'en', name: 'English', href: '/en' },
+    ]);
+    expect(page).toContain('<p><a href="/en" hreflang="en" lang="en">English</a></p>');
+    expect(html).not.toContain('hreflang');
+  });
 });
