@@ -12,7 +12,7 @@ function CrashPage() {
       body={ui.error.body}
       action={
         // A full page load: after a crash, start again from a clean state.
-        <a className="pixel-button" href={PATHS.world}>
+        <a className="comic-button" href={PATHS.world}>
           {ui.error.backLabel}
         </a>
       }

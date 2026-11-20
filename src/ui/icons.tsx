@@ -1,56 +1,42 @@
-/** A page with a dog-ear and three lines of text, 8 × 12 pixels drawn 2 × 2. */
+/*
+ * Icons inked like the rest of the comic: round strokes in the colour of the
+ * text (.icon in global.css), on a 24 × 24 grid.
+ */
+
+/** A page with a dog-ear and three lines of text: the text version. */
 export function TextVersionIcon() {
   return (
-    <svg
-      className="pixel-icon"
-      viewBox="0 0 8 12"
-      width="16"
-      height="24"
-      aria-hidden="true"
-      shapeRendering="crispEdges"
-    >
-      <path
-        fill="currentColor"
-        d="M0 0h1v12H0zM1 0h4v1H1zM4 1h2v1H4zM4 2h1v1H4zM6 2h1v1H6zM4 3h4v1H4zM7 4h1v8H7zM1 11h6v1H1zM2 5h4v1H2zM2 7h4v1H2zM2 9h3v1H2z"
-      />
+    <svg className="icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+      <path d="M5.5 2.5h8.5l4.5 4.5v14.5h-13z" />
+      <path d="M14 2.5V7h4.5M9 12h6M9 15.5h6M9 19h3.5" />
     </svg>
   );
 }
 
-/** A map pin, 10 × 11 pixels drawn 2 × 2: the button that shows or hides the minimap. */
+/** A map pin: the button that shows or hides the minimap. */
 export function MinimapIcon() {
   return (
-    <svg
-      className="pixel-icon"
-      viewBox="0 0 10 11"
-      width="20"
-      height="22"
-      aria-hidden="true"
-      shapeRendering="crispEdges"
-    >
-      <path
-        fill="currentColor"
-        d="M3 0h4v1H3zM2 1h6v1H2zM1 2h3v1H1zM6 2h3v1H6zM1 3h2v2H1zM7 3h2v2H7zM1 5h3v1H1zM6 5h3v1H6zM2 6h6v2H2zM3 8h4v1H3zM4 9h2v2H4z"
-      />
+    <svg className="icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+      <path d="M12 21.5S5.5 15.2 5.5 9.8a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11.7-6.5 11.7z" />
+      <circle cx="12" cy="9.8" r="2.3" />
     </svg>
   );
 }
 
-/** Plus and minus, 7 × 7 pixels drawn 2 × 2, with the stroke of the other icons. */
+/** Plus and minus, with the stroke of the other icons. */
 export function ZoomIcon({ direction }: { direction: 1 | -1 }) {
   return (
-    <svg
-      className="pixel-icon"
-      viewBox="0 0 7 7"
-      width="14"
-      height="14"
-      aria-hidden="true"
-      shapeRendering="crispEdges"
-    >
-      <path
-        fill="currentColor"
-        d={direction === 1 ? 'M0 3h7v1H0zM3 0h1v3H3zM3 4h1v3H3z' : 'M0 3h7v1H0z'}
-      />
+    <svg className="icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      <path d={direction === 1 ? 'M5 12h14M12 5v14' : 'M5 12h14'} strokeWidth="3" />
+    </svg>
+  );
+}
+
+/** A cross: the button that closes a dialog. */
+export function CloseIcon() {
+  return (
+    <svg className="icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      <path d="M6 6l12 12M18 6 6 18" strokeWidth="3" />
     </svg>
   );
 }

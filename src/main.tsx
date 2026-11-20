@@ -1,9 +1,10 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+// First, so that each component's stylesheet comes after it and can adjust the shared rules.
+import './styles/global.css';
 import { createBrowserHistory } from './app/history';
 import { legacyHashRoute, normalizeLocation } from './app/location';
 import { App } from './app/router';
-import './styles/global.css';
 
 // Old links (/#/home, /#/work) become /home and /work before the app reads the address...
 normalizeLocation(window.location, window.history);

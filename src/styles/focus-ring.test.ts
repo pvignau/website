@@ -51,7 +51,17 @@ describe('focus ring', () => {
   const colours = rootColours();
   const ring = colours.get('--focus-ring') ?? '';
   const edge = colours.get('--focus-edge') ?? '';
-  const surfaces = ['--panel-solid', '--panel-raised', '--wood', '--wood-dark', '--accent'];
+  // Newsprint and the four inks: the panels, captions, buttons and dot screens.
+  const surfaces = [
+    '--paper',
+    '--paper-shade',
+    '--ink',
+    '--red',
+    '--yellow',
+    '--blue',
+    '--cyan',
+    '--magenta',
+  ];
 
   it('uses two colours that stand apart from each other', () => {
     expect(ring).toMatch(/^#[0-9a-f]{6}$/i);

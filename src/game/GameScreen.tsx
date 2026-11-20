@@ -309,7 +309,7 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
   return (
     <div className="game" style={{ '--backdrop': map.backdrop }}>
       <a
-        className="skip-link pixel-button"
+        className="skip-link comic-button"
         href={`#${TEXT_VERSION_ID}`}
         inert={textOpen}
         onClick={(event) => {
@@ -368,7 +368,7 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
               <div className="toolbar__buttons">
                 <button
                   type="button"
-                  className="pixel-button pixel-button--quiet"
+                  className="comic-button comic-button--quiet"
                   title={ui.toolbar.help}
                   aria-keyshortcuts={ui.toolbar.helpShortcut}
                   onClick={() => {
@@ -381,7 +381,7 @@ export function GameScreen({ mapId }: { mapId: MapId }) {
                 <button
                   type="button"
                   ref={textButtonRef}
-                  className="pixel-button pixel-button--quiet toolbar__text"
+                  className="comic-button comic-button--quiet toolbar__text"
                   onClick={openTextVersion}
                 >
                   <TextVersionIcon />

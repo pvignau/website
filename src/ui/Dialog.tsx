@@ -2,6 +2,7 @@ import type { KeyboardEvent, ReactNode } from 'react';
 import { useEffect, useId, useRef } from 'react';
 import { ui } from '../content';
 import './Dialog.css';
+import { CloseIcon } from './icons';
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex="-1"])';
@@ -119,22 +120,11 @@ export function Dialog({ open, onClose, title, eyebrow, children, footer }: Dial
           </div>
           <button
             type="button"
-            className="dialog__close pixel-button pixel-button--quiet"
+            className="dialog__close comic-button comic-button--quiet"
             aria-label={ui.dialog.close}
             onClick={onClose}
           >
-            <svg
-              viewBox="0 0 7 7"
-              width="14"
-              height="14"
-              aria-hidden="true"
-              shapeRendering="crispEdges"
-            >
-              <path
-                fill="currentColor"
-                d="M0 0h1v1H0zm1 1h1v1H1zm1 1h1v1H2zm1 1h1v1H3zm1-1h1v1H4zm1-1h1v1H5zm1-1h1v1H6zM2 4h1v1H2zM1 5h1v1H1zM0 6h1v1H0zm4-2h1v1H4zm1 1h1v1H5zm1 1h1v1H6z"
-              />
-            </svg>
+            <CloseIcon />
           </button>
         </header>
         <div

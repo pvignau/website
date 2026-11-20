@@ -75,7 +75,7 @@ export function TextVersion({
           <p className="text-version__role">{content.role}</p>
           <p>{content.pitch}</p>
           {open && (
-            <button type="button" className="pixel-button text-version__close" onClick={onClose}>
+            <button type="button" className="comic-button text-version__close" onClick={onClose}>
               {ui.textVersion.close}
             </button>
           )}

@@ -14,7 +14,7 @@ export function NotFound() {
       title={notFound.title}
       body={notFound.body}
       action={
-        <Link className="pixel-button" to={PATHS.world}>
+        <Link className="comic-button" to={PATHS.world}>
           {notFound.backLabel}
         </Link>
       }
