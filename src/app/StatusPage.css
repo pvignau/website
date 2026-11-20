@@ -1,10 +1,19 @@
+/*
+ * The hero in the water above the panel, the two centred together: the burst
+ * of the title rises 1.6em above the panel, and as much room is left under
+ * the hero, whatever the height of the screen.
+ */
 .status-page {
+  --title-size: clamp(2.25rem, 10vw, 3.5rem);
   position: fixed;
   inset: 0;
   display: grid;
-  place-items: center;
-  padding: 1rem;
-  overflow: hidden;
+  align-content: center;
+  align-content: safe center;
+  justify-items: center;
+  row-gap: calc(1.6 * var(--title-size) - 0.5rem);
+  padding: 2.5rem 1rem 1.5rem;
+  overflow: auto;
   /* The sea of the world map: 4 × 4 of its tiles, drawn twice their size. */
   background: #67e6d2 url('../img/sea.webp') 0 0 / 256px 256px repeat;
   image-rendering: pixelated;
@@ -12,12 +21,9 @@
 
 /* The hero, waist-deep in the water. */
 .status-page__splash {
-  position: absolute;
-  top: 16%;
-  left: 50%;
+  position: relative;
   width: 48px;
   height: 72px;
-  translate: -50% 0;
 }
 
 .status-page__hero {
@@ -74,17 +80,18 @@
 
 /*
  * The title is the sound of the scene: a starburst over the top of the panel.
- * Its padding keeps one line or two clear of the spikes.
+ * Its padding keeps one line or two clear of the spikes: a long title wraps,
+ * as a long line would cross them.
  */
 .status-page__title {
   width: fit-content;
-  max-width: calc(100% + 3rem);
+  max-width: min(calc(100% + 3rem), 8em);
   margin: -1.6em auto 0.15em;
   padding: 1em 1.6em;
   background: var(--burst) center / 100% 100% no-repeat;
   color: var(--ink);
   font-family: var(--font-display);
-  font-size: clamp(2.25rem, 10vw, 3.5rem);
+  font-size: var(--title-size);
   font-weight: 400;
   line-height: 0.95;
   letter-spacing: 0.05em;
@@ -96,4 +103,11 @@
   margin: 0 0 1.25rem;
   font-size: 1.1rem;
   line-height: 1.5;
+}
+
+/* A phone on its side: a smaller burst. */
+@media (max-height: 30rem) {
+  .status-page {
+    --title-size: 2rem;
+  }
 }
