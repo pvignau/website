@@ -55,9 +55,45 @@ const site: SiteMetadata = {
     },
   ],
   fallback: { file: '404.html', title: 'Plouf ! · Le monde de Pyve', language: 'fr' },
+  person: {
+    name: 'Pierre-Yves Vignau',
+    alternateName: 'Pyve',
+    jobTitle: 'Software architect',
+    worksFor: 'France Télévisions',
+    sameAs: ['https://github.com/pvignau', 'https://example.com/</script>'],
+  },
 };
 
 describe('site pages', () => {
+  it('describes each indexed page as the profile page of its person', () => {
+    const english = metaBlock(site, site.pages[2] ?? null);
+    const json = /<script type="application\/ld\+json">(.*?)<\/script>/.exec(english)?.[1];
+    if (json === undefined) throw new Error('No structured data.');
+    // No text may close the script element early.
+    expect(json).not.toContain('</');
+    const data = JSON.parse(json) as Record<string, unknown>;
+    expect(data).toMatchObject({
+      '@type': 'ProfilePage',
+      url: 'https://pyve.is-a.dev/en',
+      inLanguage: 'en',
+      mainEntity: {
+        '@type': 'Person',
+        name: 'Pierre-Yves Vignau',
+        alternateName: 'Pyve',
+        url: 'https://pyve.is-a.dev/en',
+        worksFor: { '@type': 'Organization', name: 'France Télévisions' },
+        sameAs: ['https://github.com/pvignau', 'https://example.com/</script>'],
+      },
+    });
+    expect(english).toContain('<link rel="me" href="https://github.com/pvignau" />');
+  });
+
+  it('gives the fallback page neither structured data nor rel="me"', () => {
+    const fallback = metaBlock(site, null);
+    expect(fallback).not.toContain('application/ld+json');
+    expect(fallback).not.toContain('rel="me"');
+  });
+
   it('escapes text and attributes', () => {
     expect(escapeHtml(`<a href="x">L'été & co</a>`)).toBe(
       '&lt;a href=&quot;x&quot;&gt;L&#39;été &amp; co&lt;/a&gt;',

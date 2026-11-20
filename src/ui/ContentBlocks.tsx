@@ -1,5 +1,6 @@
 import type { ContentBlock, Link, Project } from '../content';
 import { useCopy } from '../app/copy';
+import { PROFILES } from '../content/profiles';
 import './ContentBlocks.css';
 
 type HeadingLevel = 2 | 3 | 4;
@@ -114,7 +115,13 @@ export function ContentLink({ link, tabIndex }: { link: Link; tabIndex?: number 
       className="content-link"
       href={link.href}
       tabIndex={tabIndex}
-      {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+      {...(external
+        ? {
+            target: '_blank',
+            // Pyve's own profiles say so (rel="me").
+            rel: PROFILES.includes(link.href) ? 'me noopener noreferrer' : 'noopener noreferrer',
+          }
+        : {})}
     >
       {link.label}
       {external && <span className="visually-hidden"> {ui.dialog.newTab}</span>}

@@ -1,3 +1,4 @@
+import { PROFILES } from '../src/content/profiles.ts';
 import { describe, expect, it } from 'vitest';
 import { content, PLACE_IDS } from '../src/content/index.ts';
 import type { SiteContent } from '../src/content/types.ts';
@@ -11,7 +12,9 @@ describe('renderStaticPage', () => {
       /^<main class="static-page"><header class="static-page__header"><h1>Pyve<\/h1>/,
     );
     for (const id of PLACE_IDS) expect(html).toContain(`<h2>${content.places[id].title}</h2>`);
-    const hrefs = [...html.matchAll(/<a href="([^"]+)">/g)].map(([, href = '']) => href);
+    const hrefs = [...html.matchAll(/<a href="([^"]+)"(?: rel="me")?>/g)].map(
+      ([, href = '']) => href,
+    );
     const places = PLACE_IDS.map((id) => content.places[id]);
     const expected = places.flatMap((place) => [
       ...place.body.flatMap((block) =>
@@ -23,6 +26,11 @@ describe('renderStaticPage', () => {
     ]);
     expect(hrefs.map((href) => href.replaceAll('&amp;', '&'))).toEqual(expected);
     expect(html).toContain('<p class="static-page__intro">Le jeu a besoin de JavaScript.</p>');
+  });
+
+  it('marks the links to Pyve\'s own profiles with rel="me", and only those', () => {
+    const own = [...html.matchAll(/<a href="([^"]+)" rel="me">/g)].map(([, href = '']) => href);
+    expect(new Set(own)).toEqual(new Set(PROFILES));
   });
 
   it('puts project names one level below their place', () => {

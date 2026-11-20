@@ -1,10 +1,12 @@
 import type { ContentBlock, Link, SiteContent } from '../src/content/types.ts';
+import { PROFILES } from '../src/content/profiles.ts';
 import { escapeHtml } from './site-pages.ts';
 
 const text = escapeHtml;
 
 function link({ label, href }: Link): string {
-  return `<a href="${text(href)}">${text(label)}</a>`;
+  const me = PROFILES.includes(href) ? ' rel="me"' : '';
+  return `<a href="${text(href)}"${me}>${text(label)}</a>`;
 }
 
 function links(list: readonly Link[]): string {

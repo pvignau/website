@@ -5,6 +5,7 @@ import { localizedPath } from './src/app/language.ts';
 import { PATHS, STATIC_PAGES, translationsOf } from './src/app/pages.ts';
 import type { Lang } from './src/content/index.ts';
 import { COPIES, DEFAULT_LANG, LANGS, LANGUAGES, PLACE_IDS } from './src/content/index.ts';
+import { PERSON } from './src/content/profiles.ts';
 import type { SiteLanguage } from './vite-plugins/site-pages.ts';
 import { sitePages } from './vite-plugins/site-pages.ts';
 import { renderStaticPage } from './vite-plugins/static-page.ts';
@@ -58,6 +59,7 @@ export default defineConfig({
         title: COPIES[DEFAULT_LANG].ui.pageTitle(COPIES[DEFAULT_LANG].content.notFound.title),
         language: DEFAULT_LANG,
       },
+      person: PERSON,
     }),
   ],
   test: {

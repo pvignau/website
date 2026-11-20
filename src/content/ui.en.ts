@@ -3,12 +3,12 @@ import type { UiCopy } from './ui.ts';
 /** Interface microcopy in English: a translation of ./ui.ts. */
 
 const siteName = "Pyve's world";
-/** Completes the site name in the home page title. */
-const tagline = 'portfolio and interactive experiments';
+/** Opens the home page title: who the site is about, for searches on the name. */
+const tagline = 'Pierre-Yves Vignau, software architect';
 
 export const ui: UiCopy = {
   siteName,
-  pageTitle: (page) => (page === null ? `${siteName}: ${tagline}` : `${page} · ${siteName}`),
+  pageTitle: (page) => (page === null ? `${tagline} · ${siteName}` : `${page} · ${siteName}`),
   ogImageAlt:
     'In pixel art, the hero on the path in front of his house, the bridge to the other island and a boat at the quay.',
   skipLink: 'Skip to the text version',

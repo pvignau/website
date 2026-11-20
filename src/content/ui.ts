@@ -69,12 +69,12 @@ export interface UiCopy {
 }
 
 const siteName = 'Le monde de Pyve';
-/** Completes the site name in the home page title. */
-const tagline = 'portfolio et expériences interactives';
+/** Opens the home page title: who the site is about, for searches on the name. */
+const tagline = 'Pierre-Yves Vignau, software architect';
 
 export const ui: UiCopy = {
   siteName,
-  pageTitle: (page) => (page === null ? `${siteName} : ${tagline}` : `${page} · ${siteName}`),
+  pageTitle: (page) => (page === null ? `${tagline} · ${siteName}` : `${page} · ${siteName}`),
   ogImageAlt:
     "En pixel art, le héros sur le chemin devant sa maison, le pont vers l'autre île et un bateau à quai.",
   skipLink: 'Aller à la version texte',

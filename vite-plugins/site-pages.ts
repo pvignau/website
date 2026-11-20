@@ -50,6 +50,17 @@ export interface SiteMetadata {
    * not to be indexed.
    */
   fallback: { file: string; title: string; language: string };
+  /**
+   * Who the site is about: a schema.org `ProfilePage` in each indexed page, and a
+   * `rel="me"` link to each of their profiles (`sameAs`).
+   */
+  person?: {
+    name: string;
+    alternateName: string;
+    jobTitle: string;
+    worksFor: string;
+    sameAs: readonly string[];
+  };
 }
 
 const META_START = '<!-- site-meta -->';
@@ -69,6 +80,35 @@ const ESCAPES: Readonly<Record<string, string>> = {
 
 export function escapeHtml(text: string): string {
   return text.replace(/[&<>"']/g, (char) => ESCAPES[char] ?? char);
+}
+
+/** JSON in a <script>: `<` escaped, so no text can close the element. */
+const scriptJson = (value: unknown) => JSON.stringify(value).replace(/</g, '\\u003c');
+
+/** The schema.org data of an indexed page: a profile page, about its person. */
+export function structuredData(site: SiteMetadata, page: SitePage): string | null {
+  const { person } = site;
+  if (!person) return null;
+  // The person's own page is the home page in the language of this one.
+  const home = site.pages.find((candidate) => candidate.language === page.language);
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    url: new URL(page.path, site.origin).href,
+    name: page.title,
+    inLanguage: languageNamed(site, page.language).lang,
+    mainEntity: {
+      '@type': 'Person',
+      name: person.name,
+      alternateName: person.alternateName,
+      jobTitle: person.jobTitle,
+      worksFor: { '@type': 'Organization', name: person.worksFor },
+      url: new URL(home?.path ?? '/', site.origin).href,
+      image: new URL(site.image.path, site.origin).href,
+      sameAs: person.sameAs,
+    },
+  };
+  return `<script type="application/ld+json">${scriptJson(data)}</script>`;
 }
 
 const meta = (key: 'name' | 'property', name: string, value: string) =>
@@ -131,6 +171,10 @@ export function metaBlock(
     meta('property', 'og:image:height', String(site.image.height)),
     meta('property', 'og:image:alt', language.imageAlt),
     meta('name', 'twitter:card', 'summary_large_image'),
+    ...(page ? (site.person?.sameAs ?? []) : []).map(
+      (profile) => `<link rel="me" href="${escapeHtml(profile)}" />`,
+    ),
+    page && structuredData(site, page),
     ...preloads.map((href) => `<link rel="preload" href="${escapeHtml(href)}" as="image" />`),
   ];
   return [META_START, ...tags.filter(Boolean), META_END].join('\n    ');
