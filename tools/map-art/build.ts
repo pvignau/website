@@ -6,8 +6,9 @@
  * - `sprites.ts`: sprites drawn over it, placed by the objects of the `art`
  *   layer of src/maps/<map>.json (named after a sprite, in drawing order);
  *
- * and writes src/maps/<map>.webp twice as large, lossless, with cwebp. The sea
- * around the world map (src/img/sea.webp) comes from `sea.png`.
+ * prints them like a comic book (comic.ts) and writes src/maps/<map>.webp
+ * twice as large, lossless, with cwebp. The sea around the world map
+ * (src/img/sea.webp) comes from `sea.png`.
  *
  *   npm run map-art              rebuild the images
  *   npm run map-art -- --check   only check that they are up to date (needs dwebp)
@@ -16,8 +17,9 @@ import { execFileSync } from 'node:child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { printComic, SHADOW } from './comic.ts';
 import type { Image } from './image.ts';
-import { drawImage, enlarge } from './image.ts';
+import { createImage, drawImage, enlarge } from './image.ts';
 import { decodePng, encodePng } from './png.ts';
 import { SPRITES } from './sprites.ts';
 
@@ -64,7 +66,7 @@ interface TiledLayer {
   }[];
 }
 
-interface TiledMap {
+export interface TiledMap {
   width: number;
   height: number;
   tilewidth: number;
@@ -170,11 +172,45 @@ const OUTPUTS: readonly Output[] = [
   { base: 'sea.png', out: 'src/img/sea.webp' },
 ];
 
+/** Splits sprites into what they draw and the shadows they cast (SHADOW pixels). */
+export function castShadows(sprites: Readonly<Record<string, Image>>) {
+  const shadow = Number.parseInt(SHADOW.slice(1), 16);
+  const bodies: Record<string, Image> = {};
+  const shadows: Record<string, Image> = {};
+  for (const [name, sprite] of Object.entries(sprites)) {
+    const body = { ...sprite, data: Uint8Array.from(sprite.data) };
+    const cast = { ...sprite, data: Uint8Array.from(sprite.data) };
+    const pixels = new DataView(sprite.data.buffer, sprite.data.byteOffset, sprite.data.byteLength);
+    for (let i = 0; i < sprite.width * sprite.height; i += 1) {
+      const target = pixels.getUint32(i * 4) === shadow ? body : cast;
+      target.data[i * 4 + 3] = 0;
+    }
+    bodies[name] = body;
+    shadows[name] = cast;
+  }
+  return { bodies, shadows };
+}
+
+const { bodies: BODIES, shadows: SHADOWS } = castShadows(SPRITES);
+
+/** The art of a map, sprites drawn, printed like a comic (comic.ts), at 1 pixel per art pixel. */
+export function printMap(base: Image, map?: TiledMap): Image {
+  if (map === undefined) return printComic(base, { x: 0, y: 0 });
+  const rect = backgroundRect(map);
+  const objects = artObjects(map);
+  const origin = { x: rect.x / ART_SCALE, y: rect.y / ART_SCALE };
+  if (!Number.isInteger(origin.x) || !Number.isInteger(origin.y)) {
+    throw new Error('The background must sit on the art grid (even map pixels).');
+  }
+  const shadows = compose(createImage(base.width, base.height), objects, rect, SHADOWS);
+  return printComic(compose(base, objects, rect, BODIES), origin, shadows);
+}
+
+const readMap = (file: string) => JSON.parse(readFileSync(join(ROOT, file), 'utf8')) as TiledMap;
+
 function render({ base, map }: Output): Image {
   const art = decodePng(readFileSync(join(HERE, base)));
-  if (map === undefined) return enlarge(art, ART_SCALE);
-  const tiled = JSON.parse(readFileSync(join(ROOT, map), 'utf8')) as TiledMap;
-  return enlarge(compose(art, artObjects(tiled), backgroundRect(tiled)), ART_SCALE);
+  return enlarge(printMap(art, map === undefined ? undefined : readMap(map)), ART_SCALE);
 }
 
 /** Reads a PAM file written by `dwebp -pam`. */

@@ -3,7 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { NOTE_IDS } from '../../src/content/notes.ts';
 import { PLACE_IDS, PLACE_VIEW_IDS } from '../../src/content/places.ts';
 import { parseTiledMap } from '../../src/engine/tiled.ts';
-import { ART_SCALE, artObjects, backgroundRect, compose } from './build.ts';
+import { ART_SCALE, artObjects, backgroundRect, castShadows, compose } from './build.ts';
+import { SHADOW } from './comic.ts';
 import type { Image } from './image.ts';
 import { createImage } from './image.ts';
 import { decodePng } from './png.ts';
@@ -85,6 +86,15 @@ describe('compose', () => {
       /No sprite/,
     );
     expect(() => compose(createImage(4, 4), [], origin, sprites)).toThrow(/The base is 4 × 4/);
+  });
+});
+
+describe('castShadows', () => {
+  it('parts what a sprite draws from the shadow it casts', () => {
+    const sprite = parseSprite('s', { a: '#ff0000', _: SHADOW }, 'a_');
+    const { bodies, shadows } = castShadows({ s: sprite });
+    expect([...(bodies.s?.data ?? [])]).toEqual([255, 0, 0, 255, 0, 0, 0, 0]);
+    expect([...(shadows.s?.data ?? [])]).toEqual([255, 0, 0, 0, 0, 0, 0, 64]);
   });
 });
 
